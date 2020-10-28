@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Mpmg\Laravue\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
-class MpmgApi extends Command
+class LaravueApiCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mpmg:api {model} {--f|fields=}';
+    protected $signature = 'laravue:api {model} {--f|fields=}';
 
     /**
      * The console command description.
@@ -45,7 +45,7 @@ class MpmgApi extends Command
      */
     protected function createMigration()
     {
-        $this->call('mpmg:migration', [
+        $this->call('laravue:migration', [
             'model' => $this->argument('model'),
             '--fields' =>  $this->option('fields'),
         ]);
@@ -58,7 +58,7 @@ class MpmgApi extends Command
      */
     protected function createSeeder()
     {
-        $this->call('mpmg:seed', [
+        $this->call('laravue:seed', [
             'model' => $this->argument('model'),
             '--fields' =>  $this->option('fields'),
         ]);
@@ -71,7 +71,7 @@ class MpmgApi extends Command
      */
     protected function createDataTableSeeder()
     {
-        $this->call('mpmg:dbseeder', [
+        $this->call('laravue:dbseeder', [
             'model' => $this->argument('model'),
         ]);
     }
@@ -83,7 +83,7 @@ class MpmgApi extends Command
      */
     protected function createController()
     {
-        $this->call('mpmg:controller', [
+        $this->call('laravue:controller', [
             'model' => $this->argument('model'),
             '--fields' =>  $this->option('fields'),
         ]);
@@ -96,7 +96,7 @@ class MpmgApi extends Command
      */
     protected function createModel()
     {
-        $this->call('mpmg:model', [
+        $this->call('laravue:model', [
             'model' => $this->argument('model'),
             '--fields' =>  $this->option('fields'),
         ]);
@@ -109,7 +109,7 @@ class MpmgApi extends Command
      */
     protected function createReport()
     {
-        $this->call('mpmg:report', [
+        $this->call('laravue:report', [
             'model' => $this->argument('model'),
         ]);
     }
@@ -121,7 +121,7 @@ class MpmgApi extends Command
      */
     protected function createRoute()
     {
-        $this->call('mpmg:route', [
+        $this->call('laravue:route', [
             'model' => $this->argument('model'),
         ]);
     }
@@ -133,7 +133,7 @@ class MpmgApi extends Command
      */
     protected function createPermission()
     {
-        $this->call('mpmg:permission', [
+        $this->call('laravue:permission', [
             'model' => $this->argument('model'),
         ]);
     }

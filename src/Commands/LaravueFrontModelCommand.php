@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Mpmg\Laravue\Commands;
 
 use Illuminate\Support\Str;
 
-class MpmgFrontModel extends MpmgCommand
+class LaravueFrontModelCommand extends LaravueCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mpmg:frontmodel {model} {--f|fields=}';
+    protected $signature = 'laravue:frontmodel {model} {--f|fields=}';
 
     /**
      * The console command description.

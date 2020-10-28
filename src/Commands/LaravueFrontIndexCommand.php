@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Mpmg\Laravue\Commands;
 
 use Illuminate\Console\Command;
 
-class MpmgFrontIndex extends MpmgCommand
+class LaravueFrontIndexCommand extends LaravueCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mpmg:index {model} {--f|fields=}';
+    protected $signature = 'laravue:frontindex {model} {--f|fields=}';
 
     /**
      * The console command description.

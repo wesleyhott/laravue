@@ -11,13 +11,13 @@ composer require mpmg/laravue
 ### Commands
 #### Build
 ```
-php artisan mpmg:build <model>
+php artisan laravue:build <model>
 ```
 Generates code for backend (Laravel) and frontend (VueJs) for model \<model\>
 
 #### Build with options
 ```
-php artisan mpmg:build <model> <-f|--fields>
+php artisan laravue:build <model> <-f|--fields>
 ```
 #### Comand Description
 Generates code for backend (Laravel) and frontend (VueJs) for model \<model\> with fields <-f|--fields>
@@ -42,12 +42,12 @@ Supose we have the situation that users have posts and models are
 
 **Command for generate User model**
 ```
-php artisan mpmg:build User -f name:s,age:i.n
+php artisan laravue:build User -f name:s,age:i.n
 ```
 
 **Command for generate Post model**
 ```
-php artisan mpmg:build Post -f user_id:i,text:s,age:i.n,created_at:dt,approved:b
+php artisan laravue:build Post -f user_id:i,text:s,age:i.n,created_at:dt,approved:b
 ```
 ### Fields types and shortcus
 

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Mpmg\Laravue\Commands;
 
-class MpmgPermission extends MpmgCommand
+class LaravuePermissionCommand extends LaravueCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mpmg:permission {model}';
+    protected $signature = 'laravue:permission {model}';
 
     /**
      * The console command description.
@@ -61,9 +61,9 @@ class MpmgPermission extends MpmgCommand
         $newPermission .= "\t\t$"."apagar_$route = Permission::create(['name' => 'apagar $route']);" . PHP_EOL;
         $newPermission .= "\t\t$"."imprimir_$route = Permission::create(['name' => 'imprimir $route']);" . PHP_EOL;
         $newPermission .= PHP_EOL;
-        $newPermission .= "\t\t// {{ mpmg-insert:permissions }}";
+        $newPermission .= "\t\t// {{ laravue-insert:permissions }}";
 
-        return str_replace( '// {{ mpmg-insert:permissions }}', $newPermission, $permissionFile );
+        return str_replace( '// {{ laravue-insert:permissions }}', $newPermission, $permissionFile );
     }
 
     protected function replaceMenu($permissionFile, $model)
@@ -74,8 +74,8 @@ class MpmgPermission extends MpmgCommand
 
         $newPermission = "";
         $newPermission .= "$"."ver_menu_$route = Permission::create(['name' => 'ver menu $route']);" . PHP_EOL;
-        $newPermission .= "\t\t// {{ mpmg-insert:menu }}";
+        $newPermission .= "\t\t// {{ laravue-insert:menu }}";
         
-        return str_replace( '// {{ mpmg-insert:menu }}', $newPermission, $permissionFile );
+        return str_replace( '// {{ laravue-insert:menu }}', $newPermission, $permissionFile );
     }
 }

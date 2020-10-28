@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Mpmg\Laravue\Commands;
 
-class MpmgFrontDelete extends MpmgCommand
+class LaravueFrontShowCommand extends LaravueCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mpmg:frontdelete {model}';
+    protected $signature = 'laravue:frontshow {model}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Criação do frontend Delete.vue';
+    protected $description = 'Criação do frontend Show.vue';
 
     /**
      * Execute the console command.
@@ -25,13 +25,13 @@ class MpmgFrontDelete extends MpmgCommand
      */
     public function handle()
     {
-        $this->setStub('/front/delete');
+        $this->setStub('/front/show');
         $model = trim($this->argument('model'));
         $date = now();
 
-        $path = $this->getFrontPath($model, "Delete");
+        $path = $this->getFrontPath($model, "Show");
         $this->files->put($path, $this->buildModel($model));
 
-        $this->info("$date - [ $model ] >> Delete.vue");
+        $this->info("$date - [ $model ] >> Show.vue");
     }
 }

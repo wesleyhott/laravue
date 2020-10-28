@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Mpmg\Laravue\Commands;
 
-class MpmgSeed extends MpmgCommand
+class LaravueSeedCommand extends LaravueCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mpmg:seed {model} {--f|fields=}';
+    protected $signature = 'laravue:seed {model} {--f|fields=}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Criação de seeder nos padrões do MPMG.';
+    protected $description = 'Criação de seeder nos padrões do Laravue.';
 
     /**
      * Tipo de modelo que está sendo criado.

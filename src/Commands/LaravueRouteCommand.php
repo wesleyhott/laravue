@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Mpmg\Laravue\Commands;
 
-class MpmgRoute extends MpmgCommand
+class LaravueRouteCommand extends LaravueCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mpmg:route {model}';
+    protected $signature = 'laravue:route {model}';
 
     /**
      * The console command description.
@@ -57,9 +57,9 @@ class MpmgRoute extends MpmgCommand
 
         $newRoute = "";
         $newRoute .= "'$route' => '$formatedModel"."Controller'," . PHP_EOL;
-        $newRoute .= "\t// {{ mpmg-insert:route }}";
+        $newRoute .= "\t// {{ laravue-insert:route }}";
 
-        return str_replace( '// {{ mpmg-insert:route }}', $newRoute, $routeFile );
+        return str_replace( '// {{ laravue-insert:route }}', $newRoute, $routeFile );
     }
 
     protected function replaceReport($routeFile, $model)
@@ -70,8 +70,8 @@ class MpmgRoute extends MpmgCommand
 
         $newRoute = "";
         $newRoute .= "Route::get('$route/{reportType}', '$model"."ReportController@index');" . PHP_EOL;
-        $newRoute .= "\t// {{ mpmg-insert:report }}";
+        $newRoute .= "\t// {{ laravue-insert:report }}";
 
-        return str_replace( '// {{ mpmg-insert:report }}', $newRoute, $routeFile );
+        return str_replace( '// {{ laravue-insert:report }}', $newRoute, $routeFile );
     }
 }

@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Mpmg\Laravue\Commands;
 
-class MpmgController extends MpmgCommand
+class LaravueControllerCommand extends LaravueCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mpmg:controller {model} {--f|fields=}';
+    protected $signature = 'laravue:controller {model} {--f|fields=}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Cria um novo controlador nos padrões do MPMG.';
+    protected $description = 'Cria um novo controlador nos padrões do Laravue.';
 
     /**
      * Tipo de modelo que está sendo criado.

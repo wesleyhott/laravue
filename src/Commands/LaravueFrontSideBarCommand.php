@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Mpmg\Laravue\Commands;
 use Illuminate\Support\Str;
 
-class MpmgFrontSideBar extends MpmgCommand
+class LaravueFrontSideBarCommand extends LaravueCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mpmg:frontsidebar {model}';
+    protected $signature = 'laravue:frontsidebar {model}';
 
     /**
      * The console command description.
@@ -83,7 +83,7 @@ class MpmgFrontSideBar extends MpmgCommand
         $route = strtolower( $ModelName );
 
         $newRoute = "";
-        $newRoute .= "// {{ mpmg-insert:routes }}" . PHP_EOL;
+        $newRoute .= "// {{ laravue-insert:routes }}" . PHP_EOL;
         $newRoute .= "\t{" . PHP_EOL;
         $newRoute .= "\t\tname: '$ModelName'," . PHP_EOL;
         $newRoute .= "\t\ticon: 'nc-icon nc-paper', " . PHP_EOL;
@@ -98,6 +98,6 @@ class MpmgFrontSideBar extends MpmgCommand
         $newRoute .= "\t\t//]," . PHP_EOL;
         $newRoute .= "\t},";
 
-        return str_replace( '// {{ mpmg-insert:routes }}', $newRoute, $routeFile );
+        return str_replace( '// {{ laravue-insert:routes }}', $newRoute, $routeFile );
     }
 }
