@@ -1,0 +1,18 @@
+<?php
+
+namespace App;
+
+class {{ class }} extends MPMGModel
+{
+    // Redefinir nome da tabela, uma vez que o plural não é somente acrescentar 's'.
+    // protected $table = '';
+
+    /**
+     * Implementação do método da classe abstrata em BaseModel
+     *
+     * @return array ('nome da coluna do banco', 'nome mapeado')
+     */
+    public function mapColumns() {
+        return [{{ fields }}];
+    }
+}

@@ -1,0 +1,103 @@
+<?php
+
+namespace App\Console\Commands;
+use Illuminate\Support\Str;
+
+class MpmgFrontSideBar extends MpmgCommand
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'mpmg:frontsidebar {model}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Criação do menu no frontend para o modelo';
+
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        $model = trim($this->argument('model'));
+        $date = now();
+
+        $path = $this->getFrontMenuPath();
+        $this->files->put($path, $this->buildMenu($model));
+
+        $this->info("$date - [ $model ] >> sidebarLinks.js");
+    }
+
+    protected function getFrontMenuPath()
+    {
+        $currentDirectory =  getcwd();
+        $paths = explode( "/", $currentDirectory );
+
+        if( end( $paths ) == "api") { // laravel
+            $routeDirectory = Str::replaceFirst( end( $paths ), "frontend/src", $currentDirectory);
+        } else { // docker
+            $routeDirectory = Str::replaceFirst( end( $paths ), "src", $currentDirectory);
+        }
+
+        if( !is_dir($routeDirectory) ) {
+            mkdir( $routeDirectory, 0777, true);
+        }
+
+        $file = "$routeDirectory/sidebarLinks.js";
+        
+        return $file;
+    }
+
+    protected function buildMenu($model)
+    {
+        $routes = $this->files->get($this->resolveFrontMenuPath());
+
+        return $this->replaceRouteRoutes($routes, $model);
+    }
+
+    protected function resolveFrontMenuPath()
+    {
+        $currentDirectory =  getcwd();
+        $paths = explode( "/", $currentDirectory );
+
+        if( end( $paths ) == "api") { // laravel
+            $routeDirectory = Str::replaceFirst( end( $paths ), "frontend/src/sidebarLinks.js", $currentDirectory);
+        } else { // docker
+            $routeDirectory = Str::replaceFirst( end( $paths ), "src/sidebarLinks.js", $currentDirectory);
+        }
+
+        return $routeDirectory;
+    }
+
+    protected function replaceRouteRoutes($routeFile, $model)
+    {   
+        $formatedModel = ucfirst( $model );
+        $ModelName = ucfirst( $this->pluralize( 2, $model ) );
+        $route = strtolower( $ModelName );
+
+        $newRoute = "";
+        $newRoute .= "// {{ mpmg-insert:routes }}" . PHP_EOL;
+        $newRoute .= "\t{" . PHP_EOL;
+        $newRoute .= "\t\tname: '$ModelName'," . PHP_EOL;
+        $newRoute .= "\t\ticon: 'nc-icon nc-paper', " . PHP_EOL;
+        $newRoute .= "\t\tpath: '/paginas/$route'," . PHP_EOL;
+        $newRoute .= "\t\tpermission: 'ver $route'," . PHP_EOL;
+        $newRoute .= "\t\t//children: [" . PHP_EOL;
+        $newRoute .= "\t\t//\t{" . PHP_EOL;
+        $newRoute .= "\t\t//\t\tname: ''," . PHP_EOL;
+        $newRoute .= "\t\t//\t\tpath: ''," . PHP_EOL;
+        $newRoute .= "\t\t//\t\tpermission: ''," . PHP_EOL;
+        $newRoute .= "\t\t//\t}," . PHP_EOL;
+        $newRoute .= "\t\t//]," . PHP_EOL;
+        $newRoute .= "\t},";
+
+        return str_replace( '// {{ mpmg-insert:routes }}', $newRoute, $routeFile );
+    }
+}

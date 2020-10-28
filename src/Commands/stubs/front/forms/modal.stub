@@ -1,0 +1,14 @@
+<template>
+  <div v-if="model">
+    {{ fields }}
+  </div>
+</template>
+
+<script>
+export default {
+  name: "Show",
+  props: {
+    model: undefined
+  }
+}
+</script>

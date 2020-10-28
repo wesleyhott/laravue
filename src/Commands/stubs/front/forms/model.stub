@@ -1,0 +1,162 @@
+<template>
+  <div class="row">
+    <div class="col-sm-12">
+      <card>
+        <div class="row">
+          <div class="col-sm-9">
+              <h4 slot="header" class="card-title">{{ titulo }}</h4>
+          </div>
+          <div class="col-sm-2" style="text-align:right">
+            <small>{{ loadingMessage }} </small>
+          </div>
+          <div class="col-sm-1">
+               <pulse-loader :loading="loading" color="black" size="5px"></pulse-loader>
+          </div>
+        </div>
+        {{ fields }}<br>
+        <router-link :to="goBack">
+          <p-button type="info" round>voltar</p-button>
+        </router-link>
+        <p-button style="margin-left:8px" v-if="relatorio" type="danger" round @click="getReport('pdf')">PDF</p-button>
+        <p-button style="margin-left:8px" v-if="relatorio" type="success" round @click="getReport('xlsx')">XLSX</p-button>
+        <p-button style="margin-left:8px" v-else type="success" round @click="submit">{{ labelSubmit }}</p-button>
+      </card>
+    </div>
+  </div>
+</template>
+
+<script>
+import mpmgNotify from "@/components/ProjetoBase/Views/Components/notifications/mpmgNotifications"
+import PulseLoader from "vue-spinner/src/PulseLoader"
+import { DatePicker } from "element-ui"
+
+export default {
+  components: { PulseLoader, [DatePicker.name]: DatePicker },
+  props: {
+    titulo: String,
+    edicao: Boolean,
+    relatorio: Boolean,
+    rotaVoltar: String,
+    rota: String
+  },
+  data() {
+    return {
+      loadingMessage: "",
+      hasValidationErrors: false,
+      validationErrors: [],
+      loading: false,
+      selects: { {{ fields:data-selects }}
+      },
+      model: {
+        {{ fields:model }}
+      },
+      modelValidations: {
+        {{ fields:validation }}
+      },
+    }
+  },
+  created() {
+    this.loadSelects()
+  },
+  computed: {
+    labelSubmit() {
+      return this.edicao ? `Alterar` : `Cadastrar`
+    },
+    goBack() {
+      return `/paginas/${this.rotaVoltar}`
+    },
+    url() {
+      return this.edicao
+        ? `${this.rota}/${this.$route.params.modelId}`
+        : this.rota
+    },{{ fields:computed }}
+  },
+  methods: {
+    setLoading(status, message = "") {
+      if(this.loading != status){
+        this.loading = status
+      }
+      this.loadingMessage = message
+    },
+    getReportFilter() {
+      return `{{ fields:report }}`
+    },
+    getReport(modelo) {
+      this.setLoading(true, "Gerando Arquivo")
+      this.$http
+        .get(`reports/${this.rota}/${modelo}${this.getReportFilter()}`, {responseType: 'arraybuffer'})
+        .then(response => {
+          this.setLoading(false)
+          this.$getReport(response, modelo)
+        })
+        .catch(e => {
+          this.setLoading(true, "Falha ao Gerar Arquivo")
+          mpmgNotify.failure(this, e)
+        })
+    },
+    getError(fieldName) {
+      return this.errors.first(fieldName)
+    },
+    validate() {
+      this.$validator.validateAll().then(isValid => {
+        this.$emit("on-submit", this.registerForm, isValid)
+      })
+    },
+    submit() {
+      this.$validator.validateAll().then(isValid => {
+        if (isValid) {
+          let message = this.edicao ? "Alterando" : "Inserindo"
+          this.setLoading(true, message)
+          this.$http({
+            method: this.edicao ? "put" : "post",
+            url: this.url,
+            data: { {{ fields:data-submit }} 
+            }
+          })
+            .then(response => {
+              if (!this.edicao) {
+                this.model = {
+                  {{ fields:model2 }}
+                }
+                this.$validator.reset()
+              }
+              this.setLoading(false)
+              if (this.edicao) {
+                mpmgNotify.success(this, "edit")
+              } else {
+                mpmgNotify.success(this)
+              }
+            })
+            .catch(e => {
+              this.setLoading(false)
+              mpmgNotify.failure(this, e)
+            })
+        }
+      })
+    },
+    loadModel(){
+      if (this.edicao) {
+        this.setLoading(true, "{{ model }}")
+        this.$http
+          .get(this.url)
+          .then(response => {
+            this.setLoading(false)
+            this.model = response.data.data
+          })
+          .catch(e => {
+            mpmgNotify.failure(this, e)
+          })
+      } else {
+        this.setLoading(false)
+      }
+    },
+    {{ fields:method }}
+  }
+}
+</script>
+
+<style scoped>
+.formSpace {
+  margin-bottom: 8px;
+}
+</style>

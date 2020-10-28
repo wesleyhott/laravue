@@ -85,3 +85,11 @@ php artisan mpmg:build Post -f user_id:i,text:s,age:i.n,created_at:dt,approved:b
 |    .+    | ->unsigned()                                  | Unsigned integer                                                                   |
 |    .u    | ->unique()                                    | Unique field                                                                       |
 |   .u+    | unique[]                                      | Fields that are unique together                                                    |
+
+### Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE) for more information.

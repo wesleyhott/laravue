@@ -1,0 +1,43 @@
+<template>
+  <div>
+    <mpmg-datatable
+      titulo="{{ title }}"
+      rota="{{ route }}"
+      :colunas = "colunas"
+      :ordenacao = "ordenacao"
+      overrideShow 
+      overrideDelete >
+        <template v-slot:modalShow="{ model }">
+            <show :model="model"></show>
+        </template>
+        <template v-slot:modalDelete="{ model }">
+          <delete :model="model"></delete>
+        </template>
+    </mpmg-datatable>
+  </div>
+</template>
+
+<script>
+import MpmgDatatable from "@/components/ProjetoBase/Views/Components/MpmgDataTable"
+import Show from "./Show"
+import Delete from "./Delete"
+
+export default {
+  name: "Index.vue",
+  components: { MpmgDatatable, Show, Delete },
+  data() {
+    return {
+      colunas: [
+        {{ fields }}
+      ],
+      ordenacao:[
+        {
+          prop: "id",
+          order: "ASC",
+          default: true
+        }
+      ]
+    }
+  }
+}
+</script>

@@ -1,0 +1,17 @@
+<template>
+  <modal-form
+    :model="model"
+  ></modal-form>
+</template>
+
+<script>
+import ModalForm from "./forms/Modal"
+
+export default {
+  name: "Show",
+  components: { ModalForm },
+  props: {
+    model: undefined
+  }
+}
+</script>

@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class Create{{ class }}Table extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('{{ table }}', function (Blueprint $table) {
+            $table->increments('id');
+            {{ fields }}
+            $table->string('usuario_ult_alteracao', 40);
+            $table->timestamps();
+
+            // $table->unique(['unique_01', 'unique_02']);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('{{ table }}');
+    }
+}
