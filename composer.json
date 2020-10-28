@@ -1,6 +1,7 @@
 {
     "name": "mpmg/laravue",
     "description": "Code generation for MPMG projects that use Laravel and VueJs tecnologies.",
+    "type": "library",
     "keywords": [
         "mpmg",
         "vue",
@@ -17,20 +18,14 @@
         }
     ],
     "require": {
-        "php": "^7.3",
-        "laravel/framework": "^8.0"
+        "orchestra/testbench": "^6.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.3"
+        "phpunit/phpunit": "^9.4"
     },
     "autoload": {
         "psr-4": {
             "Mpmg\\Laravue\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Mpmg\\Laravue\\Test": "tests"
         }
     },
     "extra": {
@@ -41,8 +36,5 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "scripts": {
-        "test": "phpunit"
-    }
+    "prefer-stable": true
 }
