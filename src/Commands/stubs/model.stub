@@ -2,7 +2,7 @@
 
 namespace App;
 
-class {{ class }} extends MPMGModel
+class {{ class }} extends LaravueModel
 {
     // Redefinir nome da tabela, uma vez que o plural não é somente acrescentar 's'.
     // protected $table = '';

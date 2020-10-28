@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Mpmg\Laravue\Commands;
 use Illuminate\Support\Str;
 
-class MpmgFrontRoute extends MpmgCommand
+class LaravueFrontRouteCommand extends LaravueCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mpmg:frontroute {model}';
+    protected $signature = 'laravue:frontroute {model}';
 
     /**
      * The console command description.
@@ -89,9 +89,9 @@ class MpmgFrontRoute extends MpmgCommand
         $newImport .= "import $formatedModel" . "Index from 'src/components/$this->projectName/Views/Pages/$formatedModel/Index.vue'" . PHP_EOL;
         $newImport .= "import $formatedModel" . "Report from 'src/components/$this->projectName/Views/Pages/$formatedModel/Report.vue'" . PHP_EOL;
         $newImport .= PHP_EOL;
-        $newImport .= '// {{ mpmg-insert:import }}' . PHP_EOL;
+        $newImport .= '// {{ laravue-insert:import }}' . PHP_EOL;
 
-        return str_replace( '// {{ mpmg-insert:import }}', $newImport, $routeFile );
+        return str_replace( '// {{ laravue-insert:import }}', $newImport, $routeFile );
     }
 
     protected function replaceRouteRoutes($routeFile, $model)
@@ -125,8 +125,8 @@ class MpmgFrontRoute extends MpmgCommand
         $newRoute .= "\t\t\tname: 'Imprimir $ModelName', " . PHP_EOL;
         $newRoute .= "\t\t\tcomponent: $formatedModel"."Report, " . PHP_EOL;
         $newRoute .= "\t\t}," . PHP_EOL;
-        $newRoute .= "\t\t// {{ mpmg-insert:routes }}";
+        $newRoute .= "\t\t// {{ laravue-insert:routes }}";
 
-        return str_replace( '// {{ mpmg-insert:routes }}', $newRoute, $routeFile );
+        return str_replace( '// {{ laravue-insert:routes }}', $newRoute, $routeFile );
     }
 }

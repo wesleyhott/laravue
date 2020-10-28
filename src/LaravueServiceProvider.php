@@ -8,29 +8,32 @@ class LaravueServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        $this->commands([
-            Commands\MpmgApi::class,
-            Commands\MpmgBuild::class,
-            Commands\MpmgCommand::class,
-            Commands\MpmgController::class,
-            Commands\MpmgDatabaseSeeder::class,
-            Commands\MpmgFront::class,
-            Commands\MpmgFrontCreate::class,
-            Commands\MpmgFrontDelete::class,
-            Commands\MpmgFrontEdit::class,
-            Commands\MpmgFrontIndex::class,
-            Commands\MpmgFrontModal::class,
-            Commands\MpmgFrontModel::class,
-            Commands\MpmgFrontReport::class,
-            Commands\MpmgFrontRoute::class,
-            Commands\MpmgFrontShow::class,
-            Commands\MpmgFrontSideBar::class,
-            Commands\MpmgMigration::class,
-            Commands\MpmgModel::class,
-            Commands\MpmgPermission::class,
-            Commands\MpmgReport::class,
-            Commands\MpmgRoute::class,
-            Commands\MpmgSeed::class,
-        ]);
+        // Register the command if we are using the application via the CLI
+        if( $this->app->runningInConsole() ) {
+            $this->commands([
+                Commands\LaravueApiCommand::class,
+                Commands\LaravueBuildCommand::class,
+                Commands\LaravueCommandCommand::class,
+                Commands\LaravueControllerCommand::class,
+                Commands\LaravueDatabaseSeederCommand::class,
+                Commands\LaravueFrontCommand::class,
+                Commands\LaravueFrontCreateCommand::class,
+                Commands\LaravueFrontDeleteCommand::class,
+                Commands\LaravueFrontEditCommand::class,
+                Commands\LaravueFrontIndexCommand::class,
+                Commands\LaravueFrontModalCommand::class,
+                Commands\LaravueFrontModelCommand::class,
+                Commands\LaravueFrontReportCommand::class,
+                Commands\LaravueFrontRouteCommand::class,
+                Commands\LaravueFrontShowCommand::class,
+                Commands\LaravueFrontSideBarCommand::class,
+                Commands\LaravueMigrationCommand::class,
+                Commands\LaravueModelCommand::class,
+                Commands\LaravuePermissionCommand::class,
+                Commands\LaravueReportCommand::class,
+                Commands\LaravueRouteCommand::class,
+                Commands\LaravueSeedCommand::class,
+            ]);
+        }
     }
 }

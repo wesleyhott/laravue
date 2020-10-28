@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Mpmg\Laravue\Commands;
 
 use Illuminate\Console\Command;
 
-class MpmgFront extends Command
+class LaravueFrontCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mpmg:front {model} {--f|fields=}';
+    protected $signature = 'laravue:front {model} {--f|fields=}';
 
     /**
      * The console command description.
@@ -46,7 +46,7 @@ class MpmgFront extends Command
      */
     protected function createIndex()
     {
-        $this->call('mpmg:index', [
+        $this->call('laravue:frontindex', [
             'model' => $this->argument('model'),
             '--fields' =>  $this->option('fields'),
         ]);
@@ -59,7 +59,7 @@ class MpmgFront extends Command
      */
     protected function createModel()
     {
-        $this->call('mpmg:frontmodel', [
+        $this->call('laravue:frontmodel', [
             'model' => $this->argument('model'),
             '--fields' =>  $this->option('fields'),
         ]);
@@ -72,7 +72,7 @@ class MpmgFront extends Command
      */
     protected function createCreate()
     {
-        $this->call('mpmg:frontcreate', [
+        $this->call('laravue:frontcreate', [
             'model' => $this->argument('model'),
         ]);
     }
@@ -84,7 +84,7 @@ class MpmgFront extends Command
      */
     protected function createEdit()
     {
-        $this->call('mpmg:frontedit', [
+        $this->call('laravue:frontedit', [
             'model' => $this->argument('model'),
         ]);
     }
@@ -96,7 +96,7 @@ class MpmgFront extends Command
      */
     protected function createReport()
     {
-        $this->call('mpmg:frontreport', [
+        $this->call('laravue:frontreport', [
             'model' => $this->argument('model'),
         ]);
     }
@@ -108,7 +108,7 @@ class MpmgFront extends Command
      */
     protected function createModal()
     {
-        $this->call('mpmg:frontmodal', [
+        $this->call('laravue:frontmodal', [
             'model' => $this->argument('model'),
             '--fields' =>  $this->option('fields'),
         ]);
@@ -121,7 +121,7 @@ class MpmgFront extends Command
      */
     protected function createShow()
     {
-        $this->call('mpmg:frontshow', [
+        $this->call('laravue:frontshow', [
             'model' => $this->argument('model'),
         ]);
     }
@@ -133,7 +133,7 @@ class MpmgFront extends Command
      */
     protected function createDelete()
     {
-        $this->call('mpmg:frontdelete', [
+        $this->call('laravue:frontdelete', [
             'model' => $this->argument('model'),
         ]);
     }
@@ -145,7 +145,7 @@ class MpmgFront extends Command
      */
     protected function createFrontRoutes()
     {
-        $this->call('mpmg:frontroute', [
+        $this->call('laravue:frontroute', [
             'model' => $this->argument('model'),
         ]);
     }
@@ -157,7 +157,7 @@ class MpmgFront extends Command
      */
     protected function createFrontSideBar()
     {
-        $this->call('mpmg:frontsidebar', [
+        $this->call('laravue:frontsidebar', [
             'model' => $this->argument('model'),
         ]);
     }

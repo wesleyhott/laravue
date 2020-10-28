@@ -28,6 +28,11 @@
             "Mpmg\\Laravue\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Mpmg\\Laravue\\Tests\\": "tests"
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [

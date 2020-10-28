@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Mpmg\Laravue\Commands;
 
-class MpmgDatabaseSeeder extends MpmgCommand
+class LaravueDataBaseSeederCommand extends LaravueCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mpmg:dbseeder {model}';
+    protected $signature = 'laravue:dbseeder {model}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Criação do seed em database seeder nos padrões do MPMG.';
+    protected $description = 'Criação do seed em database seeder nos padrões do Laravue.';
 
     /**
      * Tipo de modelo que está sendo criado.
@@ -62,8 +62,8 @@ class MpmgDatabaseSeeder extends MpmgCommand
 
         $newSeeder = "";
         $newSeeder .= "$"."this->call($formatedModel"."TableSeeder::class);" . PHP_EOL;
-        $newSeeder .= "\t\t// {{ mpmg-insert:seed }}";
+        $newSeeder .= "\t\t// {{ laravue-insert:seed }}";
         
-        return str_replace( '// {{ mpmg-insert:seed }}', $newSeeder, $databaseSeederFile );
+        return str_replace( '// {{ laravue-insert:seed }}', $newSeeder, $databaseSeederFile );
     }
 }

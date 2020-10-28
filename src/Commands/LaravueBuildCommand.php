@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Mpmg\Laravue\Commands;
 
-class MpmgBuild extends MpmgCommand
+class LaravueBuildCommand extends LaravueCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mpmg:build {model : The model to be builded} 
+    protected $signature = 'laravue:build {model : The model to be builded} 
         {--f|fields= : Feilds that belongs to model} 
         {--b|backward : Indicates to rebuild entire database}
         {--bw : Indicates to rebuild entire database}
@@ -47,7 +47,7 @@ class MpmgBuild extends MpmgCommand
      */
     protected function backend()
     {
-        $this->call('mpmg:api', [
+        $this->call('laravue:api', [
             'model' => $this->argument('model'),
             '--fields' =>  $this->option('fields'),
         ]);
@@ -60,7 +60,7 @@ class MpmgBuild extends MpmgCommand
      */
     protected function frontend()
     {
-        $this->call('mpmg:front', [
+        $this->call('laravue:front', [
             'model' => $this->argument('model'),
             '--fields' =>  $this->option('fields'),
         ]);

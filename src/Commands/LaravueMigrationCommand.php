@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Mpmg\Laravue\Commands;
 
 use Illuminate\Support\Str;
 
-class MpmgMigration extends MpmgCommand
+class LaravueMigrationCommand extends LaravueCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mpmg:migration {model} {--f|fields=}';
+    protected $signature = 'laravue:migration {model} {--f|fields=}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Criação de migration nos padrões do MPMG.';
+    protected $description = 'Criação de migration nos padrões do Laravue.';
 
     /**
      * Tipo de modelo que está sendo criado.

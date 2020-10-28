@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Mpmg\Laravue\Commands;
 
-class MpmgReport extends MpmgCommand
+class LaravueReportCommand extends LaravueCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mpmg:report {model}';
+    protected $signature = 'laravue:report {model}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Cria um novo controlador de relatório nos padrões do MPMG.';
+    protected $description = 'Cria um novo controlador de relatório nos padrões do Laravue.';
 
     /**
      * Tipo de modelo que está sendo criado.

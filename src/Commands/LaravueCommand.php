@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Mpmg\Laravue\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Composer;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 
-class MpmgCommand extends Command
+class LaravueCommand extends Command
 {
+    protected $hidden = true;
+
     /**
      * O nome do projeto atual.
      *
@@ -21,14 +23,14 @@ class MpmgCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'mpmg';
+    protected $signature = 'laravue';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Classe base dos comandos personalizados do MPMG';
+    protected $description = 'Classe base dos comandos personalizados do Laravue';
 
     /**
      * The filesystem instance.
@@ -68,7 +70,7 @@ class MpmgCommand extends Command
 
         $this->files = $files;
         $this->composer = $composer;
-        $this->projectName = config('app.name', "MPMG");
+        $this->projectName = config('app.name', "Laravue");
     }
 
     /**
@@ -137,19 +139,23 @@ class MpmgCommand extends Command
                 $dirs = explode( "/", $currentDirectory );
 
                 if( end( $dirs ) == "api") { // laravel
-                    $frontPpath = Str::replaceFirst( end( $dirs ),"frontend/src/components/$this->projectName/Views/Pages/$model/forms", $currentDirectory);
+                    $frontPath = Str::replaceFirst( end( $dirs ),"frontend/src/components/$this->projectName/Views/Pages/$model/forms", $currentDirectory);
                 } else { // docker
-                    $frontPpath = Str::replaceFirst( end( $dirs ), "src/components/$this->projectName/Views/Pages/$model/forms", $currentDirectory);
+                    $frontPath = Str::replaceFirst( end( $dirs ), "src/components/$this->projectName/Views/Pages/$model/forms", $currentDirectory);
                 }
 
-                if( !is_dir($frontPpath) ) {
-                    mkdir( $frontPpath, 0777, true);
+                if( !is_dir($frontPath) ) {
+                    mkdir( $frontPath, 0777, true);
                 }
-                $path = "$frontPpath/Modal.vue";
+                $path = "$frontPath/Modal.vue";
                 // dd($path);
                 break;
             default:
-                $path = "$currentDirectory/app/$model.$ext";
+                $backPath = "$currentDirectory/app";
+                if( !is_dir($backPath) ) {
+                    mkdir( $backPath, 0777, true);
+                }
+                $path = "$backPath/$model.$ext";
         }
         
         return $path;

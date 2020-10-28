@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Mpmg\Laravue\Commands;
 
-class MpmgFrontReport extends MpmgCommand
+class LaravueFrontReportCommand extends LaravueCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mpmg:frontreport {model}';
+    protected $signature = 'laravue:frontreport {model}';
 
     /**
      * The console command description.
