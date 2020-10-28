@@ -3,7 +3,7 @@ Code generation for MPMG projects that use Laravel and VueJs tecnologies.
 
 ## Instalation
 ```
-composer require mpmg-sti/laravue
+composer require mpmg/laravue
 ```
 
 ## Documentation
