@@ -13,7 +13,7 @@ class LaravueServiceProvider extends ServiceProvider
             $this->commands([
                 Commands\LaravueApiCommand::class,
                 Commands\LaravueBuildCommand::class,
-                Commands\LaravueCommandCommand::class,
+                Commands\LaravueCommand::class,
                 Commands\LaravueControllerCommand::class,
                 Commands\LaravueDatabaseSeederCommand::class,
                 Commands\LaravueFrontCommand::class,
