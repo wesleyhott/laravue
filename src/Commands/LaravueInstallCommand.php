@@ -40,6 +40,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeAbstractFilter();
         $this->makeLaravueFilter();
         $this->makeLaravueModel();
+        $this->makeLaravueController();
     }
 
     protected function makeActiveFilter() {
@@ -122,6 +123,17 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeLaravueModel() {
         $this->setStub('install/model');
         $fileName = "LaravueModel.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeLaravueController() {
+        $this->setStub('install/controller');
+        $fileName = "Http/Controllers/LaravueController.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );

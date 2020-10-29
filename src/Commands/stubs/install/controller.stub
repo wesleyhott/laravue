@@ -1,0 +1,439 @@
+<?php
+
+namespace App\Http\Controllers;
+
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use \Validator;
+use App\Monitoramento;
+use DB;
+
+abstract class LaravueController extends Controller
+{
+    /**
+     * Models Variables
+     */
+    private $model;
+    private $default_per_page = 15; // Standard lines number for LaravueDatatable.
+
+    /**
+     * General Messages
+     */
+    private $message_store_200 = "Item registrado com sucesso.";
+    private $message_store_500 = "Não foi possível criar o registro. Tente mais tarde.";
+
+    /**
+     * Methods that controllers must have
+     */
+    abstract protected function getModel();
+    abstract protected function setModel(Request $request);
+    abstract protected function getModelValidation($data);
+
+    /**
+     * Especif logic insertion point
+     */
+    public function beforeIndex($data) { return $data; }
+    public function beforeShow($data) { return $data; }
+    public function beforeSave($model) { return $model; }
+    public function afterSave($model) { return $model; }
+    public function beforeDestroy($model) { return $model; }
+
+    /**
+     * Constructor
+     */
+    function __construct()
+    {
+        $this->middleware('auth:api');
+        $this->model = $this->getModel();
+    }
+
+    private function storeValidation($data)
+    {
+        $validation = $this->getModelValidation($data);
+
+        if (isset($validation['messages'])) {
+            return Validator::make($data, $validation['rules'], $validation['messages']);
+        }
+
+        return Validator::make($data, $validation['rules']);
+    }
+
+    /**
+     * Models filters
+     */
+    private function filter($filtros)
+    {
+        $per_page = isset($filtros['per_page']) ? intval($filtros['per_page']) : $this->default_per_page;
+
+        return $this->model::filter($filtros)->paginate($per_page);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $filtros)
+    {
+        if( !( $this->hasPermissionTo('ver') ) ) {
+            return response([
+                "message" => "Acesso negado.",
+                'data' => []
+            ],
+            Response::HTTP_BAD_REQUEST);
+        }
+
+        // Filter/sort data by queryStrings
+        $data = $this->filter($filtros);
+
+        // Transform data before show
+        $data = $this->beforeIndex($data);
+
+        return response(
+            [
+                'message' => 'record fetched',
+                'data' => $data
+            ],
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * Make a message validation array
+     *
+     * @param \Validator $validation
+     * @return array de mensagens
+     */
+    private function getValidationMessages($validation)
+    {
+        $messages = $validation->messages();
+        $arrayMessages = array();
+        $i = 0;
+        foreach ($messages->all() as $message) {
+            $arrayMessages[$i++] = $message;
+        }
+
+        return $arrayMessages;
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        if( !( $this->hasPermissionTo('editar') ) ) {
+            return response([
+                "message" => "Acesso negado.",
+                'data' => []
+            ],
+            Response::HTTP_BAD_REQUEST);
+        }
+
+        // Changes data fields for Brazil format date time type.
+        foreach ($request->all() as $key => $value) {
+            $request[$key] = $this->strDateBRToDate($value);
+        }
+
+        $data = $request->all();
+
+        // Validade field before store
+        $data['id'] = null;
+        if (isset($request->id)) {
+            $data['id'] = $request->id;
+        }
+        $validation = $this->storeValidation($data);
+
+        // In case of validations fails
+        if ($validation->fails()) {
+            // Store monitor
+            $operacao = $request->id ? 'edição' : 'inclusão';
+            (new Monitoramento([
+                'tipo' => Monitoramento::INFO,
+                'resultado' => Monitoramento::RESULTADO_NEUTRO,
+                'arquivo' => __FILE__,
+                'classe' => $this->getModel(),
+                'metodo' => __FUNCTION__,
+                'linha' => __LINE__,
+                'mensagem' => "Erro de Validação: $operacao. ID:" . $data['id']
+                    . " Mensagens: " . serialize($this->getValidationMessages($validation))
+            ]))->dispatch();
+            return response(
+                [
+                    'message' => $this->getValidationMessages($validation)
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+        // Populate data
+        $model = $this->setModel($request);
+        $model = $this->beforeSave($model);
+        DB::beginTransaction();
+        try {
+            if($request->id){ // if edition
+                $modelBackup = $model::find($request->id);
+                (new Monitoramento([
+                    'tipo' => Monitoramento::DEBUG,
+                    'resultado' => Monitoramento::RESULTADO_SUCESSO,
+                    'arquivo' => __FILE__,
+                    'classe' => $this->getModel(),
+                    'metodo' => __FUNCTION__,
+                    'linha' => __LINE__,
+                    'mensagem' => "Registro editado com sucesso. EDIÇÃO Backup data:" . $modelBackup->toJson()
+                ]))->dispatch();
+            }
+            if ($model->save()) {
+                // Store monitor
+                if(!$request->id){ // If insertion
+                    (new Monitoramento([
+                        'tipo' => Monitoramento::DEBUG,
+                        'resultado' => Monitoramento::RESULTADO_SUCESSO,
+                        'arquivo' => __FILE__,
+                        'classe' => $this->getModel(),
+                        'metodo' => __FUNCTION__,
+                        'linha' => __LINE__,
+                        'mensagem' => "Registro incluído com sucesso. id:$model->id"
+                    ]))->dispatch();
+                }
+
+                $model = $this->afterSave($model);
+                DB::commit();
+                return response(
+                    [
+                        'message' => $this->message_store_200,
+                        'data' => $data
+                    ],
+                    Response::HTTP_OK
+                );
+            } else {
+                // Store monitor
+                (new Monitoramento([
+                    'tipo' => Monitoramento::ERRO,
+                    'resultado' => Monitoramento::RESULTADO_FALHA,
+                    'arquivo' => __FILE__,
+                    'classe' => $this->getModel(),
+                    'metodo' => __FUNCTION__,
+                    'linha' => __LINE__,
+                    'mensagem' => $this->message_store_500
+                ]))->dispatch();
+                DB::commit();
+                return response(
+                    [
+                        'message' => $this->message_store_500
+                    ],
+                    Response::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollback();
+            // Store monitor
+            (new Monitoramento([
+                'tipo' => Monitoramento::ERRO,
+                'resultado' => Monitoramento::RESULTADO_NEUTRO,
+                'arquivo' => __FILE__,
+                'classe' => $this->getModel(),
+                'metodo' => __FUNCTION__,
+                'linha' => __LINE__,
+                'mensagem' => "violação de regras de inserção. Erro: " . $e->getMessage()
+            ]))->dispatch();
+            if ($e->getCode() == '23000') { // Exception by database key violation
+              abort(Response::HTTP_CONFLICT, "Não foi possível incluir o registro: violação de regras de inserção.");
+            } else {
+                throw new \Exception($e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        if( !( $this->hasPermissionTo('ver') ) ) {
+            return response([
+                "message" => "Acesso negado.",
+                'data' => []
+            ],
+            Response::HTTP_BAD_REQUEST);
+        }
+
+        $model = $this->model::findOrFail($id);
+        $model = $this->beforeShow($model);
+        return response(
+            [
+                'message' => 'Registro encontrado',
+                'data' => $model
+            ],
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        if( !($this->hasPermissionTo('editar')) ) {
+            return response([
+                "message" => "Acesso negado.",
+                'data' => []
+            ],
+            Response::HTTP_BAD_REQUEST);
+        }
+
+        $request->id = $id;
+        return $this->store($request);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        if( !( $this->hasPermissionTo('apagar') ) ) {
+            return response([
+                "message" => "Acesso negado.",
+                'data' => []
+            ],
+            Response::HTTP_BAD_REQUEST);
+        }
+
+        DB::beginTransaction();
+        try {
+            $model = $this->model::findOrFail($id);
+            $model = $this->beforeDestroy($model);
+            if ($model->delete()) {
+                DB::commit();
+                (new Monitoramento([
+                    'tipo' => Monitoramento::DEBUG,
+                    'resultado' => Monitoramento::RESULTADO_SUCESSO,
+                    'arquivo' => __FILE__,
+                    'classe' => $this->getModel(),
+                    'metodo' => __FUNCTION__,
+                    'linha' => __LINE__,
+                    'mensagem' => "Registro excluído com sucesso. EXCLUSÃO Backup data:" . $model->toJson()
+                ]))->dispatch();
+                return response(
+                    [
+                        'message' => 'Registro Excluído',
+                        'data' => $model
+                    ],
+                    Response::HTTP_OK
+                );
+            } else {
+                DB::rollback();
+                (new Monitoramento([
+                    'tipo' => Monitoramento::CRITICO,
+                    'resultado' => Monitoramento::RESULTADO_FALHA,
+                    'arquivo' => __FILE__,
+                    'classe' => $this->getModel(),
+                    'metodo' => __FUNCTION__,
+                    'linha' => __LINE__,
+                    'mensagem' => "Banco de dados inacessível."
+                ]))->dispatch();
+                return response(
+                    [
+                        'message' => 'Banco de dados inacessível.'
+                    ],
+                    Response::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
+        } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $mnfe){
+            DB::rollback();
+            (new Monitoramento([
+                'tipo' => Monitoramento::ERRO,
+                'resultado' => Monitoramento::RESULTADO_NEUTRO,
+                'arquivo' => __FILE__,
+                'classe' => $this->getModel(),
+                'metodo' => __FUNCTION__,
+                'linha' => __LINE__,
+                'mensagem' => 'Tentativa de exclusão de registro excluído. Erro: ' . $mnfe->getMessage()
+            ]))->dispatch();
+
+            abort(Response::HTTP_MOVED_PERMANENTLY, "O registro já foi excluído. Atualize a tela.");
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollback();
+            if ($e->getCode() == '23000') { // Exception by database key violation
+                (new Monitoramento([
+                    'tipo' => Monitoramento::ERRO,
+                    'resultado' => Monitoramento::RESULTADO_NEUTRO,
+                    'arquivo' => __FILE__,
+                    'classe' => $this->getModel(),
+                    'metodo' => __FUNCTION__,
+                    'linha' => __LINE__,
+                    'mensagem' => 'Tentativa de exclusão de registro vinculado. Erro: ' . $e->getMessage()
+                ]))->dispatch();
+
+                $msg = $e->getMessage();
+                $pos1 = strpos($msg, '", table "dbo.') + 14;
+                $pos2 = strpos($msg, '", column ');
+                $table = substr($msg, $pos1, $pos2 - $pos1);
+                abort(Response::HTTP_CONFLICT, "Não foi possível excluir o registro pois ele está sendo usando em outra tabela. [$table]");
+            } else {
+                (new Monitoramento([
+                    'tipo' => Monitoramento::ERRO,
+                    'resultado' => Monitoramento::RESULTADO_FALHA,
+                    'arquivo' => __FILE__,
+                    'classe' => $this->getModel(),
+                    'metodo' => __FUNCTION__,
+                    'linha' => __LINE__,
+                    'mensagem' => $e->getMessage()
+                ]))->dispatch();
+                throw new \Exception($e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * Converte string formato data BR "dd/mm/YYYY" ou "dd/mm/YYYY H:i:s" para objeto DateTime
+     *
+     * @param string $strDate
+     * @return DateTime
+     */
+    private function strDateBRToDate($strDate)
+    {
+        if (is_string($strDate) && ((strpos($strDate, '/') !== false))) {
+
+            $format = strpos($strDate, ':') === false ? 'd/m/Y' : 'd/m/Y H:i:s';
+
+            if (($date = \DateTime::createFromFormat($format, $strDate)) && ($date->format($format) == $strDate)) {
+                return $date;
+            }
+        }
+        return $strDate;
+    }
+
+    private function getUri(){
+        $routeParts = explode('/', $_SERVER['REQUEST_URI']);
+        $routePartsIndex = config('server.uri_index', 4);
+        $uri = $routeParts[$routePartsIndex];
+        if(strpos($uri , '?')){
+            $query =  explode('?', $uri);
+            $uri = $query[0];
+        }
+
+        return $uri;
+    }
+
+    private function hasPermissionTo(String $action) {
+        $user = auth()->user();
+        if( !( $user->hasPermissionTo( $action . ' ' . $this->getUri() ) ) ) {
+            return false;
+        }
+
+        return true;
+    }
+}
