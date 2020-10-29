@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Mpmg\Laravue\Tests\TestCase;
 
-class MakeMpmpModelTest extends TestCase
+class MakeLaravueModelCommandTest extends TestCase
 {
     /** @test */
     function it_creates_a_new_model_class()
