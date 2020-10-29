@@ -40,6 +40,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeAbstractFilter();
         $this->makeLaravueFilter();
         $this->makeLaravueModel();
+        $this->makeLaravueController();
     }
 
     protected function makeActiveFilter() {
@@ -130,22 +131,16 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
-    protected function makePath( $file ) {
-        $folders = "";
-        if( strpos( $file, "/" ) !== false ) {
-            $folders = explode("/", $file);
-            $file = array_pop( $folders );
-            
-            $folders = "/" . implode( "/", $folders );
-        }
-        
-        $currentDirectory =  getcwd();
-        $backPath = "$currentDirectory/app$folders";
+    protected function makeLaravueController() {
+        $this->setStub('install/controller');
+        $fileName = "Http/Controllers/LaravueController.php";
+        $path = $this->makePath( $fileName );
 
-        if( !is_dir($backPath) ) {
-            mkdir( $backPath, 0777, true);
-        }
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
 
-        return "$backPath/$file";
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
     }
+
+
 }
