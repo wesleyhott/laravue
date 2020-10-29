@@ -39,6 +39,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeUserIdFilter();
         $this->makeAbstractFilter();
         $this->makeLaravueFilter();
+        $this->makeLaravueModel();
     }
 
     protected function makeActiveFilter() {
@@ -110,6 +111,17 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeLaravueFilter() {
         $this->setStub('install/filter');
         $fileName = "Filters/LaravueFilter.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeLaravueModel() {
+        $this->setStub('install/model');
+        $fileName = "LaravueModel.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );

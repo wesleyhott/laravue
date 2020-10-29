@@ -1,0 +1,58 @@
+<?php
+
+namespace App;
+
+use App\Filters\LarvueFilter;
+use Exception;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+
+abstract class LarvueModel extends Model
+{
+    /**
+     * Maps model fields for report
+     */
+    abstract protected function mapColumns();
+
+    /**
+     * Maps column names for report
+     */
+    public function getHeaders() {
+        $headers = array();
+        foreach( $this->mapColumns() as $k => $v) {
+            array_push($headers, "$k as $v");
+        }
+        return $headers;
+    }
+
+    /**
+     * Model queries filter
+     */
+    public function scopeFilter(Builder $builder, $request)
+    {
+        return (new LarvueFilter($request))->filter($builder);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function($model){
+            try {
+                $model->usuario_ult_alteracao = Auth::user()->email;
+            } catch (Exception $e) {
+                abort(401, 'Usuário não autenticado.');
+            }
+        });
+
+        self::updating(function($model){
+            try {
+                $model->usuario_ult_alteracao = Auth::user()->email;
+            } catch (Exception $e) {
+                abort(401, 'Usuário não autenticado.');
+            }
+        });
+    }
+}
