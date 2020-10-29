@@ -36,6 +36,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeActiveEditionFilter();
         $this->makeOrderByIdFilter();
         $this->makeOrderByNameFilter();
+        $this->makeUserIdFilter();
         $this->makeAbstractFilter();
         $this->makeLaravueFilter();
     }
@@ -76,6 +77,17 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeOrderByNameFilter() {
         $this->setStub('install/filter-orderby-name');
         $fileName = "Filters/OrderByName.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeUserIdFilter() {
+        $this->setStub('install/filter-user-id');
+        $fileName = "Filters/UserId.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
