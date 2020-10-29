@@ -19,6 +19,13 @@ class LaravueModelCommand extends LaravueCommand
     protected $description = 'Criação de modelo de negócio nos padrões do Laravue.';
 
     /**
+     * Tipo de modelo que está sendo criado.
+     *
+     * @var string
+     */
+    protected $type = 'model';
+
+    /**
      * Execute the console command.
      *
      * @return mixed

@@ -129,23 +129,4 @@ class LaravueInstallCommand extends LaravueCommand
         $date = now();
         $this->info("$date - [ Installing ] >> $fileName");
     }
-
-    protected function makePath( $file ) {
-        $folders = "";
-        if( strpos( $file, "/" ) !== false ) {
-            $folders = explode("/", $file);
-            $file = array_pop( $folders );
-            
-            $folders = "/" . implode( "/", $folders );
-        }
-        
-        $currentDirectory =  getcwd();
-        $backPath = "$currentDirectory/app$folders";
-
-        if( !is_dir($backPath) ) {
-            mkdir( $backPath, 0777, true);
-        }
-
-        return "$backPath/$file";
-    }
 }

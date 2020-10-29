@@ -12,8 +12,7 @@ class MakeLaravueModelCommandTest extends TestCase
     function it_creates_a_new_model_class()
     {
         // destination path of the Foo class
-        // $testClass = app_path('app/Test.php');
-        $testClass = str_replace( "tests/Feature", "", __DIR__) . "app/Test.php";
+        $testClass = str_replace( "tests/Feature", "", __DIR__) . "app/Models/Test.php";
 
         // make sure we're starting from a clean state
         if (File::exists($testClass)) {
