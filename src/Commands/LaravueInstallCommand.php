@@ -42,6 +42,8 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeLaravueModel();
         $this->makeLaravueServerConfig();
         $this->makeLaravueController();
+        $this->makeLaravueAccessTokenController();
+        $this->makeLaravueRouteApi();
     }
 
     protected function makeActiveFilter() {
@@ -153,4 +155,28 @@ class LaravueInstallCommand extends LaravueCommand
         $date = now();
         $this->info("$date - [ Installing ] >> $fileName");
     }
+
+    protected function makeLaravueAccessTokenController() {
+        $this->setStub('install/controller-access-token');
+        $fileName = "Http/Controllers/Laravue/AccessTokenController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeLaravueRouteApi() {
+        $this->setStub('install/route-api');
+        $fileName = "routes/api.php";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
 }
