@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Filters;
+
+class OrderByName
+{
+    public function filter($builder, $value)
+    {
+        return $builder->orderBy('name', $value);
+    }
+}
