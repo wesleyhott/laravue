@@ -33,11 +33,23 @@ class LaravueInstallCommand extends LaravueCommand
     public function handle()
     {
         $this->makeAbstractFilter();
+        $this->makeLaravuetFilter();
     }
 
     protected function makeAbstractFilter() {
         $this->setStub('install/filter-abstract');
         $fileName = "Filters/AbstractFilter.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeLaravuetFilter() {
+        $this->setStub('install/filter');
+        $fileName = "Filters/LaravueFilter.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );

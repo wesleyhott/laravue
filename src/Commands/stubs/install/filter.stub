@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Filters;
+
+use App\Filters\AbstractFilter;
+
+class LaravueFilter extends AbstractFilter
+{
+    protected $filters = [
+        // Filters ( put in alphabetical order )
+        'active' => Active::class,
+        'active_edition' => ActiveEdition::class,
+        'user_id' => UserId::class,
+        
+        // Sorters ( put in alphabetical order )
+        'orderById' => OrderById::class,
+        'orderByName' => OrderByName::class,
+    ];
+}
