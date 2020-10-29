@@ -42,6 +42,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeLaravueModel();
         $this->makeLaravueServerConfig();
         $this->makeLaravueController();
+        $this->makeLaravueAccessTokenController();
         $this->makeLaravueRouteApi();
     }
 
@@ -147,6 +148,17 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeLaravueController() {
         $this->setStub('install/controller');
         $fileName = "Http/Controllers/LaravueController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeLaravueAccessTokenController() {
+        $this->setStub('install/controller-access-token');
+        $fileName = "Http/Controllers/Laravue/AccessTokenController.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
