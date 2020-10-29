@@ -33,6 +33,7 @@ class LaravueInstallCommand extends LaravueCommand
     public function handle()
     {
         $this->makeActiveFilter();
+        $this->makeActiveEditionFilter();
         $this->makeAbstractFilter();
         $this->makeLaravueFilter();
     }
@@ -40,6 +41,17 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeActiveFilter() {
         $this->setStub('install/filter-active');
         $fileName = "Filters/Active.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeActiveEditionFilter() {
+        $this->setStub('install/filter-active-edition');
+        $fileName = "Filters/ActiveEdition.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
