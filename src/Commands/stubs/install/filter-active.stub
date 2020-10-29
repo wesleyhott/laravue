@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Filters;
+
+class Active
+{
+    public function filter($builder, $value)
+    {   
+        $filtro = substr($value, 0, 1);
+        if( intval($filtro) == 1){
+            return $builder->where('active', 1);
+        }
+
+        if( strtoupper($filtro) == 'A' ) {
+            return $builder->where('active', 1);
+        }
+
+        return $builder->where('ativo', 0);
+    }
+}
