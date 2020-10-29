@@ -42,6 +42,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeLaravueModel();
         $this->makeLaravueServerConfig();
         $this->makeLaravueController();
+        $this->makeLaravueRouteApi();
     }
 
     protected function makeActiveFilter() {
@@ -154,5 +155,16 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
+    protected function makeLaravueRouteApi() {
+        $this->setStub('install/route-api');
+        $fileName = "routes/api.php";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
 
 }

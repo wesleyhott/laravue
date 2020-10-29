@@ -1,0 +1,73 @@
+<?php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+/**
+ * >>> LARAVUE
+ */
+
+// Overwriting oauth/token for CAS usage Ref: https://gist.github.com/messi89/489473c053e3ea8d9e034b0032effb1d
+Route::post('oauth/token', 'Laravue\AccessTokenController@issueToken');
+
+Route::resources([
+    'monitors' => 'MonitorController',
+    'users' => 'UserController',
+    'roles' => 'RoleController',
+    'permissions' => 'PermissionController',
+    'taskgroups' => 'TaskGroupController',
+    'taskstatuses' => 'TaskStatusController',
+    'projectmodules' => 'ProjectModuleController',
+    'tasks' => 'TaskController',
+    'versions' => 'VersionController',
+    // {{ laravue-insert:route }}
+]);
+
+Route::group(['middleware' => 'auth:api'], function() {
+    //Binding roles and permissions
+    Route::get('/rolepermissions', 'RolePermissionController@index');
+    Route::put('/rolepermissions/{id}', 'RolePermissionController@update');
+    Route::delete('/rolepermissions/{id}', 'RolePermissionController@destroy');
+    //Binding users and roles
+    Route::get('/userroles', 'UserRoleController@index');
+    Route::put('/userroles/{id}', 'UserRoleController@update');
+    Route::delete('/userroles/{id}', 'UserRoleController@destroy');
+    //Binding users and permissions
+    Route::get('/userpermissions', 'UserPermissionController@index');
+    Route::put('/userpermissions/{id}', 'UserPermissionController@update');
+    Route::delete('/userpermissions/{id}', 'UserPermissionController@destroy');
+    // Version
+    Route::get('/currentversions', 'CurrentVersionController@index');
+    Route::get('/roadmaps', 'RoadMapController@index');
+});
+
+Route::group(['namespace' => 'Reports', 'prefix' => 'reports', ], function () {
+    Route::get('tasks/{reportType}', 'TaskReportController@index');
+    Route::get('users/{reportType}', 'UserReportController@index');
+    Route::get('monitors/{reportType}', 'MonitorReportController@index');
+    // {{ laravue-insert:report }}
+});
+
+Route::get('/logout', function(){ 
+    Auth::logout();
+    cas()->logout(); 
+});
+
+/**
+ * <<< LARAVUE
+ */

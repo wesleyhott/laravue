@@ -589,7 +589,7 @@ class LaravueCommand extends Command
         }
     }
 
-    protected function makePath( $file ) {
+    protected function makePath( $file, $outsideApp = false ) {
         $folders = "";
         if( strpos( $file, "/" ) !== false ) {
             $folders = explode("/", $file);
@@ -599,7 +599,7 @@ class LaravueCommand extends Command
         }
         
         $currentDirectory =  getcwd();
-        $backPath = "$currentDirectory/app$folders";
+        $backPath = $outsideApp ? $currentDirectory . $folders : "$currentDirectory/app$folders";
 
         if( !is_dir($backPath) ) {
             mkdir( $backPath, 0777, true);
