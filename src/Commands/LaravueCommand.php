@@ -109,6 +109,9 @@ class LaravueCommand extends Command
         $path = '';
         $currentDirectory =  getcwd();
         switch ($this->type) {
+            case 'model':
+                $path = $this->makePath("Models/$model.$ext");
+                break;
             case 'controller': 
                 $model = $model . "Controller";
                 $path = "$currentDirectory/app/http/Controllers/$model.$ext";
@@ -587,5 +590,30 @@ class LaravueCommand extends Command
         } else {
             return false;
         }
+    }
+
+    /**
+     * Make relative app path
+     *
+     * @param  string  File with relative app path
+     * @return string
+     */
+    protected function makePath( $file, $outsideApp = false ) {
+        $folders = "";
+        if( strpos( $file, "/" ) !== false ) {
+            $folders = explode("/", $file);
+            $file = array_pop( $folders );
+            
+            $folders = "/" . implode( "/", $folders );
+        }
+        
+        $currentDirectory =  getcwd();
+        $backPath = $outsideApp ? $currentDirectory . $folders : "$currentDirectory/app$folders";
+
+        if( !is_dir($backPath) ) {
+            mkdir( $backPath, 0777, true);
+        }
+
+        return "$backPath/$file";
     }
 }
