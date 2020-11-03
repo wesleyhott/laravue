@@ -35,6 +35,13 @@ class LaravueServiceProvider extends ServiceProvider
                 Commands\LaravueRouteCommand::class,
                 Commands\LaravueSeedCommand::class,
             ]);
+
+            // Export the migrations
+            if (! class_exists('CreateMonitorsTable')) {
+                $this->publishes([
+                __DIR__ . '/../database/migrations/create_laravue_tables.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_laravue_tables.php'),
+                ], 'migrations');
+            }
         }
     }
 }

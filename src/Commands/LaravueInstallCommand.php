@@ -44,6 +44,8 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeLaravueController();
         $this->makeLaravueAccessTokenController();
         $this->makeLaravueRouteApi();
+        // Dependences
+        $this->publishSpatiePermission();
     }
 
     protected function makeActiveFilter() {
@@ -125,7 +127,18 @@ class LaravueInstallCommand extends LaravueCommand
 
     protected function makeLaravueModel() {
         $this->setStub('install/model');
-        $fileName = "LaravueModel.php";
+        $fileName = "Models/LaravueModel.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeLaravueMonitorModel() {
+        $this->setStub('install/model-monitor');
+        $fileName = "Models/Monitor.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
@@ -177,6 +190,10 @@ class LaravueInstallCommand extends LaravueCommand
 
         $date = now();
         $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function publishSpatiePermission() {
+        $this->call('vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"');
     }
 
 }
