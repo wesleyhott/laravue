@@ -1,0 +1,20 @@
+<?php
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class TaskGroupSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('task_groups')->insert(['name' => 'feat', 'usuario_ult_alteracao' => 'inserir usuário logado']);
+        DB::table('task_groups')->insert(['name' => 'chore', 'usuario_ult_alteracao' => 'inserir usuário logado']);
+        DB::table('task_groups')->insert(['name' => 'hotfix', 'usuario_ult_alteracao' => 'inserir usuário logado']);
+        DB::table('task_groups')->insert(['name' => 'version', 'usuario_ult_alteracao' => 'inserir usuário logado']);
+    }
+}
