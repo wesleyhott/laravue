@@ -32,6 +32,8 @@ class LaravueInstallCommand extends LaravueCommand
      */
     public function handle()
     {
+        $this->makeDotEnvExample();
+        $this->makeDotEnv();
         $this->makeActiveFilter();
         $this->makeActiveEditionFilter();
         $this->makeOrderByIdFilter();
@@ -46,7 +48,6 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeLaravueController();
         $this->makeLaravueAccessTokenController();
         $this->makeLaravueRouteApi();
-        // .env .envExample
 
         $this->makeKernel();
         $this->makeProviderPhpOffice();
@@ -56,6 +57,30 @@ class LaravueInstallCommand extends LaravueCommand
         $this->publishSubFissionCas();
         $this->publishLogViewer();
         $this->publishInterventionImage();
+    }
+
+    protected function makeDotEnvExample() {
+        $this->setStub('install/.env-example');
+        $fileName = ".env.example";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp);
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeDotEnv() {
+        $this->setStub('install/.env');
+        $fileName = ".env";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp);
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
     }
 
     protected function makeActiveFilter() {
@@ -304,43 +329,43 @@ class LaravueInstallCommand extends LaravueCommand
     }
 
     protected function publishSpatiePermission() {
+        $date = now();
         $this->info("$date - [ Publishing ] >> PermissionServiceProvider");
         $this->call('vendor:publish',[
             '--provider' =>  'Spatie\Permission\PermissionServiceProvider',
         ]);
-        $date = now();
     }
 
     protected function publishAdLdap() {
+        $date = now();
         $this->info("$date - [ Publishing ] >> AdldapServiceProvider");
         $this->call('vendor:publish',[
             '--provider' =>  'Adldap\Laravel\AdldapServiceProvider',
         ]);
-        $date = now();
     }
 
     protected function publishSubFissionCas() {
+        $date = now();
         $this->info("$date - [ Publishing ] >> CasServiceProvider");
         $this->call('vendor:publish',[
             '--provider' =>  'Subfission\Cas\CasServiceProvider',
         ]);
-        $date = now();
     }
 
     protected function publishLogViewer() {
+        $date = now();
         $this->info("$date - [ Publishing ] >> LogViewerServiceProvider");
         $this->call('vendor:publish',[
             '--provider' =>  'Arcanedev\LogViewer\LogViewerServiceProvider',
         ]);
-        $date = now();
     }
 
     protected function publishInterventionImage() {
+        $date = now();
         $this->info("$date - [ Publishing ] >> ImageServiceProviderLaravelRecent");
         $this->call('vendor:publish',[
             '--provider' =>  'Intervention\Image\ImageServiceProviderLaravelRecent',
         ]);
-        $date = now();
     }
 
 }

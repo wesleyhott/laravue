@@ -19,6 +19,7 @@
     ],
     "require": {
         "orchestra/testbench": "^6.3",
+        "laravel/passport": "^10.0",
         "spatie/laravel-permission": "^3.17",
         "adldap2/adldap2-laravel": "^6.1",
         "subfission/cas":"^4.0",
