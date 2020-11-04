@@ -1,0 +1,23 @@
+<?php
+
+use Illuminate\Database\Seeder;
+use App\User;
+use Illuminate\Support\Facades\Hash;
+
+class UserSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $user = new User();
+        $user->name = "Laravue User";
+        $user->email = "laravue_user@mpmg.mp.br";
+        $user->password = Hash::make("73KjCSpa9GAuTW6iKig8vnKeXwmzc2w1ceapZFPK");
+        $user->save();
+        Auth::loginUsingId($user->id, true);
+    }
+}

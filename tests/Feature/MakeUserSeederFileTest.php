@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Mpmg\Laravue\Tests\TestCase;
 
-class MakeDataBaseSeederFileTest extends TestCase
+class MakeUserSeederFileTest extends TestCase
 {
     /** @test */
-    function it_creates_a_database_seeder_file()
+    function it_creates_a_user_seeder_file()
     {
         // destination path of the Foo class
-        $testClass = str_replace( "tests/Feature", "", __DIR__) . "database/seeders/DatabaseSeeder.php";
+        $testClass = str_replace( "tests/Feature", "", __DIR__) . "database/seeders/UserSeeder.php";
 
         // make sure we're starting from a clean state
         if (File::exists($testClass)) {
