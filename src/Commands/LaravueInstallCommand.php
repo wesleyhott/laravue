@@ -47,8 +47,9 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeLaravueAccessTokenController();
         $this->makeLaravueRouteApi();
         // ldap2
-        // spreadsheet
+        // logviwer
         $this->makeKernel();
+        $this->makeProviderPhpOffice();
         // Dependences
         $this->publishSpatiePermission();
         $this->publishSubFissionCas();
@@ -282,6 +283,17 @@ class LaravueInstallCommand extends LaravueCommand
         $fileName = "Http/Kernel.php";
         $path = $this->makePath( $fileName );
 
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeProviderPhpOffice() {
+        $this->setStub('install/provider-phpoffice');
+        $fileName = "Providers/PhpSpreadsheetServiceProvider.php";
+        $path = $this->makePath( $fileName );
+        
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
 
         $date = now();
