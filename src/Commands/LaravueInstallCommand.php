@@ -47,13 +47,14 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeLaravueAccessTokenController();
         $this->makeLaravueRouteApi();
         // .env .envExample
-        // logviwer
+
         $this->makeKernel();
         $this->makeProviderPhpOffice();
         // Dependences
         $this->publishSpatiePermission();
         $this->publishAdLdap();
         $this->publishSubFissionCas();
+        $this->publishLogViewer();
     }
 
     protected function makeActiveFilter() {
@@ -321,6 +322,14 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Publishing ] >> CasServiceProvider");
         $this->call('vendor:publish',[
             '--provider' =>  'Subfission\Cas\CasServiceProvider',
+        ]);
+        $date = now();
+    }
+
+    protected function publishLogViewer() {
+        $this->info("$date - [ Publishing ] >> LogViewerServiceProvider");
+        $this->call('vendor:publish',[
+            '--provider' =>  'Arcanedev\LogViewer\LogViewerServiceProvider',
         ]);
         $date = now();
     }

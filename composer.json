@@ -23,7 +23,8 @@
         "adldap2/adldap2-laravel": "^6.1",
         "subfission/cas":"^4.0",
         "barryvdh/laravel-dompdf": "^0.8.7",
-        "phpoffice/phpspreadsheet": "^1.15"
+        "phpoffice/phpspreadsheet": "^1.15",
+        "arcanedev/log-viewer": "8.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.4"
