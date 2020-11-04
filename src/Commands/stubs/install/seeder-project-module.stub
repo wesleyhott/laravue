@@ -1,0 +1,19 @@
+<?php
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class ProjectModuleSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('project_modules')->insert(['name' => 'full', 'usuario_ult_alteracao' => 'inserir usuário logado']);
+        DB::table('project_modules')->insert(['name' => 'frontend', 'usuario_ult_alteracao' => 'inserir usuário logado']);
+        DB::table('project_modules')->insert(['name' => 'backend', 'usuario_ult_alteracao' => 'inserir usuário logado']);
+    }
+}

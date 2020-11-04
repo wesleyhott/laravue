@@ -38,6 +38,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeOauthClientSeeder();
         $this->makeTaskGroupSeeder();
         $this->makeTaskStatusSeeder();
+        $this->makeProjectModuleSeeder();
         $this->makeDataBaseSeeder();
         $this->makeLaravueSeeder();
         $this->makeActiveFilter();
@@ -116,6 +117,18 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeTaskStatusSeeder() {
         $this->setStub('install/seeder-taskstatus');
         $fileName = "database/seeders/TaskStatusSeeder.php";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp);
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeProjectModuleSeeder() {
+        $this->setStub('install/seeder-project-module');
+        $fileName = "database/seeders/ProjectModuleSeeder.php";
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp);
 
