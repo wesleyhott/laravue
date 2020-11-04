@@ -40,12 +40,16 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeAbstractFilter();
         $this->makeLaravueFilter();
         $this->makeLaravueModel();
-        $this->makeLaravueServerConfig();
+        $this->makeLaravueConfigServer();
         $this->makeLaravueController();
         $this->makeLaravueAccessTokenController();
         $this->makeLaravueRouteApi();
+        // locale
+        // spreadsheet
+        // config app
         // Dependences
         $this->publishSpatiePermission();
+        $this->publishSubFissionCas();
     }
 
     protected function makeActiveFilter() {
@@ -147,7 +151,18 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
-    protected function makeLaravueServerConfig() {
+    protected function makeLaravueConfigApp() {
+        $this->setStub('install/config-app');
+        $fileName = "config/app.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeLaravueConfigServer() {
         $this->setStub('install/config-server');
         $fileName = "config/server.php";
         $path = $this->makePath( $fileName );
@@ -193,7 +208,17 @@ class LaravueInstallCommand extends LaravueCommand
     }
 
     protected function publishSpatiePermission() {
-        $this->call('vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"');
+        $this->call('vendor:publish',[
+            '--provider' =>  'Spatie\Permission\PermissionServiceProvider',
+        ]);
+        $date = now();
+        $this->info("$date - [ Publishing ] >> PermissionServiceProvider");
+    }
+
+    protected function publishSubFissionCas() {
+        $this->call('vendor:publish');
+        $date = now();
+        $this->info("$date - [ Publishing ] >> SubfissionCas");
     }
 
 }
