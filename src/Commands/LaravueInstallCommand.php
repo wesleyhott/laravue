@@ -35,6 +35,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeDotEnvExample();
         $this->makeDotEnv();
         $this->makeUserSeeder();
+        $this->makeOauthClientSeeder();
         $this->makeDataBaseSeeder();
         $this->makeLaravueSeeder();
         $this->makeActiveFilter();
@@ -77,6 +78,18 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeUserSeeder() {
         $this->setStub('install/seeder-user');
         $fileName = "database/seeders/UserSeeder.php";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp);
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeOauthClientSeeder() {
+        $this->setStub('install/seeder-oauth-client');
+        $fileName = "database/seeders/OauthClientSeeder.php";
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp);
 
