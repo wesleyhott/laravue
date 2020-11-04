@@ -40,13 +40,17 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeAbstractFilter();
         $this->makeLaravueFilter();
         $this->makeLaravueModel();
+        $this->makePtBrLocale();
+        $this->makeLaravueConfigApp();
         $this->makeLaravueConfigServer();
         $this->makeLaravueController();
         $this->makeLaravueAccessTokenController();
         $this->makeLaravueRouteApi();
+        // ldap2
         // locale
         // spreadsheet
-        // config app
+        // kernel
+        $this->makeKernel();
         // Dependences
         $this->publishSpatiePermission();
         $this->publishSubFissionCas();
@@ -151,6 +155,10 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
+    protected function makePtBrLocale() {
+
+    }
+
     protected function makeLaravueConfigApp() {
         $this->setStub('install/config-app');
         $fileName = "config/app.php";
@@ -207,6 +215,17 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
+    protected function makeKernel() {
+        $this->setStub('install/kernel');
+        $fileName = "Http/Kernel.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
     protected function publishSpatiePermission() {
         $this->call('vendor:publish',[
             '--provider' =>  'Spatie\Permission\PermissionServiceProvider',
@@ -216,9 +235,11 @@ class LaravueInstallCommand extends LaravueCommand
     }
 
     protected function publishSubFissionCas() {
-        $this->call('vendor:publish');
+        $this->call('vendor:publish',[
+            '--provider' =>  'Subfission\Cas\CasServiceProvider',
+        ]);
         $date = now();
-        $this->info("$date - [ Publishing ] >> SubfissionCas");
+        $this->info("$date - [ Publishing ] >> CasServiceProvider");
     }
 
 }
