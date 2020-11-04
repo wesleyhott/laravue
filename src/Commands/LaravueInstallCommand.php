@@ -46,12 +46,13 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeLaravueController();
         $this->makeLaravueAccessTokenController();
         $this->makeLaravueRouteApi();
-        // ldap2
+        // .env .envExample
         // logviwer
         $this->makeKernel();
         $this->makeProviderPhpOffice();
         // Dependences
         $this->publishSpatiePermission();
+        $this->publishAdLdap();
         $this->publishSubFissionCas();
     }
 
@@ -301,19 +302,27 @@ class LaravueInstallCommand extends LaravueCommand
     }
 
     protected function publishSpatiePermission() {
+        $this->info("$date - [ Publishing ] >> PermissionServiceProvider");
         $this->call('vendor:publish',[
             '--provider' =>  'Spatie\Permission\PermissionServiceProvider',
         ]);
         $date = now();
-        $this->info("$date - [ Publishing ] >> PermissionServiceProvider");
+    }
+
+    protected function publishAdLdap() {
+        $this->info("$date - [ Publishing ] >> AdldapServiceProvider");
+        $this->call('vendor:publish',[
+            '--provider' =>  'Adldap\Laravel\AdldapServiceProvider',
+        ]);
+        $date = now();
     }
 
     protected function publishSubFissionCas() {
+        $this->info("$date - [ Publishing ] >> CasServiceProvider");
         $this->call('vendor:publish',[
             '--provider' =>  'Subfission\Cas\CasServiceProvider',
         ]);
         $date = now();
-        $this->info("$date - [ Publishing ] >> CasServiceProvider");
     }
 
 }
