@@ -1,0 +1,113 @@
+<?php
+
+namespace App\Models;
+use App\Events\Monitor as EventMonitor;
+use Illuminate\Support\Facades\DB;
+
+class Monitor extends LaravueModel
+{
+    // Type
+    public const DEBUG = 'DEBUG';
+    public const INFO = 'INFO';
+    public const ERROR = 'ERRO';
+    public const WARNING = 'AVISO';
+    public const CRITICAL = 'CRITICO';
+    public const EMERGENTIAL = 'EMERGENCIAL';
+
+    // Result
+    public const RESULT_SUCESS = 'SUCESSO';
+    public const RESULT_NEUTRAL = 'NEUTRO';
+    public const RESULT_FAILURE = 'FALHA';
+
+    function __construct($options = NULL)
+    {
+        parent::__construct();
+        if(isset($options)){
+            if(isset($options['file'])){
+                $this->file = $options['file'];
+            }
+            if(isset($options['class'])){
+                $this->class = $options['class'];
+            }
+            if(isset($options['method'])){
+                $this->method = $options['method'];
+            }
+            if(isset($options['line'])){
+                $this->line = $options['line'];
+            }
+            if(isset($options['type'])){
+                $this->type = $options['type'];
+            }
+            if(isset($options['message'])){
+                $this->message = $options['message'];
+            }
+            $this->user_id = auth()->user() ? auth()->user()->id : NULL;
+            $this->origin = request()->headers->get('origin');
+            $this->ip = request()->server('REMOTE_ADDR');
+            $this->user_agent = request()->server('HTTP_USER_AGENT');
+            if(isset($options['result'])){
+                $this->resultado = $options['result'];   
+            }
+        }
+    }
+
+    /**
+     * Implementation of BaseModel abstract class
+     *
+     * @return array ('Database column namenome da coluna do banco', 'Mapped name')
+     */
+    public function mapColumns() {
+        return [
+            'id' => '#',
+            'type' => 'Tipo',
+            'result' => 'Resultado',
+            'message' => 'Mensagem',
+            'class' => 'Classe : método : linha',
+            'method' => 'Método',
+            'line' => 'Linha',
+            'updated_at' => 'Data (atualização)',
+            'usuario_ult_alteracao' => 'Usuário (atualização)',
+            'ip' => 'IP',
+            'user_agent' => 'User Agent',
+        ];
+    }
+
+    public function dispatch(){
+        event(new EventMonitor($this));
+    }
+
+    /**
+     * Store data without user has been logged in
+     *
+     * @param string $message
+     * @param int $line
+     * @param string $method
+     * @param string $file
+     * @param string $class
+     * @param string $type
+     * @param string $result
+     * @return void
+     */
+    public static function setLogNoUserAuth($message, $line = null, $method = null, $file = null, $class = null, $type = null, $result = null) {
+        isset($line) ?: $line = __LINE__;
+        isset($method) ?: $method = __FUNCTION__;
+        isset($file) ?: $file = __FILE__;
+        isset($class) ?: $class = __CLASS__;
+        isset($type) ?: $type = self::ERRO;
+        isset($result) ?: $result = self::RESULT_FALHA;
+        DB::table('monitors')->insert(
+            [
+                'type' => $type,
+                'result' => $result,
+                'file' => $file,
+                'class' => $class,
+                'method' => $method,
+                'line' => $line,
+                'message' => $message,
+                'usuario_ult_alteracao' => 'laravue_user@mpmg.mp.br',
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ]
+        );
+    }
+}
