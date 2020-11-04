@@ -38,7 +38,7 @@ class LaravuePermissionCommand extends LaravueCommand
         $path = $this->getPath($model);
         $this->files->put($path, $this->buildPermission($model));
 
-        $this->info("$date - [ $model ] >> AccessTableSeeder.php");
+        $this->info("$date - [ $model ] >> LaravueSeeder.php");
     }
 
     protected function buildPermission($model)

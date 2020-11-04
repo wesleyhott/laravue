@@ -1,0 +1,94 @@
+<?php
+
+use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
+
+class LaravueSeeder extends Seeder
+{
+    /**
+     * Create the initial roles and permissions.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        // Force spatie to use guard api
+        Auth::shouldUse('api');
+
+        // Reset cached roles and permissions
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+
+        // Reset cached roles and permissions
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+
+        // create permissions
+        $ver_users = Permission::create(['name' => 'ver users']);
+        $apagar_users = Permission::create(['name' => 'apagar users']);
+        $imprimir_users = Permission::create(['name' => 'imprimir users']);
+
+        $ver_roles = Permission::create(['name' => 'ver roles']);
+        $editar_roles = Permission::create(['name' => 'editar roles']);
+        $apagar_roles = Permission::create(['name' => 'apagar roles']);
+
+        $ver_permissions = Permission::create(['name' => 'ver permissions']);
+        $editar_permissions = Permission::create(['name' => 'editar permissions']);
+        $apagar_permissions = Permission::create(['name' => 'apagar permissions']);
+
+        $ver_taskGroups = Permission::create(['name' => 'ver taskgroups']);
+        $editar_taskGroups = Permission::create(['name' => 'editar taskgroups']);
+        $apagar_taskGroups = Permission::create(['name' => 'apagar taskgroups']);
+
+        $ver_taskStatus = Permission::create(['name' => 'ver taskstatuses']);
+        $editar_taskStatus = Permission::create(['name' => 'editar taskstatuses']);
+        $apagar_taskStatus = Permission::create(['name' => 'apagar taskstatuses']);
+
+        $ver_projectModules = Permission::create(['name' => 'ver projectmodules']);
+        $editar_projectModules = Permission::create(['name' => 'editar projectmodules']);
+        $apagar_projectModules = Permission::create(['name' => 'apagar projectmodules']);
+
+        $ver_projects = Permission::create(['name' => 'ver projects']);
+        $editar_projects = Permission::create(['name' => 'editar projects']);
+        $apagar_projects = Permission::create(['name' => 'apagar projects']);
+        
+        $ver_tasks = Permission::create(['name' => 'ver tasks']);
+        $editar_tasks = Permission::create(['name' => 'editar tasks']);
+        $apagar_tasks = Permission::create(['name' => 'apagar tasks']);
+        $imprimir_tasks = Permission::create(['name' => 'imprimir tasks']);
+
+        $ver_versions = Permission::create(['name' => 'ver versions']);
+        $editar_versions = Permission::create(['name' => 'editar versions']);
+        $apagar_versions = Permission::create(['name' => 'apagar versions']);
+        
+        // {{ laravue-insert:permissions }}
+
+        // Permissões de menu
+        $ver_menu_painel_controle = Permission::create(['name' => "ver menu painel de controle"]);
+        $ver_menu_configuracao = Permission::create(['name' => "ver menu configuracao"]);
+        $ver_menu_configuracao = Permission::create(['name' => "ver menu cadastro auxiliar"]);
+        $ver_menu_configuracao = Permission::create(['name' => "ver menu seguranca"]);
+        $ver_menu_configuracao = Permission::create(['name' => "ver menu ferramentas"]);
+        $ver_menu_relatorios = Permission::create(['name' => "ver menu relatorios"]);
+        // {{ laravue-insert:menu }}
+
+        // create aditional permissions
+        $ver_monitoramentos = Permission::create(['name' => 'ver monitoramentos']);
+        $ver_monitoramentos = Permission::create(['name' => 'imprimir monitoramentos']);
+        $ver_logs = Permission::create(['name' => 'ver logs']);
+        $editar_roles_users = Permission::create(['name' => 'editar roles users']);
+        $editar_permissions_users = Permission::create(['name' => 'editar permissions users']);
+        $editar_permissions_roles = Permission::create(['name' => 'editar permissions roles']);
+
+        // create roles and assign existing permissions
+        $roleAdmin = Role::create(['name' => 'Administrador', 'guard_name' => 'api']);
+        $roleAdmin->givePermissionTo(Permission::all());
+
+        // create users
+		$user = \App\User::where('email', 'wesley@mpmg.mp.br')->first();
+
+        if( isset($user) ) {
+            $user->assignRole($roleAdmin);
+        }
+    }
+}
