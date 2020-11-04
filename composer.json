@@ -24,7 +24,8 @@
         "subfission/cas":"^4.0",
         "barryvdh/laravel-dompdf": "^0.8.7",
         "phpoffice/phpspreadsheet": "^1.15",
-        "arcanedev/log-viewer": "8.0"
+        "arcanedev/log-viewer": "8.0",
+        "intervention/image": "^2.5"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.4"

@@ -55,6 +55,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->publishAdLdap();
         $this->publishSubFissionCas();
         $this->publishLogViewer();
+        $this->publishInterventionImage();
     }
 
     protected function makeActiveFilter() {
@@ -330,6 +331,14 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Publishing ] >> LogViewerServiceProvider");
         $this->call('vendor:publish',[
             '--provider' =>  'Arcanedev\LogViewer\LogViewerServiceProvider',
+        ]);
+        $date = now();
+    }
+
+    protected function publishInterventionImage() {
+        $this->info("$date - [ Publishing ] >> ImageServiceProviderLaravelRecent");
+        $this->call('vendor:publish',[
+            '--provider' =>  'Intervention\Image\ImageServiceProviderLaravelRecent',
         ]);
         $date = now();
     }
