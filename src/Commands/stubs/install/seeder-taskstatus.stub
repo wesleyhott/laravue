@@ -1,0 +1,20 @@
+<?php
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class TaskSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('task_statuses')->insert(['name' => 'criada', 'usuario_ult_alteracao' => 'inserir usuário logado']);
+        DB::table('task_statuses')->insert(['name' => 'em desenvolvimento', 'usuario_ult_alteracao' => 'inserir usuário logado']);
+        DB::table('task_statuses')->insert(['name' => 'concluída', 'usuario_ult_alteracao' => 'inserir usuário logado']);
+        DB::table('task_statuses')->insert(['name' => 'cancelada', 'usuario_ult_alteracao' => 'inserir usuário logado']);
+    }
+}
