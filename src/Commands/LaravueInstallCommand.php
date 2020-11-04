@@ -34,6 +34,7 @@ class LaravueInstallCommand extends LaravueCommand
     {
         $this->makeDotEnvExample();
         $this->makeDotEnv();
+        $this->makeDataBaseSeeder();
         $this->makeLaravueSeeder();
         $this->makeActiveFilter();
         $this->makeActiveEditionFilter();
@@ -63,6 +64,18 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeDotEnvExample() {
         $this->setStub('install/.env-example');
         $fileName = ".env.example";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp);
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeDataBaseSeeder() {
+        $this->setStub('install/seeder-database');
+        $fileName = "database/seeders/DatabaseSeeder.php";
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp);
 
