@@ -1,0 +1,29 @@
+<?php
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
+class TaskSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('tasks')->insert([
+            'task_group_id' => 4,
+            'task_status_id' => 3,
+            'user_id' => 1,
+            'project_module_id' => 1,
+            'name' => 'Criação do projeto',
+            'started_at' => Carbon::now(),
+            'ended_at' => Carbon::now(),
+            'is_milestone' => true,
+            'is_roadmap' => true,
+            'usuario_ult_alteracao' => 'inserir usuário logado',
+        ]);
+    }
+}
