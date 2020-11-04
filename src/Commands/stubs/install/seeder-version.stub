@@ -1,0 +1,25 @@
+<?php
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
+class VersionSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('versions')->insert([
+            'task_id' => 1,
+            'version_number' => 1,
+            'feature_number' => 0,
+            'issue_number' => 0,
+            'is_milestone' => true,
+             'usuario_ult_alteracao' => 'inserir usuário logado',
+        ]);
+    }
+}
