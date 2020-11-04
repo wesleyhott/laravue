@@ -124,7 +124,7 @@ class LaravueCommand extends Command
                 $path = "$currentDirectory/routes/api.php";
                 break;
             case 'permission':
-                $path = "$currentDirectory/database/seeds/AccessTableSeeder.php";
+                $path = "$currentDirectory/database/seeds/LaravueSeeder.php";
                 break;
             case 'migration':
                 $prefix = date('Y_m_d_His');
@@ -132,8 +132,7 @@ class LaravueCommand extends Command
                 $path = "$currentDirectory/database/migrations/$prefix"."_create_$model"."_table.$ext";
                 break;
             case 'seed':
-                $model = $this->pluralize( 2, $model );
-                $path = "$currentDirectory/database/seeds/$model"."TableSeeder.php";
+                $path = "$currentDirectory/database/seeds/$model"."Seeder.php";
                 break;
             case 'seeder':
                 $path = "$currentDirectory/database/seeds/DatabaseSeeder.php";
