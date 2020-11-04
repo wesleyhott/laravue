@@ -47,9 +47,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeLaravueAccessTokenController();
         $this->makeLaravueRouteApi();
         // ldap2
-        // locale
         // spreadsheet
-        // kernel
         $this->makeKernel();
         // Dependences
         $this->publishSpatiePermission();
@@ -155,8 +153,72 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
-    protected function makePtBrLocale() {
+    protected function makePtBrLocaleAuth() {
+        $this->setStub('install/locale-auth');
+        $fileName = "resources/lang/pt-BR/auth.php";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp );
 
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makePtBrLocalePagination() {
+        $this->setStub('install/locale-pagination');
+        $fileName = "resources/lang/pt-BR/pagination.php";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makePtBrLocalePasswords() {
+        $this->setStub('install/locale-passwords');
+        $fileName = "resources/lang/pt-BR/passwords.php";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makePtBrLocaleValidation() {
+        $this->setStub('install/locale-validation');
+        $fileName = "resources/lang/pt-BR/validation.php";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makePtBrLocalePtBr() {
+        $this->setStub('install/locale-validation');
+        $fileName = "resources/lang/pt-BR.json";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makePtBrLocale() {
+        $this->makePtBrLocaleAuth();
+        $this->makePtBrLocalePagination();
+        $this->makePtBrLocalePasswords();
+        $this->makePtBrLocaleValidation();
+        $this->makePtBrLocalePtBr();
     }
 
     protected function makeLaravueConfigApp() {
