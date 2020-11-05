@@ -75,6 +75,12 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeControllerRoadMap();
         $this->makeLaravueAccessTokenController();
         $this->makeControllerMonitor();
+        $this->makeControllerPermission();
+        $this->makeControllerRolePermission();
+        $this->makeControllerRole();
+        $this->makeControllerUserPermission();
+        $this->makeControllerUserRole();
+        $this->makeControllerUser();
         $this->makeLaravueRouteApi();
 
         $this->makeKernel();
@@ -607,7 +613,7 @@ class LaravueInstallCommand extends LaravueCommand
     }
 
     protected function makeControllerTaskStatus() {
-        $this->setStub('install/controller-tasktatus');
+        $this->setStub('install/controller-taskstatus');
         $fileName = "Http/Controllers/TaskStatusController.php";
         $path = $this->makePath( $fileName );
 
@@ -620,6 +626,72 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeControllerVersion() {
         $this->setStub('install/controller-version');
         $fileName = "Http/Controllers/VersionController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeControllerPermission() {
+        $this->setStub('install/controller-permission');
+        $fileName = "Http/Controllers/PermissionController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeControllerRolePermission() {
+        $this->setStub('install/controller-role-permission');
+        $fileName = "Http/Controllers/RolePermissionController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeControllerRole() {
+        $this->setStub('install/controller-role');
+        $fileName = "Http/Controllers/RoleController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeControllerUserPermission() {
+        $this->setStub('install/controller-user-permission');
+        $fileName = "Http/Controllers/UserPermissionController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeControllerUserRole() {
+        $this->setStub('install/controller-user-role');
+        $fileName = "Http/Controllers/UserRoleController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeControllerUser() {
+        $this->setStub('install/controller-user');
+        $fileName = "Http/Controllers/UserController.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );

@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use Illuminate\Http\Request;
+
+class UserController extends LaravueController
+{
+    /**
+     * Implementação do modelo da classe abstrata em LaravueController
+     * 
+     * @return \App\Models\User::class
+     */
+    protected function getModel(){
+        return  \App\Models\User::class;
+    }
+
+    /**
+     * Preenche o modelo com os valores correspondentes ao request
+     * 
+     * @return \App\Models\User
+     */
+    public function setModel(Request $request)
+    {
+        // verifica se é edição - PUT - ou inlcusão - POST.
+        $model = $request->isMethod('put') ? $this->model::findOrFail($request->id) : new $this->model();
+        
+        // Preencher os atributos do modelo
+        $model->name = $request->input('name');
+        $model->email = $request->input('email');
+        $model->password = Hash::make($request->input('password'));
+        $model->password_confirmation = $request->input('password_confirmation');
+        $model->email = $request->input('email');
+
+        return  $model;
+    }
+
+    /**
+     * Método que passa as validações para o método que implementa Validator no MPMGController
+     * 
+     * @return array de validação dos campos do modelo
+     */
+    public function getModelValidation($data){
+        return [
+            'rules' =>  [
+				'name' => ['required', 'string', 'max:255'],
+				'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+				'password' => ['required', 'string', 'min:8', 'confirmed'],
+			]
+        ];
+    }
+}

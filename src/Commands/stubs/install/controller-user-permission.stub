@@ -1,0 +1,80 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Models\User;
+
+class UserPermissionController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $response = array();
+
+        $users = User::all();
+        foreach( $users as $user) {
+            $obj = new \stdClass();
+            $obj->id = $user->id;
+            $obj->name = $user->name;
+            $obj->permissions = $user->getDirectPermissions();
+            array_push($response, $obj);
+
+        }
+        return response(
+            [
+                'message' => 'record fetched',
+                'data' => $response
+            ],
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $data = $request->all();
+        $user = User::findOrFail($id);
+        $user->givePermissionTo($data['permission']);
+
+        return response(
+            [
+                'message' => 'permission gived',
+                'data' => $user->getDirectPermissions()
+            ],
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Request $request, $id)
+    {
+        $data = $request->all();
+        $user = User::findOrFail($id);
+        $user->revokePermissionTo($data['permission']);
+
+        return response(
+            [
+                'message' => 'permission revoked',
+                'data' => $user->getDirectPermissions()
+            ],
+            Response::HTTP_OK
+        );
+    }
+}

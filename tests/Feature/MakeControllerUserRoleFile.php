@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Mpmg\Laravue\Tests\TestCase;
 
-class MakeControllerVersionFileTest extends TestCase
+class MakeControllerUserRoleFile extends TestCase
 {
     /** @test */
-    function it_creates_a_version_controller_file()
+    function it_creates_a_user_role_controller_file()
     {
         // destination path of the Foo class
-        $testClass = str_replace( "tests/Feature", "", __DIR__) . "app/Http/Controllers/VersionController.php";
+        $testClass = str_replace( "tests/Feature", "", __DIR__) . "app/Http/Controllers/UserRoleController.php";
 
         // make sure we're starting from a clean state
         if (File::exists($testClass)) {

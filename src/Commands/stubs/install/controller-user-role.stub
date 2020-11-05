@@ -1,0 +1,71 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Models\User;
+
+class UserRoleController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $users = User::with('roles')->get();
+
+        return response(
+            [
+                'message' => 'record fetched',
+                'data' => $users
+            ],
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $data = $request->all();
+        $user = User::findOrFail($id);
+        $user->assignRole($data['role']);
+
+        return response(
+            [
+                'message' => 'role gived',
+                'data' => User::with('roles')->get()
+            ],
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Request $request, $id)
+    {
+        $data = $request->all();
+        $user = User::findOrFail($id);
+        $user->removeRole($data['role']);
+
+        return response(
+            [
+                'message' => 'role revoked',
+                'data' => User::with('roles')->get()
+            ],
+            Response::HTTP_OK
+        );
+    }
+}

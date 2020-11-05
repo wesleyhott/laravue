@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class  PermissionController extends LaravueController
+{
+    /**
+     * Implementação do modelo da classe abstrata em LaravueController
+     *
+     * @return \App\Permission::class
+     */
+    protected function getModel()
+    {
+        return  \App\Permission::class;
+    }
+
+    /**
+     * Preenche o modelo com os valores correspondentes ao request
+     *
+     * @return \App\Permission
+     */
+    public function setModel(Request $request)
+    {
+        // verifica se é edição - PUT - ou inlcusão - POST.
+        $model = $request->isMethod('put') ? \App\Permission::findOrFail($request->id) : new \App\Permission;
+
+        // Preencher os atributos do modelo
+        $model->name = $request->input('name');
+        $model->guard_name = "api";
+
+        return  $model;
+    }
+
+    /**
+     * Método que passa as validações para o método que implementa Validator no LaravueController
+     *
+     * @return array de validação dos campos do modelo
+     */
+    public function getModelValidation($data)
+    {
+        return [
+			'rules' =>  [
+                'name' => 'required | string | max:255',
+			],
+        ];
+    }
+}
