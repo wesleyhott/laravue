@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Adldap\Laravel\Facades\Adldap;
+use App\Models\User;
+use Closure;
+use Illuminate\Support\Facades\Auth;
+use phpCAS;
+use Subfission\Cas\Facades\Cas;
+
+class LaravueAuthenticate
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
+    {
+        if ( ! cas()->checkAuthentication())
+        {
+            if ($request->ajax()) {
+                return response('Unauthorized.', 401);
+            }
+            cas()->authenticate();
+        }
+        if (cas()->user()) {  
+
+            $userLdap = Adldap::connect()->search()->select(['mail'])->findBy('login', cas()->user()); // Adldap\Models\Entry Object
+            
+            if (isset($userLdap->mail[0])) {
+
+                $user = User::where('email', $userLdap->mail[0])->first();
+                
+                if (isset($user->id)) {
+                    Auth::loginUsingId($user->id, true);
+                }
+            }        
+        }
+        return $next($request);
+    }
+}

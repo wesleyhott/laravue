@@ -96,6 +96,8 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeReportControllerMonitor();
         $this->makeReportControllerTask();
         $this->makeReportControllerUser();
+        // Middlewares
+        $this->makeMiddlewareLaravueAuthenticate();
         // Route
         $this->makeLaravueRouteApi();
         // General
@@ -763,6 +765,17 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeReportControllerUser() {
         $this->setStub('install/report-controller-user');
         $fileName = "Http/Controllers/Reports/UserReportController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeMiddlewareLaravueAuthenticate() {
+        $this->setStub('install/middleware-authenticate');
+        $fileName = "Http/Middleware/LaravueAuthenticate.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );

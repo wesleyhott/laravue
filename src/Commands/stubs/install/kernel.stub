@@ -67,7 +67,7 @@ class Kernel extends HttpKernel
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
-        'mpmg.auth' => \App\Http\Middleware\MPMGAuthenticate::class,
+        'laravue.auth' => \App\Http\Middleware\LaravueAuthenticate::class,
         'iframe_header' => \App\Http\Middleware\IFrameHeader::class,
     ];
 }
