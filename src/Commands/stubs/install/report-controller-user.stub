@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Http\Controllers\Reports;
+
+use App\Http\Controllers\Reports\LaravueReportController;
+
+class UserReportController extends LaravueReportController
+{
+    // Overrided Superclass methods
+    public function getFileName(){
+        return 'usuarios' ;
+    }
+
+    public function getPdfOrientation(){
+        return \App\Report::ORIENTATION_LANDSCAPE;
+    }
+
+    /**
+     * Implementação do modelo da classe abstrata em BaseController
+     *
+     * @return \App\User::class
+     */
+    protected function getModel()
+    {
+        return  \App\User::class;
+    }
+
+    /**
+     * Implementação do título do relatório da classe abstrata 
+     * em BaseController
+     *
+     * @return String
+     */
+    public function getTitle(){
+        return 'Listagem de Usuários';
+    }
+
+    /**
+     * Alterações necessárias antes de mostrar a coleção do modelo
+     *
+     * @return \App\User
+     */
+    public function beforeIndex($data)
+    {
+        return $data;
+    }
+}

@@ -32,8 +32,10 @@ class LaravueInstallCommand extends LaravueCommand
      */
     public function handle()
     {
+        // .env
         $this->makeDotEnvExample();
         $this->makeDotEnv();
+        // Seeder
         $this->makeUserSeeder();
         $this->makeOauthClientSeeder();
         $this->makeTaskGroupSeeder();
@@ -43,6 +45,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeVersionSeeder();
         $this->makeDataBaseSeeder();
         $this->makeLaravueSeeder();
+        // Filters
         $this->makeActiveFilter();
         $this->makeActiveEditionFilter();
         $this->makeOrderByIdFilter();
@@ -50,10 +53,13 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeUserIdFilter();
         $this->makeAbstractFilter();
         $this->makeLaravueFilter();
+        // Events
+        $this->makeEventMonitor();
+        // Listeners
+        $this->makeListenerMonitor();
+        // Models
         $this->makeLaravueModel();
         $this->makeModelMonitor();
-        $this->makeEventMonitor();
-        $this->makeListenerMonitor();
         $this->makeModelUser();
         $this->makeModelRole();
         $this->makeModelPermission();
@@ -62,9 +68,12 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeModelProjectModule();
         $this->makeModelTask();
         $this->makeModelVersion();
+        // Resource
         $this->makePtBrLocale();
+        // Config
         $this->makeLaravueConfigApp();
         $this->makeLaravueConfigServer();
+        // Controller
         $this->makeLaravueController();
         $this->makeControllerTaskGroup();
         $this->makeControllerTaskStatus();
@@ -81,8 +90,14 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeControllerUserPermission();
         $this->makeControllerUserRole();
         $this->makeControllerUser();
+        // Report Controller
+        $this->makeReportControllerLaravue();
+        $this->makeReportControllerMonitor();
+        $this->makeReportControllerTask();
+        $this->makeReportControllerUser();
+        // Route
         $this->makeLaravueRouteApi();
-
+        // General
         $this->makeKernel();
         $this->makeProviderPhpOffice();
         // Dependences
@@ -692,6 +707,50 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeControllerUser() {
         $this->setStub('install/controller-user');
         $fileName = "Http/Controllers/UserController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeReportControllerLaravue() {
+        $this->setStub('install/report-controller');
+        $fileName = "Http/Controllers/Reports/LaravueReportController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeReportControllerMonitor() {
+        $this->setStub('install/report-controller-monitor');
+        $fileName = "Http/Controllers/Reports/MonitorReportController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeReportControllerTask() {
+        $this->setStub('install/report-controller-task');
+        $fileName = "Http/Controllers/Reports/TaskReportController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeReportControllerUser() {
+        $this->setStub('install/report-controller-user');
+        $fileName = "Http/Controllers/Reports/UserReportController.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );

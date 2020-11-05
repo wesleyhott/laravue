@@ -1,0 +1,235 @@
+<?php
+
+namespace App\Http\Controllers\Reports;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Carbon\Carbon;
+use PDF;
+use Illuminate\Support\Str;
+use App\Models\Report;
+
+abstract class LaravueReportController extends Controller
+{
+   /**
+    * Variáveis de modelo
+    */
+   protected $reportType;
+   private $useDefaultHeaders = false;
+   private $headers = [];
+   private $title;
+   private $dataset = [];
+
+   /**
+    * Métodos obrigatórios em todos os controllers
+    */
+    abstract protected function getModel();
+    abstract protected function beforeIndex($data);
+    abstract protected function getTitle();
+
+   /**
+    * Construtor para configurar os valores necessários do tipo de relatório
+    */
+    function __construct()
+    {
+        $this->middleware('auth:api');
+        $this->model = $this->getModel();
+    }
+
+    /**
+    * Sobrescreva este método se deseja modificar o nome do relatório.
+    */
+    public function getFileName(){
+      return Report::DEFAULT_FILE_NAME;
+   }
+
+   /**
+    * Sobrescreva este método se deseja modificar a orientação de impressão
+    * do relatório.
+    */
+   public function getPdfOrientation(){
+      return Report::ORIENTATION_PORTRAIT;
+   }
+
+   /**
+    * Sobrescreva este método se deseja modificar o tamanho do papel de impressão
+    * do papel de relatório.
+    */
+   public function getPaperSize(){
+      return Report::PAPER_A4;
+   }
+
+   /**
+    * Sobrescreva este método se deseja modificar o layout do pdf.
+    */
+   public function getPdfViewSource(){
+      return Report::DEFAULT_SOURCE;
+   }
+
+   /**
+    * Atenção: esse método somente deve ser reescrito se não for usado o
+    * layout padrão do sistema.
+    * Sobrescreva este método se deseja modificar os parâmetros enviados
+    * para um novo layout criado.
+    */
+    public function getPdfViewParameters(){
+      return [
+            'title' => $this->title, 
+            'headers'=> $this->headers , 
+            'dataset' => $this->dataset
+         ];
+    }
+
+    /**
+     * Sobrescreva esse método caso necessidade de cabeçalhos personalizados no
+     * realtório.
+     * Instruções:
+     *   Para sobrescrever, crie um método no modelo e coloque-o como retorno.
+     *   Não é necessário fazer atribuição à $useDefaultHeaders, pois o padrão
+     *   é falso e funcionará como esperado apenas ignorando-a.
+     */
+    public function getHeaders(){
+       $this->useDefaultHeaders = true;
+       return ( new $this->model )->getHeaders();
+    }
+
+   /**
+    * Método para filtrar todos os relatórios.
+    */
+   private function filter($filters)
+   {
+      $headers = $this->getHeaders();
+
+      // Se o mapColumns() do modelo não for implementado, $headers terá tamanho zero.
+      if( ( !$this->useDefaultHeaders ) || ( isset($headers) && count($headers) == 0 ) ){
+         return $this->beforeIndex( $this->model::filter($filters)->get() );
+      } else {
+         return $this->beforeIndex( $this->model::filter($filters)->get($headers) );
+      }
+   }
+
+   /**
+    * Método para filtrar todos os dados do relatório.
+    */
+   public function index( Request $request, $reportType ) {
+      if( !in_array( $reportType, [Report::XLSX, Report::PDF] ) ){
+         return response()->json( ['error' => "O relatório ($reportType) não existe."], 501 );
+      }
+      
+      $this->reportType = $reportType;
+      $this->dataset = $this->filter( $request );
+
+      switch( $reportType ) {
+         case Report::XLSX: return $this->generateXlsxReport();
+         case Report::PDF: return $this->generatePdfReport();
+      }
+   }
+
+   /**
+    * Método para gerar o relatório em PDF
+    */
+   private function generatePdfReport() {
+      $this->fileName = $this->generateFileName();
+      $this->title = $this->getTitle();
+
+      // criando cabeçalho
+      $element = $this->dataset->first();
+      $obj = json_encode( $element );
+      $header = $element != null ? json_decode( $obj, true ) : [];
+
+      $headers = [];
+      foreach( $header as $key => $value ) {
+         $this->headers[] = $key;
+      }
+
+      $pdf =  PDF::loadView( $this->getPdfViewSource(), $this->getPdfViewParameters() ); ;
+      $pdf->setPaper($this->getPaperSize(), $this->getPdfOrientation());
+
+      $fileName = $this->generateFileName();
+      $file = storage_path( Report::DEFAULT_PATH ) . Str::random( 50 ); 
+      $pdf->save( $file );
+
+      $headers = [
+         'Access-Control-Expose-Headers'=> 'Content-Type, X-Auth-Token, Origin, Content-Disposition',
+         'Content-Type' => 'application/pdf',
+         'Content-Disposition' => 'inline; filename="' . $fileName . '"'
+      ];
+
+      return response()->download( $file, $fileName, $headers )->deleteFileAfterSend( true );
+   }
+
+   /**
+    * Método para gerar o relatório em XLSX
+    */
+   private function generateXlsxReport(){
+      $spreadsheet = new Spreadsheet();
+      $sheet = $spreadsheet->getActiveSheet();
+
+      // criando cabeçalho
+      $element = json_encode( $this->dataset->first() );
+      $header = json_decode( $element, true );
+
+      $char = 'A';
+      foreach( $header as $key=>$value ) {
+         $cell =  $char . '1';
+         $sheet->setCellValue( $cell, $key );
+         $char++;
+      }
+
+      // criando o corpo do relatório
+      foreach( $this->dataset as $key=>$row ){
+         $key += 3;
+         $data = json_encode( $row );
+         $dataRow = json_decode( $data, true );
+
+         $char = 'A';
+         foreach( $dataRow as $prop => $data ){
+            $cell =  $char .  $key;
+
+            $sheet->setCellValueExplicit(
+               $cell,
+               $data,
+               \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING
+            );
+
+            $char++;
+         }
+      }
+
+      // ajustando largura das colunas
+      $char = 'A';
+      foreach( $header as $key => $value ) {
+         $sheet->getColumnDimension( $char )->setAutoSize( true );
+         $char++;
+      }
+
+      // adicionando os filtros
+      $this->filterSheet( $spreadsheet );
+
+      $writer = new Xlsx( $spreadsheet );
+      $fileName = $this->generateFileName();
+      $file = storage_path( Report::DEFAULT_PATH ) . Str::random( 50 );
+      $writer->save( $file );
+
+      $headers = [
+         'Access-Control-Expose-Headers'=> 'Content-Type, X-Auth-Token, Origin, Content-Disposition',
+         'Content-Type' => 'application/xlsx',
+         'Content-Disposition' => 'inline; filename="' . $fileName . '"'
+      ];
+
+      return response()->download( $file, $fileName, $headers )->deleteFileAfterSend( true );
+   }
+
+   private function generateFileName(){
+      return $this->getFileName() . ' - ' . Carbon::now()->format('d_m_Y_H_i_s') . '.' . $this->reportType;
+   }
+
+   public function filterSheet($spreadsheet){
+      $spreadsheet->getActiveSheet()->setAutoFilter(
+         $spreadsheet->getActiveSheet()
+            ->calculateWorksheetDimension()
+      );
+   }
+}

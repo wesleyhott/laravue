@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Http\Controllers\Reports;
+
+use App\Http\Controllers\Reports\LaravueReportController;
+
+class TaskReportController extends LaravueReportController
+{
+    // Overrided Superclass methods
+    public function getFileName(){
+        return 'tarefas' ;
+    }
+
+    public function getPdfOrientation(){
+        return \App\Report::ORIENTATION_LANDSCAPE;
+    }
+
+    /**
+     * Implementação do modelo da classe abstrata em BaseController
+     *
+     * @return \App\Task::class
+     */
+    protected function getModel()
+    {
+        return  \App\Task::class;
+    }
+
+    /**
+     * Implementação do título do relatório da classe abstrata 
+     * em BaseController
+     *
+     * @return String
+     */
+    public function getTitle(){
+        return 'Listagem de Tarefas';
+    }
+
+    /**
+     * Alterações necessárias antes de mostrar a coleção do modelo
+     *
+     * @return \App\Task
+     */
+    public function beforeIndex($data)
+    {
+        // Transformando colunas
+        $item["Tipo"] = ( \App\TaskGroup::find( $item["Tipo"] ) )->name;
+        $item["Tarefa"] = "[" . $item["Tipo"] . "] " . $item["Tarefa"];
+        $item["Início"] = date( 'd/m/Y', strtotime( $item["Início"] ) );
+        $item["Fim"] = date( 'd/m/Y', strtotime( $item["Fim"] ) );
+        $item["Status"] = ( \App\TaskStatus::find( $item["Status"] ) )->name;
+        $item["Roteiro"] = $item["Roteiro"] == 1 ? "Sim" : "Não";
+        $item["Marco Histórico"] = $item["Marco Histórico"] == 1 ? "Sim" : "Não";
+        $item["Responsável"] = ( \App\User::find( $item["Responsável"] ) )->name;
+        // Removendo colunas
+        unset($item["Tipo"]);
+
+        return $data;
+    }
+}
