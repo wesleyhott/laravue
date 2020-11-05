@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Models;
+
+class TaskStatus extends LaravueModel
+{
+    public function mapColumns() {
+        return [];
+    }
+    
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+}

@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Models;
+
+class TaskGroup extends LaravueModel
+{
+    public const TASK_GROUP_FEATURE = 'feat';
+    public const TASK_GROUP_VERSION = 'version';
+
+    public function mapColumns() {
+        return [];
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+
+    public function version() {
+        return $this->where('name', \App\TaskGroup::TASK_GROUP_VERSION)->first();
+    }
+}

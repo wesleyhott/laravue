@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Models;
+
+class ProjectModule extends LaravueModel
+{
+    public function mapColumns() {
+        return [];
+    }
+    
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
+}

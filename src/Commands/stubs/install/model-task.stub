@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Models;
+
+class Task extends LaravueModel
+{
+    public const TASK_FINISHED = 'concluída';
+
+    public function mapColumns() {
+        return array(
+            'name' => 'Tarefa',
+            'started_at' => 'Início',
+            'ended_at' => 'Fim',
+            'task_status_id' => 'Status',
+            'task_group_id' => 'Tipo',
+            'is_milestone' => 'Marco Histórico',
+            'is_roadmap' => 'Roteiro',
+            'user_id' => 'Responsável',
+        );
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(TaskGroup::class);
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(TaskStatus::class);
+    }
+
+    public function modules()
+    {
+        return $this->belongsTo(ProjectModule::class);
+    }
+
+    public function version()
+    {
+        return $this->belongsTo(Version::class);
+    }
+}

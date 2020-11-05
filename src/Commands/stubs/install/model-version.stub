@@ -1,0 +1,73 @@
+<?php
+
+namespace App\Models;
+
+class Version extends LaravueModel
+{
+    protected $fillable = [
+        'task_id', 'version_number', 'feature_number', 'issue_number', 'is_milestone'
+    ];
+
+    public function mapColumns() {
+        return [];
+    }
+    
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
+    }
+
+    public function last(){
+        return $this->orderBy('id', 'DESC')->first();
+    }
+
+    public function current(){
+        $versions = $this->orderBy('id', 'DESC')->get();
+        foreach( $versions as $version) {
+            $task = \App\Task::find($version->task_id);
+            $taskGroup = \App\TaskGroup::find($task->task_group_id);
+            if( $taskGroup->name == \App\TaskGroup::TASK_GROUP_VERSION ){
+                $versionNumber = $version->version_number;
+                $featureNumber = str_pad($version->feature_number,3,"0", STR_PAD_LEFT);
+                $issueNumber = str_pad($version->issue_number,3,"0", STR_PAD_LEFT);
+                return "$versionNumber.$featureNumber.$issueNumber";
+            }
+        }
+    }
+
+    public function roadmap(){
+        $tasks = \App\Task::orderBy('id', 'ASC')->get();
+        $roadmap = [];
+        $roadMapVersion = new \stdClass();
+        $roadmapTasks = array();
+        foreach( $tasks as $task) {
+            if($task->is_roadmap){
+                $version = \App\Version::where('task_id', $task->id)->first();
+                if($version){
+                    if($task->is_milestone){
+                        // take teh name and put into roadmap->name
+                        $versionNumber = $version->version_number;
+                        $featureNumber = str_pad($version->feature_number,3,"0", STR_PAD_LEFT);
+                        $issueNumber = str_pad($version->issue_number,3,"0", STR_PAD_LEFT);
+                        $roadMapVersion->name = "$versionNumber.$featureNumber.$issueNumber - $task->name";
+                        // fetch tasks
+                        $roadMapVersion->tasks = $roadmapTasks;
+                        // reset tasks
+                        $roadmapTasks = [];
+                        // Put version into roadmap
+                        $roadmap[] = $roadMapVersion; // push without function
+                        // reset roadmap version
+                        $roadMapVersion = new \stdClass();
+                    } else { // not milestone, then task to next milestone when setted.
+                        $taskItem = new \stdClass();
+                        $taskItem->type = ( \App\TaskGroup::find($task->task_group_id) )->name;
+                        $taskItem->name = $task->name;
+                        array_push($roadmapTasks, $taskItem);
+                    }
+                }
+            }
+        }
+
+        return array_reverse($roadmap);
+    }
+}

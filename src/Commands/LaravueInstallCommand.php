@@ -53,6 +53,11 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeLaravueModel();
         $this->makeModelMonitor();
         $this->makeModelUser();
+        $this->makeModelTaskGroup();
+        $this->makeModelTaskStatus();
+        $this->makeModelProjectModule();
+        $this->makeModelTask();
+        $this->makeModelVersion();
         $this->makePtBrLocale();
         $this->makeLaravueConfigApp();
         $this->makeLaravueConfigServer();
@@ -304,6 +309,61 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeModelUser() {
         $this->setStub('install/model-user');
         $fileName = "Models/User.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeModelTaskGroup() {
+        $this->setStub('install/model-taskgroup');
+        $fileName = "Models/TaskGroup.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeModelTaskStatus() {
+        $this->setStub('install/model-taskstatus');
+        $fileName = "Models/TaskStatus.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeModelProjectModule() {
+        $this->setStub('install/model-project-module');
+        $fileName = "Models/ProjectModule.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeModelTask() {
+        $this->setStub('install/model-task');
+        $fileName = "Models/Task.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeModelVersion() {
+        $this->setStub('install/model-version');
+        $fileName = "Models/Version.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
