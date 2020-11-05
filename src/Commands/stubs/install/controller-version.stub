@@ -1,0 +1,57 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+
+class VersionController extends LaravueController
+{
+    /**
+     * Implementação do modelo da classe abstrata em LaravueController
+     *
+     * @return \App\Version::class
+     */
+    protected function getModel()
+    {
+        return  \App\Version::class;
+    }
+
+    /**
+     * Preenche o modelo com os valores correspondentes ao request
+     *
+     * @return \App\Version
+     */
+    public function setModel(Request $request)
+    {
+        // verifica se é edição - PUT - ou inlcusão - POST.
+        $model = $request->isMethod('put') ? \App\Version::findOrFail($request->id) : new \App\Version;
+
+        // Preencher os atributos do modelo
+        $model->task_id = $request->input('task_id');
+        $model->version_number = $request->input('version_number');
+        $model->feature_number = $request->input('feature_number');
+        $model->issue_number = $request->input('issue_number');
+        $model->is_milestone = $request->input('is_milestone');	
+
+        return  $model;
+    }
+
+    /**
+     * Método que passa as validações para o método que implementa Validator no LaravueController
+     *
+     * @return array de validação dos campos do modelo
+     */
+    public function getModelValidation($data)
+    {
+        return [
+			'rules' =>  [
+                'task_id' => 'required | numeric',
+                'version_number' => 'required | integer',
+                'feature_number' => 'required | integer',
+                'issue_number' => 'required | integer',
+                'is_milestone' => 'required | boolean',
+            ],
+        ];
+    }
+}

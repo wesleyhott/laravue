@@ -1,0 +1,123 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+
+class TaskController extends LaravueController
+{
+    /**
+     * Implementação do modelo da classe abstrata em LaravueController
+     *
+     * @return \App\Models\Version::class
+     */
+    protected function getModel()
+    {
+        return  \App\Models\Task::class;
+    }
+
+    /**
+     * Preenche o modelo com os valores correspondentes ao request
+     *
+     * @return \App\Models\Task
+     */
+    public function setModel(Request $request)
+    {
+        // verifica se é edição - PUT - ou inlcusão - POST.
+        $model = $request->isMethod('put') ? \App\Models\Task::findOrFail($request->id) : new \App\Models\Task;
+
+        // Preencher os atributos do modelo
+        $model->task_group_id = $request->input('task_group_id');
+        $model->task_status_id = $request->input('task_status_id');
+        $model->user_id = $request->input('user_id');
+        $model->project_module_id = $request->input('project_module_id');
+        $model->name = $request->input('name');
+        $model->started_at = $request->input('started_at');
+        $model->ended_at = $request->input('ended_at');
+        $model->is_milestone = $request->input('is_milestone');
+        $model->is_roadmap = $request->input('is_roadmap');	
+
+        return  $model;
+    }
+
+    /**
+     * Método que passa as validações para o método que implementa Validator no LaravueController
+     *
+     * @return array de validação dos campos do modelo
+     */
+    public function getModelValidation($data)
+    {
+        return [
+			'rules' =>  [
+                'name' => 'required | string | unique:tasks,name,'
+                . $data['id'] . ',id,'
+                . 'project_module_id,' .  $data['project_module_id'],
+                'task_group_id' => 'integer',
+                'task_status_id' => 'required | integer',
+                'user_id' => 'required | integer',
+                'project_module_id' => 'required | integer',
+                'started_at' => 'nullable | date',
+                'ended_at' => 'nullable | date | after_or_equal:started_at',
+			],
+            'messages' => [
+                'name.unique' => 'Já existe esta tarefa neste módulo.'
+            ]
+        ];
+    }
+
+    /**
+     * Métodos de inserção de lógica específica.
+     */
+    public function beforeIndex($data)
+    {
+        foreach($data as $item){
+            $item->name_with_group_name = $item->name;
+            if(isset($item->task_group_id)) {
+                $item->group = ( \App\Models\TaskGroup::findOrFail($item->task_group_id) )->name;
+                $item->name_with_group_name = "$item->group / $item->name";
+            }
+            $item->status = ( \App\Models\TaskStatus::findOrFail($item->task_status_id) )->name;
+            $item->user = ( \App\Models\User::findOrFail($item->user_id) )->name;
+            $item->module = ( \App\Models\ProjectModule::findOrFail($item->project_module_id) )->name;
+            $version = ( \App\Models\Version::where('task_id', $item->id)->first() );
+            if(isset($version)){
+                $versionNumber = $version->version_number;
+                $featureNumber = str_pad($version->feature_number,3,"0", STR_PAD_LEFT);
+                $issueNumber = str_pad($version->issue_number,3,"0", STR_PAD_LEFT);
+                $item->version = "$versionNumber.$featureNumber.$issueNumber";
+            } else {
+                $item->version = "Nenhuma";
+            }
+        }
+
+        return $data;
+    }
+
+    public function afterSave($model)
+    {
+        $status = ( \App\Models\TaskStatus::find($model->task_status_id) )->name;
+
+        $group = ( \App\Models\TaskGroup::find($model->task_group_id) )->name;
+
+        if( $status == \App\Models\Task::TASK_FINISHED ) {
+            $lastVersion = ( new \App\Models\Version() )->last();
+            if( $group == \App\Models\TaskGroup::TASK_GROUP_FEATURE ) {
+                $lastVersion->feature_number = ++$lastVersion->feature_number;
+            } else {
+                $lastVersion->issue_number = ++$lastVersion->issue_number;
+            }
+            // Criação automática de nova versão.
+            \App\Models\Version::create([
+                'task_id' => $model->id,
+                'version_number' => $lastVersion->version_number,
+                'feature_number' => $lastVersion->feature_number,
+                'issue_number' => $lastVersion->issue_number,
+                'is_milestone' => false,
+            ]);
+
+        }
+        return $model;
+    }
+
+}

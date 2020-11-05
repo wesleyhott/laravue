@@ -66,6 +66,13 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeLaravueConfigApp();
         $this->makeLaravueConfigServer();
         $this->makeLaravueController();
+        $this->makeControllerTaskGroup();
+        $this->makeControllerTaskStatus();
+        $this->makeControllerProjectModule();
+        $this->makeControllerTask();
+        $this->makeControllerVersion();
+        $this->makeControllerCurrentVersion();
+        $this->makeControllerRoadMap();
         $this->makeLaravueAccessTokenController();
         $this->makeControllerMonitor();
         $this->makeLaravueRouteApi();
@@ -536,6 +543,83 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeControllerMonitor() {
         $this->setStub('install/controller-monitor');
         $fileName = "Http/Controllers/MonitorController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeControllerCurrentVersion() {
+        $this->setStub('install/controller-current-version');
+        $fileName = "Http/Controllers/CurrentVersionController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeControllerProjectModule() {
+        $this->setStub('install/controller-project-module');
+        $fileName = "Http/Controllers/ProjectModuleController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeControllerRoadMap() {
+        $this->setStub('install/controller-roadmap');
+        $fileName = "Http/Controllers/RoadMapController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeControllerTask() {
+        $this->setStub('install/controller-task');
+        $fileName = "Http/Controllers/TaskController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeControllerTaskGroup() {
+        $this->setStub('install/controller-taskgroup');
+        $fileName = "Http/Controllers/TaskGroupController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeControllerTaskStatus() {
+        $this->setStub('install/controller-tasktatus');
+        $fileName = "Http/Controllers/TaskStatusController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeControllerVersion() {
+        $this->setStub('install/controller-version');
+        $fileName = "Http/Controllers/VersionController.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
