@@ -45,7 +45,8 @@ class LaravueControllerCommand extends LaravueCommand
     protected function replaceField($stub, $model)
     {
         if(!$this->option('fields')){
-            return str_replace( '{{ fields }}', "//$"."model->field = $"."request->input('field');" , $stub );
+            $fieldsParsed = str_replace( '{{ fields }}', "//$"."model->field = $"."request->input('field');" , $stub );
+            return str_replace( '{{ rules }}', "// Insira regras aqui" , $fieldsParsed );
         }
 
         $fields = $this->getFieldsArray( $this->option('fields') );
@@ -78,7 +79,6 @@ class LaravueControllerCommand extends LaravueCommand
             } 
             $returnRules .= "'$key' => '$type',"; 
         }
-        // $returnRules .= "\t\t";
 
         return str_replace( '{{ rules }}', $returnRules , $parsedfFields );
     }

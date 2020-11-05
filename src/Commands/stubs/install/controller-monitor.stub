@@ -1,0 +1,62 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+
+class MonitorController extends LaravueController
+{
+    /**
+     * Implementação do modelo da class abstrata em BaseController
+     *
+     * @return \App\Version::class
+     */
+    protected function getModel()
+    {
+        return  \App\Monitor::class;
+    }
+
+    /**
+     * Preenche o modelo com os valores correspondentes ao request
+     *
+     * @return \App\Monitor
+     */
+    public function setModel(Request $request)
+    {
+        // verifica se é edição - PUT - ou inlcusão - POST.
+        $model = $request->isMethod('put') ? \App\Monitor::findOrFail($request->id) : new \App\Monitor;
+
+        // Preencher os atributos do modelo
+        $model->file = $request->input('file');
+        $model->class = $request->input('class');
+        $model->method = $request->input('method');
+        $model->type = $request->input('type');
+        $model->message = $request->input('message');
+        $model->line = $request->input('line');
+        $model->created_at = $request->input('created_at');
+        $model->updated_at = $request->input('updated_at');
+        $model->usuario_ult_alteracao = $request->input('usuario_ult_alteracao');
+
+        return  $model;
+    }
+
+    /**
+     * Método que passa as validações para o método que implementa Validator no LaravueController
+     *
+     * @return array de validação dos campos do modelo
+     */
+    public function getModelValidation($data)
+    {
+        return [
+			'rules' =>  [
+				'file' => 'required',
+				'class' => 'required',
+				'method' => 'required',
+				'type' => 'required',
+				'message' => 'required',
+				'usuario' => 'required',
+			]	
+        ];
+    }
+}
