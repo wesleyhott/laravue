@@ -53,6 +53,8 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeLaravueModel();
         $this->makeModelMonitor();
         $this->makeModelUser();
+        $this->makeModelRole();
+        $this->makeModelPermission();
         $this->makeModelTaskGroup();
         $this->makeModelTaskStatus();
         $this->makeModelProjectModule();
@@ -309,6 +311,28 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeModelUser() {
         $this->setStub('install/model-user');
         $fileName = "Models/User.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeModelRole() {
+        $this->setStub('install/model-role');
+        $fileName = "Models/Role.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeModelPermission() {
+        $this->setStub('install/model-permission');
+        $fileName = "Models/Permission.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
