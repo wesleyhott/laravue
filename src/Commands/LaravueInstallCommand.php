@@ -68,6 +68,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeModelProjectModule();
         $this->makeModelTask();
         $this->makeModelVersion();
+        $this->makeModelReport();
         // Resource
         $this->makePtBrLocale();
         // Config
@@ -441,6 +442,17 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeModelVersion() {
         $this->setStub('install/model-version');
         $fileName = "Models/Version.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeModelReport() {
+        $this->setStub('install/model-report');
+        $fileName = "Models/Report.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );

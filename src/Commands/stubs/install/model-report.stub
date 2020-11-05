@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Models;
+
+class Report extends LaravueModel
+{
+    /**
+     * Implementação do método da classe abstrata em BaseModel
+     *
+     * @return array ('nome da coluna do banco', 'nome mapeado')
+     */
+    public function mapColumns() {
+        return [];
+    }
+    
+    // Report type
+    public const PDF = 'pdf';
+    public const XLSX = 'xlsx';
+
+    // Print Orientation
+    public const ORIENTATION_PORTRAIT = 'portrait';
+    public const ORIENTATION_LANDSCAPE = 'landscape';
+
+    // Paper size
+    public const PAPER_A4 = 'A4';
+
+    // Congiguration
+    public const DEFAULT_PATH = 'app/reports/';
+    public const DEFAULT_SOURCE = 'reports.default_pdf_report';
+    public const DEFAULT_FILE_NAME = 'relatorio';
+}
