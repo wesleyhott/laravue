@@ -1,0 +1,121 @@
+<?php
+
+namespace App;
+
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Passport\HasApiTokens;
+use App\Filters\LaravueFilter;
+
+
+class User extends Authenticatable
+{
+    use HasRoles;
+    use HasApiTokens, Notifiable;
+
+    protected $guard_name = 'api';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'email', 'password',
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+    /**
+     * Atributos da classe User
+     *
+     * @var array
+     */
+    protected $attributes;
+     /**
+     * Método construtor da classe insere o atributo usuario_ult_alteracao (usuário logado) antes de salvar no banco.
+     *
+     * @param array $attributes
+     */
+    public function __construct($email = null) {
+        $usuarioUltAlteracao = 'NOT_USER';
+        if (isset(Auth::user()->email)) {
+            $usuarioUltAlteracao = Auth::user()->email;
+        } elseif (isset($email)) {
+            $usuarioUltAlteracao = $email;
+        }
+
+        $this->attributes = array(
+           'usuario_ult_alteracao' => $usuarioUltAlteracao
+        );
+    }
+
+    public function getToken() {
+        return $this->createToken($this->email)->accessToken;
+    }
+
+    public function scopeFilter($builder, $request) {
+        return (new MPMGFilter($request))->filter($builder);
+    }
+
+    public function mapColumns() {
+        return [
+            "name" => "Nome",
+            "email" => "E-mail"
+        ];
+    }
+
+    public function getHeaders() {
+        $headers = array();
+        foreach( $this->mapColumns() as $k => $v) {
+            array_push($headers, "$k as $v");
+        }
+        return $headers;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param string $email
+     * @param [type] $name
+     * @param [type] $password
+     * @param boolean $autoCreate
+     * @return void
+     */
+    public static function getCreateUser($email, $name, $password, $autoCreate = false) {
+        $user = self::where('email', $email)->first();
+
+        if ( ! $user) {
+            if ($autoCreate) {
+                $user = new User($email);
+            } else {
+                $user = new User();
+            }
+            $user->name =  $name;
+            $user->email = $email;
+            $user->password = Hash::make($password);
+            $user->save();
+        }
+        return $user;
+    }
+}

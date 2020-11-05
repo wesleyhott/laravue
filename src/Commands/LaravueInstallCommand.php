@@ -51,7 +51,8 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeAbstractFilter();
         $this->makeLaravueFilter();
         $this->makeLaravueModel();
-        $this->makeLaravueModelMonitor();
+        $this->makeModelMonitor();
+        $this->makeModelUser();
         $this->makePtBrLocale();
         $this->makeLaravueConfigApp();
         $this->makeLaravueConfigServer();
@@ -289,9 +290,20 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
-    protected function makeLaravueModelMonitor() {
+    protected function makeModelMonitor() {
         $this->setStub('install/model-monitor');
         $fileName = "Models/Monitor.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+    
+    protected function makeModelUser() {
+        $this->setStub('install/model-user');
+        $fileName = "Models/User.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );

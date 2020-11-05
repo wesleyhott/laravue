@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Mpmg\Laravue\Tests\TestCase;
 
-class MakeLaravueModelFileTest extends TestCase
+class MakeModelUserFileTest extends TestCase
 {
     /** @test */
-    function it_creates_a_laravue_model_file()
+    function it_creates_a_user_model_file()
     {
         // destination path of the Foo class
-        $testClass = str_replace( "tests/Feature", "", __DIR__) . "app/Models/LaravueModel.php";
+        $testClass = str_replace( "tests/Feature", "", __DIR__) . "app/Models/User.php";
 
         // make sure we're starting from a clean state
         if (File::exists($testClass)) {
