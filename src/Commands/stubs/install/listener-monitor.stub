@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Listeners;
+
+use App\Events\Monitor;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class SaveMonitorLog //implements ShouldQueue
+{
+    public $connection = 'sqs';
+    public $queue = 'listeners';
+    
+    /**
+     * Create the event listener.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param  Monitor  $event
+     * @return void
+     */
+    public function handle(Monitor $event)
+    {
+        $monitor = $event->monitor;
+        $monitor->save();
+    }
+}

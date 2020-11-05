@@ -52,6 +52,8 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeLaravueFilter();
         $this->makeLaravueModel();
         $this->makeModelMonitor();
+        $this->makeEventMonitor();
+        $this->makeListenerMonitor();
         $this->makeModelUser();
         $this->makeModelRole();
         $this->makeModelPermission();
@@ -300,6 +302,28 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeModelMonitor() {
         $this->setStub('install/model-monitor');
         $fileName = "Models/Monitor.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeEventMonitor() {
+        $this->setStub('install/event-monitor');
+        $fileName = "Events/Monitor.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeListenerMonitor() {
+        $this->setStub('install/listener-monitor');
+        $fileName = "Listeners/Monitor.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
