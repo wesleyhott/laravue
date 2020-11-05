@@ -17,6 +17,6 @@ class TaskGroup extends LaravueModel
     }
 
     public function version() {
-        return $this->where('name', \App\TaskGroup::TASK_GROUP_VERSION)->first();
+        return $this->where('name', \App\Models\TaskGroup::TASK_GROUP_VERSION)->first();
     }
 }
