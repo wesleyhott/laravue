@@ -394,7 +394,7 @@ class LaravueFrontModelCommand extends LaravueCommand
         $selects .= $this->tabs(4) . "})" . PHP_EOL;
         $selects .= $this->tabs(4) . ".catch(e => {" . PHP_EOL;
         $selects .= $this->tabs(5) . "this.setLoading(false)" . PHP_EOL;
-        $selects .= $this->tabs(5) . "mpmgNotify.failure(this, e)" . PHP_EOL;
+        $selects .= $this->tabs(5) . "laravueNotify.failure(this, e)" . PHP_EOL;
         $selects .= $this->tabs(4) . "})" . PHP_EOL;
         $selects .= $this->tabs(2) . "}, {{ last }}";
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <mpmg-datatable
+    <laravue-datatable
       titulo="{{ title }}"
       rota="{{ route }}"
       :colunas = "colunas"
@@ -13,18 +13,18 @@
         <template v-slot:modalDelete="{ model }">
           <delete :model="model"></delete>
         </template>
-    </mpmg-datatable>
+    </laravue-datatable>
   </div>
 </template>
 
 <script>
-import MpmgDatatable from "@/components/ProjetoBase/Views/Components/MpmgDataTable"
+import LaravueDatatable from "@/components/ProjetoBase/Views/Components/LaravueDatatable"
 import Show from "./Show"
 import Delete from "./Delete"
 
 export default {
   name: "Index.vue",
-  components: { MpmgDatatable, Show, Delete },
+  components: { LaravueDatatable, Show, Delete },
   data() {
     return {
       colunas: [

@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import mpmgNotify from "@/components/ProjetoBase/Views/Components/notifications/mpmgNotifications"
+import laravueNotify from "@/components/ProjetoBase/Views/Components/notifications/laravueNotifications"
 import PulseLoader from "vue-spinner/src/PulseLoader"
 import { DatePicker } from "element-ui"
 
@@ -91,7 +91,7 @@ export default {
         })
         .catch(e => {
           this.setLoading(true, "Falha ao Gerar Arquivo")
-          mpmgNotify.failure(this, e)
+          laravueNotify.failure(this, e)
         })
     },
     getError(fieldName) {
@@ -122,14 +122,14 @@ export default {
               }
               this.setLoading(false)
               if (this.edicao) {
-                mpmgNotify.success(this, "edit")
+                laravueNotify.success(this, "edit")
               } else {
-                mpmgNotify.success(this)
+                laravueNotify.success(this)
               }
             })
             .catch(e => {
               this.setLoading(false)
-              mpmgNotify.failure(this, e)
+              laravueNotify.failure(this, e)
             })
         }
       })
@@ -144,7 +144,7 @@ export default {
             this.model = response.data.data
           })
           .catch(e => {
-            mpmgNotify.failure(this, e)
+            laravueNotify.failure(this, e)
           })
       } else {
         this.setLoading(false)

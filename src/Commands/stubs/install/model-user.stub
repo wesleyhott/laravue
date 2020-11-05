@@ -75,7 +75,7 @@ class User extends Authenticatable
     }
 
     public function scopeFilter($builder, $request) {
-        return (new MPMGFilter($request))->filter($builder);
+        return (new LaravueFilter($request))->filter($builder);
     }
 
     public function mapColumns() {

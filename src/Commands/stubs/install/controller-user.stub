@@ -37,7 +37,7 @@ class UserController extends LaravueController
     }
 
     /**
-     * Método que passa as validações para o método que implementa Validator no MPMGController
+     * Método que passa as validações para o método que implementa Validator no LaravueController
      * 
      * @return array de validação dos campos do modelo
      */

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Reports;
 
-use App\Http\Controllers\Reports\MPMGReportController;
+use App\Http\Controllers\Reports\LaravueReportController;
 
-class {{ model }}ReportController extends MPMGReportController
+class {{ model }}ReportController extends LaravueReportController
 {
     // Overrided Superclass methods
     public function getFileName(){
