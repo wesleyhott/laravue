@@ -5,7 +5,17 @@ Code generation for MPMG projects that use Laravel and VueJs tecnologies.
 ```
 composer require mpmg/laravue
 ```
-
+\\
+```
+'providers' => [
+    // ...
+    Mpmg\Laravue\LaravueServiceProvider::class,
+];
+```
+\\
+```
+php artisan vendor:publish --provider="Mpmg\Laravue\LaravueServiceProvider"
+```
 ## Documentation
 
 ### Commands

@@ -111,6 +111,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->publishSubFissionCas();
         $this->publishLogViewer();
         $this->publishInterventionImage();
+        $this->publishLaravue();
     }
 
     protected function makeDotEnvExample() {
@@ -880,6 +881,13 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Publishing ] >> ImageServiceProviderLaravelRecent");
         $this->call('vendor:publish',[
             '--provider' =>  'Intervention\Image\ImageServiceProviderLaravelRecent',
+        ]);
+    }
+    protected function publishLaravue() {
+        $date = now();
+        $this->info("$date - [ Publishing ] >> LaravueServiceProvider");
+        $this->call('vendor:publish',[
+            '--provider' =>  'Mpmg\Laravue\LaravueServiceProvider',
         ]);
     }
 
