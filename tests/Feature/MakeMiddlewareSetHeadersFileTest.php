@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Mpmg\Laravue\Tests\TestCase;
 
-class MakeMiddlewareAuthenticateFile extends TestCase
+class MakeMiddlewareSetHeadersFileTest extends TestCase
 {
     /** @test */
-    function it_creates_a_user_controller_file()
+    function it_creates_a_set_headers_middleware_file()
     {
         // destination path of the Foo class
-        $testClass = str_replace( "tests/Feature", "", __DIR__) . "app/Http/Middleware/LaravueAuthenticate.php";
+        $testClass = str_replace( "tests/Feature", "", __DIR__) . "app/Http/Middleware/LaravueSetHeaders.php";
 
         // make sure we're starting from a clean state
         if (File::exists($testClass)) {
