@@ -71,6 +71,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeModelReport();
         // Resource
         $this->makePtBrLocale();
+        $this->makeViewPdfBlade();
         // Config
         $this->makeLaravueConfigApp();
         $this->makeLaravueConfigServer();
@@ -467,6 +468,18 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makePtBrLocaleAuth() {
         $this->setStub('install/locale-auth');
         $fileName = "resources/lang/pt-BR/auth.php";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeViewPdfBlade() {
+        $this->setStub('install/resource-view-pdf-report');
+        $fileName = "resources/views/reports/default_pdf_report.blade.php";
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp );
 

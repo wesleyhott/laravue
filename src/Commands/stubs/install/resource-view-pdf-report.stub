@@ -1,0 +1,114 @@
+<html>
+    <head>
+        <style>
+            /** 
+                Set the margins of the page to 0, so the footer and the header
+                can be of the full height and width !
+             **/
+            @page {
+                margin: 0cm 0cm;
+            }
+
+            /** Define now the real margins of every page in the PDF **/
+            body {
+                margin-top: 2cm;
+                margin-left: 1cm;
+                margin-right: 1cm;
+                margin-bottom: 1cm;
+            }
+
+            /** Define the header rules **/
+            header {
+                position: fixed;
+                top: 0cm;
+                left: 0cm;
+                right: 0cm;
+                height: 2cm;
+            }
+
+            /** Define the footer rules **/
+            footer {
+                position: fixed; 
+                bottom: 0cm; 
+                left: 0.5cm; 
+                right: 0cm;
+                height: 0.7cm;
+            }
+
+            .page-number {
+              padding-left:8px; 
+              color:#CCCCCC;
+              text-align: left;
+            }
+            
+            .page-number:before {
+              content: "Página " counter(page);
+            }
+
+            .title {
+                color:#CCCCCC;
+                padding-left:200px; 
+            }
+
+            #table tr:nth-child(even){background-color: #f2f2f2;}
+        </style>
+    </head>
+    <body>
+        <!-- Define header and footer blocks before your content -->
+        <header>
+            <span style="border-bottom: 0.1pt solid #cccccc;"></span>
+            <Table width="100%">
+                <tr>
+                    <td>
+                    <img src = "img/logo_header.png" style="padding:16px" height="50px"/>
+                    </td>
+                    <td>
+                        <div class="title">
+                            <h2>{{ $title }}</h2>
+                        </div>
+                    </td>
+                </tr>
+            </Table>
+        </header>
+
+        <footer>
+        <div>
+            <span style="padding-left:8px;"></span>
+            <span class="page-number"></span>
+            <span style="padding-left:32px; color:#CCCCCC;">laravue.mpmg.mp.br</span>
+            <span style="padding-left:32px; color:#CCCCCC;">Relatório gerado em {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}.</span>
+            <span style="padding-right:8px;"></span>
+        </div>
+        </footer>
+
+        <!-- Wrap the content of your PDF inside a main tag -->
+        <main>
+        <div style="padding-top: 1em;">
+            @if(!empty($dataset))
+                <table style="width:100%" id="table">
+                    <tr>
+                        @foreach($headers as $header)
+                            <th style="text-align: left; border-bottom: 0.1pt solid #ccc; padding-bottom:4px;">{{ $header }}</th>
+                        @endforeach
+                    </tr>
+
+                    @foreach($dataset as $row)
+                        @php
+                            $data = json_encode($row);
+                            $dataRow = json_decode($data, true);
+                        @endphp
+
+                        <tr>
+                            @foreach($dataRow as $data)
+                                <td>{{ $data }}</td>
+                            @endforeach
+                        </tr>
+                    @endforeach
+                </table>
+            @else
+                <li>Nenhum registro encontrado.</li>
+            @endif
+        </div>
+        </main>
+    </body>
+</html>
