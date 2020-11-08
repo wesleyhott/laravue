@@ -10,22 +10,22 @@ class MonitorController extends LaravueController
     /**
      * Implementação do modelo da class abstrata em BaseController
      *
-     * @return \App\Version::class
+     * @return \App\Models\Monitor::class
      */
     protected function getModel()
     {
-        return  \App\Monitor::class;
+        return  \App\Models\Monitor::class;
     }
 
     /**
      * Preenche o modelo com os valores correspondentes ao request
      *
-     * @return \App\Monitor
+     * @return \App\Models\Monitor
      */
     public function setModel(Request $request)
     {
         // verifica se é edição - PUT - ou inlcusão - POST.
-        $model = $request->isMethod('put') ? \App\Monitor::findOrFail($request->id) : new \App\Monitor;
+        $model = $request->isMethod('put') ? \App\Models\Monitor::findOrFail($request->id) : new \App\Models\Monitor;
 
         // Preencher os atributos do modelo
         $model->file = $request->input('file');

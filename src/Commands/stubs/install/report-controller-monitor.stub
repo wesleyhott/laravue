@@ -12,17 +12,17 @@ class MonitorReportController extends LaravueReportController
     }
 
     public function getPdfOrientation(){
-        return \App\Report::ORIENTATION_LANDSCAPE;
+        return \App\Models\Report::ORIENTATION_LANDSCAPE;
     }
 
     /**
      * Implementação do modelo da classe abstrata em BaseController
      *
-     * @return \App\Monitor::class
+     * @return \App\Models\Monitor::class
      */
     protected function getModel()
     {
-        return  \App\Monitor::class;
+        return  \App\Models\Monitor::class;
     }
 
     /**
@@ -38,7 +38,7 @@ class MonitorReportController extends LaravueReportController
     /**
      * Alterações necessárias antes de mostrar a coleção do modelo
      *
-     * @return \App\Monitor
+     * @return \App\Models\Monitor
      */
     public function beforeIndex($data)
     {

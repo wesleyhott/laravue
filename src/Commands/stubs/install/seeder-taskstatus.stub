@@ -1,9 +1,11 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class TaskSeeder extends Seeder
+class TaskStatusSeeder extends Seeder
 {
     /**
      * Run the database seeds.

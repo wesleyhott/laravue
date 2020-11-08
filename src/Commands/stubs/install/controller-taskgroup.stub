@@ -10,22 +10,22 @@ class TaskGroupController extends LaravueController
     /**
      * Implementação do modelo da classe abstrata em LaravueController
      *
-     * @return \App\Version::class
+     * @return \App\Models\TaskGroup::class
      */
     protected function getModel()
     {
-        return  \App\TaskGroup::class;
+        return  \App\Models\TaskGroup::class;
     }
 
     /**
      * Preenche o modelo com os valores correspondentes ao request
      *
-     * @return \App\TaskGroup
+     * @return \App\Models\TaskGroup
      */
     public function setModel(Request $request)
     {
         // verifica se é edição - PUT - ou inlcusão - POST.
-        $model = $request->isMethod('put') ? \App\TaskGroup::findOrFail($request->id) : new \App\TaskGroup;
+        $model = $request->isMethod('put') ? \App\Models\TaskGroup::findOrFail($request->id) : new \App\Models\TaskGroup;
 
         // Preencher os atributos do modelo
         $model->name = $request->input('name');		

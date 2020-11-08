@@ -10,22 +10,22 @@ class ProjectModuleController extends LaravueController
     /**
      * Implementação do modelo da classe abstrata em LaravueController
      *
-     * @return \App\Version::class
+     * @return \App\Models\ProjectModule::class
      */
     protected function getModel()
     {
-        return  \App\ProjectModule::class;
+        return  \App\Models\ProjectModule::class;
     }
 
     /**
      * Preenche o modelo com os valores correspondentes ao request
      *
-     * @return \App\ProjectModule
+     * @return \App\Models\ProjectModule
      */
     public function setModel(Request $request)
     {
         // verifica se é edição - PUT - ou inlcusão - POST.
-        $model = $request->isMethod('put') ? \App\ProjectModule::findOrFail($request->id) : new \App\ProjectModule;
+        $model = $request->isMethod('put') ? \App\Models\ProjectModule::findOrFail($request->id) : new \App\Models\ProjectModule;
 
         // Preencher os atributos do modelo
         $model->name = $request->input('name');		

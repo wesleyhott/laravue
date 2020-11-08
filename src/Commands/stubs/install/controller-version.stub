@@ -10,22 +10,22 @@ class VersionController extends LaravueController
     /**
      * Implementação do modelo da classe abstrata em LaravueController
      *
-     * @return \App\Version::class
+     * @return \App\Models\Version::class
      */
     protected function getModel()
     {
-        return  \App\Version::class;
+        return  \App\Models\Version::class;
     }
 
     /**
      * Preenche o modelo com os valores correspondentes ao request
      *
-     * @return \App\Version
+     * @return \App\Models\Version
      */
     public function setModel(Request $request)
     {
         // verifica se é edição - PUT - ou inlcusão - POST.
-        $model = $request->isMethod('put') ? \App\Version::findOrFail($request->id) : new \App\Version;
+        $model = $request->isMethod('put') ? \App\Models\Version::findOrFail($request->id) : new \App\Models\Version;
 
         // Preencher os atributos do modelo
         $model->task_id = $request->input('task_id');

@@ -9,22 +9,22 @@ class  RoleController extends LaravueController
     /**
      * Implementação do modelo da classe abstrata em LaravueController
      *
-     * @return \App\Role::class
+     * @return \App\Models\Role::class
      */
     protected function getModel()
     {
-        return  \App\Role::class;
+        return  \App\Models\Role::class;
     }
 
     /**
      * Preenche o modelo com os valores correspondentes ao request
      *
-     * @return \App\Role
+     * @return \App\Models\Role
      */
     public function setModel(Request $request)
     {
         // verifica se é edição - PUT - ou inlcusão - POST.
-        $model = $request->isMethod('put') ? \App\Role::findOrFail($request->id) : new \App\Role;
+        $model = $request->isMethod('put') ? \App\Models\Role::findOrFail($request->id) : new \App\Models\Role;
 
         // Preencher os atributos do modelo
         $model->name = $request->input('name');

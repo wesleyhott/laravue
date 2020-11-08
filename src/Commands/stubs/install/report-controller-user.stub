@@ -12,17 +12,17 @@ class UserReportController extends LaravueReportController
     }
 
     public function getPdfOrientation(){
-        return \App\Report::ORIENTATION_LANDSCAPE;
+        return \App\Models\Report::ORIENTATION_LANDSCAPE;
     }
 
     /**
      * Implementação do modelo da classe abstrata em BaseController
      *
-     * @return \App\User::class
+     * @return \App\Models\User::class
      */
     protected function getModel()
     {
-        return  \App\User::class;
+        return  \App\Models\User::class;
     }
 
     /**
@@ -38,7 +38,7 @@ class UserReportController extends LaravueReportController
     /**
      * Alterações necessárias antes de mostrar a coleção do modelo
      *
-     * @return \App\User
+     * @return \App\Models\User
      */
     public function beforeIndex($data)
     {

@@ -9,22 +9,22 @@ class  PermissionController extends LaravueController
     /**
      * Implementação do modelo da classe abstrata em LaravueController
      *
-     * @return \App\Permission::class
+     * @return \App\Models\Permission::class
      */
     protected function getModel()
     {
-        return  \App\Permission::class;
+        return  \App\Models\Permission::class;
     }
 
     /**
      * Preenche o modelo com os valores correspondentes ao request
      *
-     * @return \App\Permission
+     * @return \App\Models\Permission
      */
     public function setModel(Request $request)
     {
         // verifica se é edição - PUT - ou inlcusão - POST.
-        $model = $request->isMethod('put') ? \App\Permission::findOrFail($request->id) : new \App\Permission;
+        $model = $request->isMethod('put') ? \App\Models\Permission::findOrFail($request->id) : new \App\Models\Permission;
 
         // Preencher os atributos do modelo
         $model->name = $request->input('name');

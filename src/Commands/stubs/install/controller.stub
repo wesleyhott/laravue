@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use \Validator;
-use App\Monitoramento;
+use App\Models\Monitor;
 use DB;
 
 abstract class LaravueController extends Controller

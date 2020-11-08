@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Laravue;
 
-use App\User;
-use App\Monitor;
+use App\Models\User;
+use App\Models\Monitor;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
