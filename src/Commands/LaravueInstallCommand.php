@@ -35,6 +35,8 @@ class LaravueInstallCommand extends LaravueCommand
         // .env
         $this->makeDotEnvExample();
         $this->makeDotEnv();
+        // migration
+        $this->makeUserMigration();
         // Seeder
         $this->makeUserSeeder();
         $this->makeOauthClientSeeder();
@@ -117,6 +119,18 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeDotEnvExample() {
         $this->setStub('install/.env-example');
         $fileName = ".env.example";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp);
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeUserMigration() {
+        $this->setStub('install/migration-user');
+        $fileName = "database/migrations/2014_10_12_000000_create_users_table.php";
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp);
 
