@@ -71,13 +71,16 @@ class LaravueControllerCommand extends LaravueCommand
         $first = true;
         foreach ($fields as $key => $value) {
             $type = $this->getType($value);
+            $nullable = $this->hasNullable($value);
+            $required = $nullable ? '' : ' | required';
+
             if( $first ) {
                 $first = false;
             } else {
                 $returnRules .= PHP_EOL;
                 $returnRules .= "\t\t\t\t";
             } 
-            $returnRules .= "'$key' => '$type',"; 
+            $returnRules .= "'$key' => '${type}${required}',"; 
         }
 
         return str_replace( '{{ rules }}', $returnRules , $parsedfFields );
