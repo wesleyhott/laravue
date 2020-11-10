@@ -114,7 +114,11 @@ class LaravueCommand extends Command
                 break;
             case 'controller': 
                 $model = $model . "Controller";
-                $path = "$currentDirectory/app/http/Controllers/$model.$ext";
+                $controllerPath = "$currentDirectory/app/http/Controllers";
+                if( !is_dir($controllerPath) ) {
+                    mkdir( $controllerPath, 0777, true);
+                }
+                $path = "$controllerPath/$model.$ext";
                 break;
             case 'report':
                 $model =  $model .  "ReportController";
@@ -460,13 +464,41 @@ class LaravueCommand extends Command
     }
 
     /**
+     * Monta um array separando o campo das opções para o campo
+     *
+     * @param  string  $options
+     * @return array
+     */
+    protected function getOptionsArray($field) {
+        return explode( ".", $field );
+    }
+
+    /**
+     * Retorna verdade se o field contém a letra n (nullable); falso caso contrário.
+     *
+     * @param  string  $field
+     * @return boolean nullable
+     */
+    protected function hasNullable($field) {
+        $options = $this->getOptionsArray($field);
+        $nullable = false;
+        foreach ($options as $option){
+            if( strpos( $option, 'n') !== false ) {
+                $nullable = true;
+            }
+        }
+        return $nullable;
+    }
+
+    /**
      * Retorna o tipo baseado na letra declarada em option
      *
      * @param  string  $value
      * @return string
      */
     protected function getType($value) {
-        switch($value) {
+        $options = $this->getOptionsArray($value);
+        switch( $options[0] ) {
             case 'b': return 'boolean';
             case 'bpk': return 'bigIncrements';
             case 'bi': return 'bigInteger';
