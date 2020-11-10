@@ -460,13 +460,24 @@ class LaravueCommand extends Command
     }
 
     /**
+     * Monta um array separando o campo das opções para o campo
+     *
+     * @param  string  $options
+     * @return array
+     */
+    protected function getOptionsArray($field) {
+        return explode( ".", $field );
+    }
+
+    /**
      * Retorna o tipo baseado na letra declarada em option
      *
      * @param  string  $value
      * @return string
      */
     protected function getType($value) {
-        switch($value) {
+        $options = $this->getOptionsArray($value);
+        switch( $options[0] ) {
             case 'b': return 'boolean';
             case 'bpk': return 'bigIncrements';
             case 'bi': return 'bigInteger';

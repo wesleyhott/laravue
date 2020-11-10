@@ -59,12 +59,21 @@ class LaravueMigrationCommand extends LaravueCommand
         $first = true;
         foreach ($fields as $key => $value) {
             $type = $this->getType($value);
+            $options = $this->getOptionsArray($value);
+            $nullable = '';
+            foreach ($options as $option){
+                if( $option == 'n') {
+                    $nullable = '->nullable()';
+                }
+            }
+
             if( $first ) {
                 $first = false;
             } else {
                 $returnFields .= PHP_EOL;
                 $returnFields .= $this->tabs(3);
             }
+
             if( $this->isFk( $key ) ) {
                 $referenced_table = $this->pluralize( 2, str_replace( "_id", "", $key ) );
 
@@ -76,7 +85,7 @@ class LaravueMigrationCommand extends LaravueCommand
                 $returnFields .= $this->tabs(4) . "->on('$referenced_table')" . PHP_EOL;
                 $returnFields .= $this->tabs(4) . "->onDelete('cascade'); // 'set null' if nullable";
             } else {
-                $returnFields .= "$"."table->$type('$key');";
+                $returnFields .= "$"."table->$type('$key')$nullable;";
             }
         }
 
