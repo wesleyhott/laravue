@@ -76,8 +76,8 @@ class LaravueSeeder extends Seeder
         // {{ laravue-insert:menu }}
 
         // create aditional permissions
-        $ver_monitoramentos = Permission::create(['name' => 'ver monitoramentos']);
-        $ver_monitoramentos = Permission::create(['name' => 'imprimir monitoramentos']);
+        $ver_monitor = Permission::create(['name' => 'ver monitors']);
+        $ver_monitor = Permission::create(['name' => 'imprimir monitors']);
         $ver_logs = Permission::create(['name' => 'ver logs']);
         $editar_roles_users = Permission::create(['name' => 'editar roles users']);
         $editar_permissions_users = Permission::create(['name' => 'editar permissions users']);

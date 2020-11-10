@@ -72,11 +72,13 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeModelVersion();
         $this->makeModelReport();
         // Resource
-        $this->makePtBrLocale();
         $this->makeViewPdfBlade();
         // Config
         $this->makeLaravueConfigApp();
+        $this->makeLaravueConfigAuth();
         $this->makeLaravueConfigServer();
+        // Provider
+        $this->makeLaravueProviderAuth();
         // Controller
         $this->makeLaravueController();
         $this->makeControllerTaskGroup();
@@ -113,6 +115,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->publishSubFissionCas();
         $this->publishLogViewer();
         $this->publishInterventionImage();
+        $this->publishInternacionalization();
         $this->publishLaravue();
     }
 
@@ -480,18 +483,6 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
-    protected function makePtBrLocaleAuth() {
-        $this->setStub('install/locale-auth');
-        $fileName = "resources/lang/pt-BR/auth.php";
-        $outsideApp = true;
-        $path = $this->makePath( $fileName, $outsideApp );
-
-        $this->files->put( $path, $this->files->get( $this->getStub() ) );
-
-        $date = now();
-        $this->info("$date - [ Installing ] >> $fileName");
-    }
-
     protected function makeViewPdfBlade() {
         $this->setStub('install/resource-view-pdf-report');
         $fileName = "resources/views/reports/default_pdf_report.blade.php";
@@ -504,66 +495,23 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
-    protected function makePtBrLocalePagination() {
-        $this->setStub('install/locale-pagination');
-        $fileName = "resources/lang/pt-BR/pagination.php";
-        $outsideApp = true;
-        $path = $this->makePath( $fileName, $outsideApp );
-
-        $this->files->put( $path, $this->files->get( $this->getStub() ) );
-
-        $date = now();
-        $this->info("$date - [ Installing ] >> $fileName");
-    }
-
-    protected function makePtBrLocalePasswords() {
-        $this->setStub('install/locale-passwords');
-        $fileName = "resources/lang/pt-BR/passwords.php";
-        $outsideApp = true;
-        $path = $this->makePath( $fileName, $outsideApp );
-
-        $this->files->put( $path, $this->files->get( $this->getStub() ) );
-
-        $date = now();
-        $this->info("$date - [ Installing ] >> $fileName");
-    }
-
-    protected function makePtBrLocaleValidation() {
-        $this->setStub('install/locale-validation');
-        $fileName = "resources/lang/pt-BR/validation.php";
-        $outsideApp = true;
-        $path = $this->makePath( $fileName, $outsideApp );
-
-        $this->files->put( $path, $this->files->get( $this->getStub() ) );
-
-        $date = now();
-        $this->info("$date - [ Installing ] >> $fileName");
-    }
-
-    protected function makePtBrLocalePtBr() {
-        $this->setStub('install/locale-validation');
-        $fileName = "resources/lang/pt-BR.json";
-        $outsideApp = true;
-        $path = $this->makePath( $fileName, $outsideApp );
-
-        $this->files->put( $path, $this->files->get( $this->getStub() ) );
-
-        $date = now();
-        $this->info("$date - [ Installing ] >> $fileName");
-    }
-
-    protected function makePtBrLocale() {
-        $this->makePtBrLocaleAuth();
-        $this->makePtBrLocalePagination();
-        $this->makePtBrLocalePasswords();
-        $this->makePtBrLocaleValidation();
-        $this->makePtBrLocalePtBr();
-    }
-
     protected function makeLaravueConfigApp() {
         $this->setStub('install/config-app');
         $fileName = "config/app.php";
-        $path = $this->makePath( $fileName );
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeLaravueConfigAuth() {
+        $this->setStub('install/config-auth');
+        $fileName = "config/auth.php";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
 
@@ -572,8 +520,20 @@ class LaravueInstallCommand extends LaravueCommand
     }
 
     protected function makeLaravueConfigServer() {
-        $this->setStub('install/config-server');
-        $fileName = "config/server.php";
+        $this->setStub('install/config');
+        $fileName = "config/laravue.php";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeLaravueProviderAuth() {
+        $this->setStub('install/provider-auth');
+        $fileName = "Providers/AuthServiceProvider.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
@@ -897,6 +857,15 @@ class LaravueInstallCommand extends LaravueCommand
             '--provider' =>  'Intervention\Image\ImageServiceProviderLaravelRecent',
         ]);
     }
+    
+    protected function publishInternacionalization() {
+        $date = now();
+        $this->info("$date - [ Publishing ] >> ImageServiceProviderLaravelRecent");
+        $this->call('vendor:publish',[
+            '--tag' =>  'laravel-pt-br-localization',
+        ]);
+    }
+
     protected function publishLaravue() {
         $date = now();
         $this->info("$date - [ Publishing ] >> LaravueServiceProvider");

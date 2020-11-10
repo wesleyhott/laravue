@@ -42,18 +42,20 @@ class TaskReportController extends LaravueReportController
      */
     public function beforeIndex($data)
     {
-        // Transformando colunas
-        $item["Tipo"] = ( \App\Models\TaskGroup::find( $item["Tipo"] ) )->name;
-        $item["Tarefa"] = "[" . $item["Tipo"] . "] " . $item["Tarefa"];
-        $item["Início"] = date( 'd/m/Y', strtotime( $item["Início"] ) );
-        $item["Fim"] = date( 'd/m/Y', strtotime( $item["Fim"] ) );
-        $item["Status"] = ( \App\Models\TaskStatus::find( $item["Status"] ) )->name;
-        $item["Roteiro"] = $item["Roteiro"] == 1 ? "Sim" : "Não";
-        $item["Marco Histórico"] = $item["Marco Histórico"] == 1 ? "Sim" : "Não";
-        $item["Responsável"] = ( \App\Models\User::find( $item["Responsável"] ) )->name;
-        // Removendo colunas
-        unset($item["Tipo"]);
-
+        foreach($data as $item){
+            // Transformando colunas
+            $item["Tipo"] = ( \App\Models\TaskGroup::find( $item["Tipo"] ) )->name;
+            $item["Tarefa"] = "[" . $item["Tipo"] . "] " . $item["Tarefa"];
+            $item["Início"] = date( 'd/m/Y', strtotime( $item["Início"] ) );
+            $item["Fim"] = date( 'd/m/Y', strtotime( $item["Fim"] ) );
+            $item["Status"] = ( \App\Models\TaskStatus::find( $item["Status"] ) )->name;
+            $item["Roteiro"] = $item["Roteiro"] == 1 ? "Sim" : "Não";
+            $item["Marco Histórico"] = $item["Marco Histórico"] == 1 ? "Sim" : "Não";
+            $item["Responsável"] = ( \App\Models\User::find( $item["Responsável"] ) )->name;
+            // Removendo colunas
+            unset($item["Tipo"]);
+        }
+        
         return $data;
     }
 }

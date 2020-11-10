@@ -12,7 +12,7 @@ class MakeLaravueConfigServerFileTest extends TestCase
     function it_creates_config_server_file()
     {
         // destination path of the Foo class
-        $testClass = str_replace( "tests/Feature", "", __DIR__) . "app/config/server.php";
+        $testClass = str_replace( "tests/Feature", "", __DIR__) . "config/laravue.php";
 
         // make sure we're starting from a clean state
         if (File::exists($testClass)) {

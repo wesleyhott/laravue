@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers\Laravue;
 
-use App\Models\User;
-use App\Models\Monitor;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Psr\Http\Message\ServerRequestInterface;
 use Adldap\Laravel\Facades\Adldap;
+use App\Models\Monitor as ModelsMonitor;
+use App\Models\User as ModelsUser;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Intervention\Image\ImageManagerStatic as Image;
 
 use \Laravel\Passport\Http\Controllers\AccessTokenController as ATC;
 use Auth;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
+use Intervention\Image\Exception\NotReadableException;
 
 /**
  * Laravel Passport - geração e emissão de token customizado para validação com CAS e LDAP.
@@ -78,9 +80,9 @@ class AccessTokenController extends ATC
                 }
 
                 $this->setMsgTraceError("->Buscando/criando usuario no Laravel...[user:{$userMPMG->ldap->mail[0]}]", __LINE__, __FUNCTION__);
-                $userMPMG->laravel = User::getCreateUser($userMPMG->ldap->mail[0], $userMPMG->ldap->nome[0], $password, true); // App\User Object
+                $userMPMG->laravel = ModelsUser::getCreateUser($userMPMG->ldap->mail[0], $userMPMG->ldap->nome[0], $password, true); // App\User Object
 
-                if (Auth::attempt(['email' => $userMPMG->ldap->mail[0], 'password' => $password ])) {
+                if (FacadesAuth::attempt(['email' => $userMPMG->ldap->mail[0], 'password' => $password ])) {
                     $userMPMG->access_keys = auth()->user()->getAllPermissions();
                 }
 
@@ -279,7 +281,7 @@ class AccessTokenController extends ATC
     public function throwErrorMonitoramento($msgTraceError, $line = null, $function = null) { 
         $this->setMsgTraceError($msgTraceError, $line);
         Log::error($this->msgTraceError);
-        Monitoramento::setLogNoUserAuth($this->msgTraceError, $line, $function, __FILE__, __CLASS__);
+         ModelsMonitor::setLogNoUserAuth($this->msgTraceError, $line, $function, __FILE__, __CLASS__);
     }
 
     private function setUserAvatar($mamp){
@@ -294,16 +296,16 @@ class AccessTokenController extends ATC
                         $img = Image::make($foto->foto);
                         $img->save(public_path("img/users/avatar/$mamp.jpeg"));
                     } catch (NotReadableException $e) {
-                        Monitoramento::setLogNoUserAuth("Conteúdo inválido do binário da foto de perfil.", __LINE__, __FUNCTION__, __FILE__, __CLASS__);
+                        ModelsMonitor::setLogNoUserAuth("Conteúdo inválido do binário da foto de perfil.", __LINE__, __FUNCTION__, __FILE__, __CLASS__);
                     }
                 } else {
-                    Monitoramento::setLogNoUserAuth($im, __LINE__, __FUNCTION__, __FILE__, __CLASS__);
+                    ModelsMonitor::setLogNoUserAuth($im, __LINE__, __FUNCTION__, __FILE__, __CLASS__);
                 }
             } else {
-                Monitoramento::setLogNoUserAuth("Sem acesso a foto->foto", __LINE__, __FUNCTION__, __FILE__, __CLASS__);
+                ModelsMonitor::setLogNoUserAuth("Sem acesso a foto->foto", __LINE__, __FUNCTION__, __FILE__, __CLASS__);
             }
         }catch(Exception $e){
-            Monitoramento::setLogNoUserAuth("Sem acesso a VW_FUNCIONARIO_MPS.", __LINE__, __FUNCTION__, __FILE__, __CLASS__);
+            ModelsMonitor::setLogNoUserAuth("Sem acesso a VW_FUNCIONARIO_MPS.", __LINE__, __FUNCTION__, __FILE__, __CLASS__);
         }
 
         return "img/users/avatar/$mamp.jpeg";

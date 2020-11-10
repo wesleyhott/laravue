@@ -151,14 +151,14 @@ abstract class LaravueController extends Controller
         if ($validation->fails()) {
             // Store monitor
             $operacao = $request->id ? 'edição' : 'inclusão';
-            (new Monitoramento([
-                'tipo' => Monitoramento::INFO,
-                'resultado' => Monitoramento::RESULTADO_NEUTRO,
-                'arquivo' => __FILE__,
-                'classe' => $this->getModel(),
-                'metodo' => __FUNCTION__,
-                'linha' => __LINE__,
-                'mensagem' => "Erro de Validação: $operacao. ID:" . $data['id']
+            (new Monitor([
+                'type' => Monitor::INFO,
+                'result' => Monitor::RESULT_NEUTRAL,
+                'file' => __FILE__,
+                'class' => $this->getModel(),
+                'method' => __FUNCTION__,
+                'line' => __LINE__,
+                'message' => "Erro de Validação: $operacao. ID:" . $data['id']
                     . " Mensagens: " . serialize($this->getValidationMessages($validation))
             ]))->dispatch();
             return response(
@@ -175,27 +175,27 @@ abstract class LaravueController extends Controller
         try {
             if($request->id){ // if edition
                 $modelBackup = $model::find($request->id);
-                (new Monitoramento([
-                    'tipo' => Monitoramento::DEBUG,
-                    'resultado' => Monitoramento::RESULTADO_SUCESSO,
-                    'arquivo' => __FILE__,
-                    'classe' => $this->getModel(),
-                    'metodo' => __FUNCTION__,
-                    'linha' => __LINE__,
-                    'mensagem' => "Registro editado com sucesso. EDIÇÃO Backup data:" . $modelBackup->toJson()
+                (new Monitor([
+                    'type' => Monitor::DEBUG,
+                    'result' => Monitor::RESULT_SUCESS,
+                    'file' => __FILE__,
+                    'class' => $this->getModel(),
+                    'method' => __FUNCTION__,
+                    'line' => __LINE__,
+                    'message' => "Registro editado com sucesso. EDIÇÃO Backup data:" . $modelBackup->toJson()
                 ]))->dispatch();
             }
             if ($model->save()) {
                 // Store monitor
                 if(!$request->id){ // If insertion
-                    (new Monitoramento([
-                        'tipo' => Monitoramento::DEBUG,
-                        'resultado' => Monitoramento::RESULTADO_SUCESSO,
-                        'arquivo' => __FILE__,
-                        'classe' => $this->getModel(),
-                        'metodo' => __FUNCTION__,
-                        'linha' => __LINE__,
-                        'mensagem' => "Registro incluído com sucesso. id:$model->id"
+                    (new Monitor([
+                        'type' => Monitor::DEBUG,
+                        'result' => Monitor::RESULT_SUCESS,
+                        'file' => __FILE__,
+                        'class' => $this->getModel(),
+                        'method' => __FUNCTION__,
+                        'line' => __LINE__,
+                        'message' => "Registro incluído com sucesso. id:$model->id"
                     ]))->dispatch();
                 }
 
@@ -210,14 +210,14 @@ abstract class LaravueController extends Controller
                 );
             } else {
                 // Store monitor
-                (new Monitoramento([
-                    'tipo' => Monitoramento::ERRO,
-                    'resultado' => Monitoramento::RESULTADO_FALHA,
-                    'arquivo' => __FILE__,
-                    'classe' => $this->getModel(),
-                    'metodo' => __FUNCTION__,
-                    'linha' => __LINE__,
-                    'mensagem' => $this->message_store_500
+                (new Monitor([
+                    'type' => Monitor::ERROR,
+                    'result' => Monitor::RESULT_FAILURE,
+                    'file' => __FILE__,
+                    'class' => $this->getModel(),
+                    'method' => __FUNCTION__,
+                    'line' => __LINE__,
+                    'message' => $this->message_store_500
                 ]))->dispatch();
                 DB::commit();
                 return response(
@@ -230,14 +230,14 @@ abstract class LaravueController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollback();
             // Store monitor
-            (new Monitoramento([
-                'tipo' => Monitoramento::ERRO,
-                'resultado' => Monitoramento::RESULTADO_NEUTRO,
-                'arquivo' => __FILE__,
-                'classe' => $this->getModel(),
-                'metodo' => __FUNCTION__,
-                'linha' => __LINE__,
-                'mensagem' => "violação de regras de inserção. Erro: " . $e->getMessage()
+            (new Monitor([
+                'type' => Monitor::ERROR,
+                'result' => Monitor::RESULT_NEUTRAL,
+                'file' => __FILE__,
+                'class' => $this->getModel(),
+                'method' => __FUNCTION__,
+                'line' => __LINE__,
+                'message' => "violação de regras de inserção. Erro: " . $e->getMessage()
             ]))->dispatch();
             if ($e->getCode() == '23000') { // Exception by database key violation
               abort(Response::HTTP_CONFLICT, "Não foi possível incluir o registro: violação de regras de inserção.");
@@ -317,14 +317,14 @@ abstract class LaravueController extends Controller
             $model = $this->beforeDestroy($model);
             if ($model->delete()) {
                 DB::commit();
-                (new Monitoramento([
-                    'tipo' => Monitoramento::DEBUG,
-                    'resultado' => Monitoramento::RESULTADO_SUCESSO,
-                    'arquivo' => __FILE__,
-                    'classe' => $this->getModel(),
-                    'metodo' => __FUNCTION__,
-                    'linha' => __LINE__,
-                    'mensagem' => "Registro excluído com sucesso. EXCLUSÃO Backup data:" . $model->toJson()
+                (new Monitor([
+                    'type' => Monitor::DEBUG,
+                    'result' => Monitor::RESULT_SUCESS,
+                    'file' => __FILE__,
+                    'class' => $this->getModel(),
+                    'method' => __FUNCTION__,
+                    'line' => __LINE__,
+                    'message' => "Registro excluído com sucesso. EXCLUSÃO Backup data:" . $model->toJson()
                 ]))->dispatch();
                 return response(
                     [
@@ -335,14 +335,14 @@ abstract class LaravueController extends Controller
                 );
             } else {
                 DB::rollback();
-                (new Monitoramento([
-                    'tipo' => Monitoramento::CRITICO,
-                    'resultado' => Monitoramento::RESULTADO_FALHA,
-                    'arquivo' => __FILE__,
-                    'classe' => $this->getModel(),
-                    'metodo' => __FUNCTION__,
-                    'linha' => __LINE__,
-                    'mensagem' => "Banco de dados inacessível."
+                (new Monitor([
+                    'type' => Monitor::CRITICO,
+                    'result' => Monitor::RESULT_FAILURE,
+                    'file' => __FILE__,
+                    'class' => $this->getModel(),
+                    'method' => __FUNCTION__,
+                    'line' => __LINE__,
+                    'message' => "Banco de dados inacessível."
                 ]))->dispatch();
                 return response(
                     [
@@ -353,28 +353,28 @@ abstract class LaravueController extends Controller
             }
         } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $mnfe){
             DB::rollback();
-            (new Monitoramento([
-                'tipo' => Monitoramento::ERRO,
-                'resultado' => Monitoramento::RESULTADO_NEUTRO,
-                'arquivo' => __FILE__,
-                'classe' => $this->getModel(),
-                'metodo' => __FUNCTION__,
-                'linha' => __LINE__,
-                'mensagem' => 'Tentativa de exclusão de registro excluído. Erro: ' . $mnfe->getMessage()
+            (new Monitor([
+                'type' => Monitor::ERROR,
+                'result' => Monitor::RESULT_NEUTRAL,
+                'file' => __FILE__,
+                'class' => $this->getModel(),
+                'method' => __FUNCTION__,
+                'line' => __LINE__,
+                'message' => 'Tentativa de exclusão de registro excluído. Erro: ' . $mnfe->getMessage()
             ]))->dispatch();
 
             abort(Response::HTTP_MOVED_PERMANENTLY, "O registro já foi excluído. Atualize a tela.");
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollback();
             if ($e->getCode() == '23000') { // Exception by database key violation
-                (new Monitoramento([
-                    'tipo' => Monitoramento::ERRO,
-                    'resultado' => Monitoramento::RESULTADO_NEUTRO,
-                    'arquivo' => __FILE__,
-                    'classe' => $this->getModel(),
-                    'metodo' => __FUNCTION__,
-                    'linha' => __LINE__,
-                    'mensagem' => 'Tentativa de exclusão de registro vinculado. Erro: ' . $e->getMessage()
+                (new Monitor([
+                    'type' => Monitor::ERROR,
+                    'result' => Monitor::RESULT_NEUTRAL,
+                    'file' => __FILE__,
+                    'class' => $this->getModel(),
+                    'method' => __FUNCTION__,
+                    'line' => __LINE__,
+                    'message' => 'Tentativa de exclusão de registro vinculado. Erro: ' . $e->getMessage()
                 ]))->dispatch();
 
                 $msg = $e->getMessage();
@@ -383,14 +383,14 @@ abstract class LaravueController extends Controller
                 $table = substr($msg, $pos1, $pos2 - $pos1);
                 abort(Response::HTTP_CONFLICT, "Não foi possível excluir o registro pois ele está sendo usando em outra tabela. [$table]");
             } else {
-                (new Monitoramento([
-                    'tipo' => Monitoramento::ERRO,
-                    'resultado' => Monitoramento::RESULTADO_FALHA,
-                    'arquivo' => __FILE__,
-                    'classe' => $this->getModel(),
-                    'metodo' => __FUNCTION__,
-                    'linha' => __LINE__,
-                    'mensagem' => $e->getMessage()
+                (new Monitor([
+                    'type' => Monitor::ERROR,
+                    'result' => Monitor::RESULT_FAILURE,
+                    'file' => __FILE__,
+                    'class' => $this->getModel(),
+                    'method' => __FUNCTION__,
+                    'line' => __LINE__,
+                    'message' => $e->getMessage()
                 ]))->dispatch();
                 throw new \Exception($e->getMessage());
             }
@@ -418,7 +418,7 @@ abstract class LaravueController extends Controller
 
     private function getUri(){
         $routeParts = explode('/', $_SERVER['REQUEST_URI']);
-        $routePartsIndex = config('server.uri_index', 4);
+        $routePartsIndex = config('laravue.uri_index', 3);
         $uri = $routeParts[$routePartsIndex];
         if(strpos($uri , '?')){
             $query =  explode('?', $uri);

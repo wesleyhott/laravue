@@ -1,0 +1,5 @@
+<?php
+
+return [
+    'uri_index' => env('SERVER_URI_INDEX', 3),
+];

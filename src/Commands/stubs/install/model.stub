@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use App\Filters\LarvueFilter;
+use App\Filters\LaravueFilter;
 use Exception;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-abstract class LarvueModel extends Model
+abstract class LaravueModel extends Model
 {
     /**
      * Maps model fields for report
@@ -32,7 +32,7 @@ abstract class LarvueModel extends Model
      */
     public function scopeFilter(Builder $builder, $request)
     {
-        return (new LarvueFilter($request))->filter($builder);
+        return (new LaravueFilter($request))->filter($builder);
     }
 
     public static function boot()

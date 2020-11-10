@@ -56,7 +56,7 @@ class LaravueRouteCommand extends LaravueCommand
         $route = strtolower( $ModelName );
 
         $newRoute = "";
-        $newRoute .= "'$route' => '$formatedModel"."Controller'," . PHP_EOL;
+        $newRoute .= "'$route' => \App\Http\Controllers\\$formatedModel"."Controller::class," . PHP_EOL;
         $newRoute .= "\t// {{ laravue-insert:route }}";
 
         return str_replace( '// {{ laravue-insert:route }}', $newRoute, $routeFile );
