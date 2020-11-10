@@ -55,6 +55,9 @@ export default {
       },
     }
   },
+  mounted() {
+    this.rotaVoltar = this.$route.query.page ? `${this.rotaVoltar}?page=${this.$route.query.page}` : this.rotaVoltar
+  },
   created() {
     this.loadSelects()
   },
