@@ -38,9 +38,8 @@ class LaravueSeedCommand extends LaravueCommand
 
         $path = $this->getPath($model);
         $this->files->put($path, $this->sortImports($this->buildSeed($model)));
-
-        $plural = $this->pluralize( 2, $model );
-        $this->info("$date - [ $model ] >> $plural"."TableSeeder.php");
+    
+        $this->info("$date - [ $model ] >> $model"."Seeder.php");
     }
 
     protected function replaceField($stub, $model)

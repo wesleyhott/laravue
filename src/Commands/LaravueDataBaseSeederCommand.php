@@ -58,10 +58,10 @@ class LaravueDataBaseSeederCommand extends LaravueCommand
 
     protected function replaceSeeder($databaseSeederFile, $model)
     {
-        $formatedModel = ucfirst( $this->pluralize( 2, $model ) );
+        $formatedModel = ucfirst( $model );
 
         $newSeeder = "";
-        $newSeeder .= "$"."this->call($formatedModel"."TableSeeder::class);" . PHP_EOL;
+        $newSeeder .= "$"."this->call($formatedModel"."Seeder::class);" . PHP_EOL;
         $newSeeder .= "\t\t// {{ laravue-insert:seed }}";
         
         return str_replace( '// {{ laravue-insert:seed }}', $newSeeder, $databaseSeederFile );

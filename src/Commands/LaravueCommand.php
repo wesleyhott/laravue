@@ -419,7 +419,7 @@ class LaravueCommand extends Command
     protected function buildSeed($model)
     {
         $stub = $this->files->get($this->getStub());
-        $class = $this->replacePluralClass($stub, $model);
+        $class = $this->replaceClass($stub, $model);
         $table = $this->replaceTable($class, $model);
 
         return $this->replaceField($table, $model);

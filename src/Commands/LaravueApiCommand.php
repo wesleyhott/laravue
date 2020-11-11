@@ -30,7 +30,7 @@ class LaravueApiCommand extends Command
     {
         $this->createMigration();
         $this->createSeeder();
-        $this->createDataTableSeeder();
+        $this->createDataSeeder();
         $this->createModel();
         $this->createController();
         $this->createReport();
@@ -69,7 +69,7 @@ class LaravueApiCommand extends Command
      *
      * @return void
      */
-    protected function createDataTableSeeder()
+    protected function createDataSeeder()
     {
         $this->call('laravue:dbseeder', [
             'model' => $this->argument('model'),
