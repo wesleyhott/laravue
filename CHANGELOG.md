@@ -1,8 +1,15 @@
-# Changelog
+# Roteiro de Mudanças
 
-All notable changes to `Laravue` will be documented in this file
+Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 1.0.0 - 2020-10-27
+## 8.3.71 - 2020-11-11
+### Adicionado
+- Suporte Nullable (.n) nas migrations e controllers.
+- Suporte a tamanho de string (s.#) nas migrations e Controllers.
+- Adicionado Nullable nas chaves estrangeiras nas migrations.
+### Alterado
+- Correções diversas.
 
-### Added
-- Everything, initial release
+## 8.0.0 - 2020-10-27
+### Adicionado
+- Tudo, versão inicial.
