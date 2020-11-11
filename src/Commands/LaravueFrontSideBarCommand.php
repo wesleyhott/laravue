@@ -83,7 +83,7 @@ class LaravueFrontSideBarCommand extends LaravueCommand
         $route = $this->pluralize( 2, strtolower( $model ) );
 
         $newRoute = "";
-        $newRoute .= "\t// {{ laravue-insert:routes }}" . PHP_EOL;
+        $newRoute .= "// {{ laravue-insert:routes }}" . PHP_EOL;
         $newRoute .= "\t{" . PHP_EOL;
         $newRoute .= "\t\tname: '$ModelName'," . PHP_EOL;
         $newRoute .= "\t\ticon: 'nc-icon nc-paper', " . PHP_EOL;
