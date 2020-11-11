@@ -491,6 +491,25 @@ class LaravueCommand extends Command
     }
 
     /**
+     * Retorna falso se não contém número ou retorna o número
+     *
+     * @param  string  $field
+     * @return boolean false or
+     * @return integer number
+     */
+    protected function hasNumber($field) {
+        $options = $this->getOptionsArray($field);
+        $numbers = false;
+        foreach ($options as $option){
+            preg_match_all('!\d+!', $option, $matches);
+            if( count( $matches[0] ) > 0 ) {
+                $numbers = $matches[0];
+            }
+        }
+        return $numbers;
+    }
+
+    /**
      * Retorna o tipo baseado na letra declarada em option
      *
      * @param  string  $value
