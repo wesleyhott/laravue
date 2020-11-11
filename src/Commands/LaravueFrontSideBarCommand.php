@@ -80,10 +80,10 @@ class LaravueFrontSideBarCommand extends LaravueCommand
     {   
         $isPlural = true;
         $ModelName = $this->getTitle( $model, $isPlural );
-        $route = strtolower( $ModelName );
+        $route = $this->pluralize( 2, strtolower( $model ) );
 
         $newRoute = "";
-        $newRoute .= "// {{ laravue-insert:routes }}" . PHP_EOL;
+        $newRoute .= "\t// {{ laravue-insert:routes }}" . PHP_EOL;
         $newRoute .= "\t{" . PHP_EOL;
         $newRoute .= "\t\tname: '$ModelName'," . PHP_EOL;
         $newRoute .= "\t\ticon: 'nc-icon nc-paper', " . PHP_EOL;
@@ -98,6 +98,6 @@ class LaravueFrontSideBarCommand extends LaravueCommand
         $newRoute .= "\t\t//]," . PHP_EOL;
         $newRoute .= "\t},";
 
-        return str_replace( '// {{ laravue-insert:routes }}', $newRoute, $routeFile );
+        return str_replace( "\t// {{ laravue-insert:routes }}", $newRoute, $routeFile );
     }
 }
