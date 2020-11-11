@@ -62,6 +62,7 @@ class LaravueMigrationCommand extends LaravueCommand
             // Nullable
             $isNullable = $this->hasNullable($value);
             $nullable = $isNullable ? '->nullable()' : '';
+            $onDelete = $isNullable ? 'set null' : 'cascade';
             // String Size
             $size = '';
             if( $type == 'string' ) {
@@ -81,12 +82,14 @@ class LaravueMigrationCommand extends LaravueCommand
                 $referenced_table = $this->pluralize( 2, str_replace( "_id", "", $key ) );
 
                 $returnFields .= "$"."table->$type('$key')" . PHP_EOL;
-                $returnFields .= $this->tabs(4) . "// ->nullable()" . PHP_EOL;
+                if( $isNullable ) {
+                    $returnFields .= $this->tabs(4) . $nullable . PHP_EOL;
+                }
                 $returnFields .= $this->tabs(4) . "->unsigned();" . PHP_EOL;
                 $returnFields .= $this->tabs(3) . "\$table->foreign('$key')" . PHP_EOL;
                 $returnFields .= $this->tabs(4) . "->references('id')" . PHP_EOL;
                 $returnFields .= $this->tabs(4) . "->on('$referenced_table')" . PHP_EOL;
-                $returnFields .= $this->tabs(4) . "->onDelete('cascade'); // 'set null' if nullable";
+                $returnFields .= $this->tabs(4) . "->onDelete('$onDelete');";
             } else {
                 $returnFields .= "$"."table->$type('$key'$size)$nullable;";
             }
