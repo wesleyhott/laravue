@@ -59,14 +59,17 @@ class LaravueMigrationCommand extends LaravueCommand
         $first = true;
         foreach ($fields as $key => $value) {
             $type = $this->getType($value);
-            $options = $this->getOptionsArray($value);
-            $nullable = '';
-            foreach ($options as $option){
-                if( $option == 'n') {
-                    $nullable = '->nullable()';
+            // Nullable
+            $isNullable = $this->hasNullable($value);
+            $nullable = $isNullable ? '->nullable()' : '';
+            // String Size
+            $size = '';
+            if( $type == 'string' ) {
+                $isNumbers = $this->hasNumber($value);
+                if( $isNumbers !== false ) {
+                    $size = ", " . $isNumbers[0];
                 }
             }
-
             if( $first ) {
                 $first = false;
             } else {
@@ -85,7 +88,7 @@ class LaravueMigrationCommand extends LaravueCommand
                 $returnFields .= $this->tabs(4) . "->on('$referenced_table')" . PHP_EOL;
                 $returnFields .= $this->tabs(4) . "->onDelete('cascade'); // 'set null' if nullable";
             } else {
-                $returnFields .= "$"."table->$type('$key')$nullable;";
+                $returnFields .= "$"."table->$type('$key'$size)$nullable;";
             }
         }
 
