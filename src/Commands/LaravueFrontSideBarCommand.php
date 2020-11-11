@@ -98,6 +98,6 @@ class LaravueFrontSideBarCommand extends LaravueCommand
         $newRoute .= "\t\t//]," . PHP_EOL;
         $newRoute .= "\t},";
 
-        return str_replace( "\t// {{ laravue-insert:routes }}", $newRoute, $routeFile );
+        return str_replace( "// {{ laravue-insert:routes }}", $newRoute, $routeFile );
     }
 }

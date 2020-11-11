@@ -31,11 +31,11 @@ class MakeLaravueModelCommandTest extends TestCase
         $expectedContents = <<<CLASS
         <?php
 
-        namespace App;
+        namespace App\Models;
         
         class Test extends LaravueModel
         {
-            // Redefinir nome da tabela, uma vez que o plural não é somente acrescentar 's'.
+            // Redefinir nome da tabela quando ele não seguir o padrão de pluralização.
             // protected \$table = '';
         
             /**

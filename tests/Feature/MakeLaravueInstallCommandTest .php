@@ -11,7 +11,7 @@ class MakeLaravueInstallCommandTest extends TestCase
     /** @test */
     function it_executes_laravue_install_command_file()
     {
-        $deleteAfterCreation = false;
+        $deleteAfterCreation = true;
 
         // destination path of the Test class
         // Config
