@@ -10,22 +10,22 @@ class {{ model }}Controller extends LaravueController
     /**
      * Implementação do modelo da classe abstrata em LaravueController
      *
-     * @return \App\Version::class
+     * @return \App\Models\{{ model }}::class
      */
     protected function getModel()
     {
-        return  \App\{{ model }}::class;
+        return  \App\Models\{{ model }}::class;
     }
 
     /**
      * Preenche o modelo com os valores correspondentes ao request
      *
-     * @return \App\{{ model }}
+     * @return \App\Models\{{ model }}
      */
     public function setModel(Request $request)
     {
         // verifica se é edição - PUT - ou inlcusão - POST.
-        $model = $request->isMethod('put') ? \App\{{ model }}::findOrFail($request->id) : new \App\{{ model }};
+        $model = $request->isMethod('put') ? \App\Models\{{ model }}::findOrFail($request->id) : new \App\Models\{{ model }};
 
         // Preencher os atributos do modelo
         {{ fields }}

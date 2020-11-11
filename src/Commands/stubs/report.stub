@@ -12,17 +12,17 @@ class {{ model }}ReportController extends LaravueReportController
     }
 
     public function getPdfOrientation(){
-        return \App\Report::ORIENTATION_LANDSCAPE;
+        return \App\Models\Report::ORIENTATION_LANDSCAPE;
     }
 
     /**
      * Implementação do modelo da classe abstrata em BaseController
      *
-     * @return \App\{{ model }}::class
+     * @return \App\Models\{{ model }}::class
      */
     protected function getModel()
     {
-        return  \App\{{ model }}::class;
+        return  \App\Models\{{ model }}::class;
     }
 
     /**
@@ -38,14 +38,14 @@ class {{ model }}ReportController extends LaravueReportController
     /**
      * Alterações necessárias antes de mostrar a coleção do modelo
      *
-     * @return \App\{{ model }}
+     * @return \App\Models\{{ model }}
      */
     public function beforeIndex($data)
     {
         // os nomes são os definidos em mapColumns() do modelo.
         // foreach($data as $item){
             // Transformando colunas
-            // $item["pk_id"] = ( \App\ModelPk::find( $item["pk_id"] ) )->name;
+            // $item["pk_id"] = ( \App\Models\ModelPk::find( $item["pk_id"] ) )->name;
             // $item["created_at"] = date( 'd/m/Y', strtotime( $item["created_at"] ) );
             // $item["booleanFiled"] = $item["booleanFiled"] == 1 ? "Sim" : "Não";
             
