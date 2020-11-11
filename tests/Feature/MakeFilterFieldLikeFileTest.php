@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Mpmg\Laravue\Tests\TestCase;
 
-class MakeLaravueActiveFilterFileTest extends TestCase
+class MakeFilterFieldLikeFileTest extends TestCase
 {
     /** @test */
-    function it_creates_active_filter_file()
+    function it_creates_field_like_filter_file()
     {
         // destination path of the Foo class
-        $testClass = str_replace( "tests/Feature", "", __DIR__) . "app/Filters/Active.php";
+        $testClass = str_replace( "tests/Feature", "", __DIR__) . "app/Filters/FieldLike.php";
 
         // make sure we're starting from a clean state
         if (File::exists($testClass)) {

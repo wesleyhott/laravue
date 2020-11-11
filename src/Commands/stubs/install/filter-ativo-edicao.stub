@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Filters;
+
+class AtivoEdicao
+{
+    public function filter($builder, $value)
+    {   
+        return ctype_digit($value) ? $builder->where('ativo', 1) ->orWhere('id', $value) : $builder->where('ativo', 1); 
+    }
+}

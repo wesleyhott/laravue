@@ -1,0 +1,66 @@
+<?php
+
+namespace App\Filters;
+/**
+ * 
+ * @return 
+ */
+class FieldLike
+{
+    public function filter($builder, $value)
+    {   
+        preg_match_all('/{{(.*?)}}/', $value, $arrayValue);
+
+        if (isset($arrayValue[1][1])) {
+            $search = $arrayValue[1][1];
+            $typeField = $arrayValue[1][0];
+        } else {
+            $search =  $arrayValue[1][0];
+        }
+
+        if (isset($search) && $search !== '') {
+            if (isset($typeField) && $typeField !== '') {
+                switch (strtolower($typeField)) {
+                    case 'bit':
+                        switch (strtolower($search)) {
+                            case 'nao':
+                            case 'não':	
+                                $search = 0;
+                                break;
+                            case 'sim':
+                                $search = 1;
+                                break;
+                        }	
+                    case 'date':
+                        $arrayPart = explode('/', $search);
+                        $searchPart = '';
+                        foreach (array_reverse($arrayPart) as $index => $part) {
+                            $searchPart .= ($index !== array_key_last($arrayPart) && $part !== '') ? "$part%" : $part;
+                        }
+                        $searchPart === '' ?: $search = $searchPart;
+                        break;
+                    case 'decimal':
+                        $search = str_replace(',', '%', str_replace('.', '%', $search));
+                        break;
+                }		
+            }    
+
+            $relationField = explode(".",  preg_replace('/{{(.*?)}}/', '', $value));
+
+            if (count($relationField) <= 1) {
+                return $builder->where($relationField[0], 'like', '%' . $search . '%');
+            } elseif ( count($relationField) == 2) {
+                return $builder->whereHas($relationField[0], function($q)  use ($relationField, $search) {
+                    $q->where($relationField[1], 'like', '%' . $search . '%');
+                })->get();
+            } else {
+                return  $builder->with([$relationField[1] => function($query) {
+                        $query->wherePivot('id', 1);
+                    }])->whereHas($relationField[1], function($q) use ($relationField, $search) {
+                        $q->where($relationField[2], 'like', '%' . $search . '%');
+                })->get();
+            }
+        }
+        return $builder->get();
+    }
+}

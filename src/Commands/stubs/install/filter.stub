@@ -8,8 +8,9 @@ class LaravueFilter extends AbstractFilter
 {
     protected $filters = [
         // Filters ( put in alphabetical order )
-        'active' => Active::class,
-        'active_edition' => ActiveEdition::class,
+        'ativo' => Ativo::class,
+        'ativo_edicao' => AtivoEdicao::class,
+        'field_like' => FieldLike::class,
         'user_id' => UserId::class,
         
         // Sorters ( put in alphabetical order )

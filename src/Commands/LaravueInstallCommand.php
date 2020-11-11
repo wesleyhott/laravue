@@ -48,8 +48,9 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeDataBaseSeeder();
         $this->makeLaravueSeeder();
         // Filters
-        $this->makeActiveFilter();
-        $this->makeActiveEditionFilter();
+        $this->makeAtivoFilter();
+        $this->makeAtivoEdicaoFilter();
+        $this->makeFieldLikeFilter();
         $this->makeOrderByIdFilter();
         $this->makeOrderByNameFilter();
         $this->makeUserIdFilter();
@@ -263,9 +264,9 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
-    protected function makeActiveFilter() {
-        $this->setStub('install/filter-active');
-        $fileName = "Filters/Active.php";
+    protected function makeAtivoFilter() {
+        $this->setStub('install/filter-ativo');
+        $fileName = "Filters/Ativo.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
@@ -274,9 +275,20 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
-    protected function makeActiveEditionFilter() {
-        $this->setStub('install/filter-active-edition');
-        $fileName = "Filters/ActiveEdition.php";
+    protected function makeAtivoEdicaoFilter() {
+        $this->setStub('install/filter-ativo-edicao');
+        $fileName = "Filters/AtivoEdicao.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeFieldLikeFilter() {
+        $this->setStub('install/filter-field-like');
+        $fileName = "Filters/FieldLike.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
