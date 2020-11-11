@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import LaravueDatatable from "@/components/ProjetoBase/Views/Components/LaravueDatatable"
+import LaravueDatatable from "@/components/ProjetoBase/Views/Components/LaravueDataTable"
 import Show from "./Show"
 import Delete from "./Delete"
 
