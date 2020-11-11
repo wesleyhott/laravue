@@ -71,8 +71,17 @@ class LaravueControllerCommand extends LaravueCommand
         $first = true;
         foreach ($fields as $key => $value) {
             $type = $this->getType($value);
+            // Nullable
             $nullable = $this->hasNullable($value);
-            $required = $nullable ? '' : ' | required';
+            $required = $nullable ? '' : '|required';
+            // String Size
+            $maxSize = '';
+            if( $type == 'string' ) {
+                $isNumbers = $this->hasNumber($value);
+                if( $isNumbers !== false ) {
+                    $maxSize = "|max:" . $isNumbers[0];
+                }
+            }
 
             if( $first ) {
                 $first = false;
@@ -80,7 +89,7 @@ class LaravueControllerCommand extends LaravueCommand
                 $returnRules .= PHP_EOL;
                 $returnRules .= "\t\t\t\t";
             } 
-            $returnRules .= "'$key' => '${type}${required}',"; 
+            $returnRules .= "'$key' => '${type}${required}${maxSize}',"; 
         }
 
         return str_replace( '{{ rules }}', $returnRules , $parsedfFields );

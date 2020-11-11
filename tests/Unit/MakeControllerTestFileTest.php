@@ -18,7 +18,7 @@ class MakeControllerTestFileTest extends TestCase
         // Run the make command
         Artisan::call('laravue:controller', [
             'model' => $model,
-            '--fields' => 'name:s.n,age:i',
+            '--fields' => 'name:s.n40,age:i',
         ]);
 
         // Assert a new file is created
