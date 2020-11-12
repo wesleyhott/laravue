@@ -276,6 +276,8 @@ class LaravueCommand extends Command
         switch($ending_letters) {
             case 'ao': 
                 return substr($singular, 0, -2).'oes';
+            case 'el': 
+                return substr($singular, 0, -2).'eis';
         }
 
         $last_letter = strtolower($singular[strlen($singular)-1]);
@@ -588,6 +590,8 @@ class LaravueCommand extends Command
                 return substr($word,0,-3).'ção';
             case 'oes':
                 return substr($word,0,-3).'ões';
+            case 'eis':
+                return substr($word,0,-3).'éis';
         }
 
         $til = substr($word, -2);
