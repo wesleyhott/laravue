@@ -76,15 +76,20 @@ class LaravueFrontModelCommand extends LaravueCommand
             switch($value) {
                 case 'b':
                     $returnFields .= $this->getCheckBox($key);
-                    break;
+                break;
                 case 'd':
                 case 'dt':
                     $returnFields .= $this->getDate($key);
-                    break;
+                break;
                 case 'i':
                 case 's': 
                     $returnFields .= $this->getInput($key);
-                    break;
+                break;
+                case 't': 
+                    $returnFields .= $this->getTime($key);
+                break;
+                default:
+                    $returnFields .= $this->getInput($key);
             }
         }
 
@@ -163,6 +168,28 @@ class LaravueFrontModelCommand extends LaravueCommand
         $input .= $this->tabs(4) .  "";
         
         return $input;
+    }
+
+    public function getTime() {
+        $field = Str::snake( $key );
+        $label = $this->getTitle( $key );
+
+        $input = "";
+        $input .= "<div class=\"row formSpace\">  <!-- TODO: [build] Change picker options -->"  . PHP_EOL;
+        $input .= $this->tabs(5) .  "<div class=\"col-sm-12\">"  . PHP_EOL;
+        $input .= $this->tabs(6) .  "<div style=\"margin-bottom: 5px; color: #9A9A9A; font-size: .8571em;\">$label</div>"  . PHP_EOL;
+        $input .= $this->tabs(6) .  "<el-time-select"  . PHP_EOL;
+        $input .= $this->tabs(7) .  "v-model=\"model.$field\""  . PHP_EOL;
+        $input .= $this->tabs(7) .  ":picker-options=\"{"  . PHP_EOL;
+        $input .= $this->tabs(8) .  "start: '08:00',"  . PHP_EOL;
+        $input .= $this->tabs(8) .  "step: '02:00',"  . PHP_EOL;
+        $input .= $this->tabs(8) .  "end: '18:00"  . PHP_EOL;
+        $input .= $this->tabs(7) .  "}\""  . PHP_EOL;
+        $input .= $this->tabs(7) .  "placeholder=\"Selecione hora\">"  . PHP_EOL;
+        $input .= $this->tabs(6) .  "</el-time-select>"  . PHP_EOL;
+        $input .= $this->tabs(5) .  "</div>"  . PHP_EOL;
+        $input .= $this->tabs(4) .  "</div>"  . PHP_EOL;
+        $input .= $this->tabs(4) .  "";
     }
 
     protected function getSelect($key) {
