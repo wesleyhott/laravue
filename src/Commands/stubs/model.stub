@@ -15,4 +15,6 @@ class {{ class }} extends LaravueModel
     public function mapColumns() {
         return [{{ fields }}];
     }
+
+    // {{ laravue-insert:relationship }}
 }
