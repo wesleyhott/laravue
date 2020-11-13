@@ -2,6 +2,14 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
+## 8.4.79 - 13/nov/2020
+### Adicionado
+- Suporte a geração no frontend de campos do tipo 'time'.
+
+### Alterado
+- Geração de campo input como padrão no caso de não haver previsão no tipo selecionado.
+- Correções menores.
+
 ## 8.3.79 - 12/nov/2020
 ### Adicionado
 - Suporte Nullable (.n) nas migrations e controllers.
