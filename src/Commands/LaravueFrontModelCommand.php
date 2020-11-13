@@ -170,7 +170,7 @@ class LaravueFrontModelCommand extends LaravueCommand
         return $input;
     }
 
-    public function getTime() {
+    public function getTime( $key ) {
         $field = Str::snake( $key );
         $label = $this->getTitle( $key );
 
