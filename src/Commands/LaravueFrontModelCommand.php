@@ -183,7 +183,7 @@ class LaravueFrontModelCommand extends LaravueCommand
         $time .= $this->tabs(7) .  ":picker-options=\"{"  . PHP_EOL;
         $time .= $this->tabs(8) .  "start: '08:00',"  . PHP_EOL;
         $time .= $this->tabs(8) .  "step: '02:00',"  . PHP_EOL;
-        $time .= $this->tabs(8) .  "end: '18:00"  . PHP_EOL;
+        $time .= $this->tabs(8) .  "end: '18:00',"  . PHP_EOL;
         $time .= $this->tabs(7) .  "}\""  . PHP_EOL;
         $time .= $this->tabs(7) .  "placeholder=\"Selecione hora\">"  . PHP_EOL;
         $time .= $this->tabs(6) .  "</el-time-select>"  . PHP_EOL;
