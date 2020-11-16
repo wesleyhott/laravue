@@ -2,7 +2,7 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.4.82 - 16/nov/2020
+## 8.4.83 - 16/nov/2020
 ### Adicionado
 - Geração de relacionamentos 1*n nos modelos.
 - Plural de palavras terminadas em 'al', 'il', 'ol', 'm'.

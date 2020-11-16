@@ -39,13 +39,13 @@ class LaravueServiceProvider extends ServiceProvider
             if (! class_exists('CreateMonitorsTable')) {
                 // Export the migrations
                 $this->publishes([
-                __DIR__ . '/../database/migrations/create_laravue_tables.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_laravue_tables.php'),
+                __DIR__ . '/../publishes/database/migrations/create_laravue_tables.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_laravue_tables.php'),
                 ], 'migrations');
 
                 // Export Images
                 $this->publishes([
-                    __DIR__.'/../assets/img/logo_header.png' => public_path('img/logo_header.png'),
-                    __DIR__.'/../assets/img/logo_mpmg.png' => public_path('img/logo_mpmg.png'),
+                    __DIR__.'/../publishes/assets/img/logo_header.png' => public_path('img/logo_header.png'),
+                    __DIR__.'/../publishes/assets/img/logo_mpmg.png' => public_path('img/logo_mpmg.png'),
                 ], 'public');
             }
         }
