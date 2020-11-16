@@ -270,18 +270,29 @@ class LaravueCommand extends Command
             case 'Orgao': return 'Orgaos';
             case 'Vao': return 'Vaos';
             case 'Cao': return 'Caes';
+            case 'Mal': return 'Males';
+            case 'Missil': return 'Misseis';
+            case 'Reptil': return 'Repteis';
         }
 
         $ending_letters = substr($singular, -2);
         switch($ending_letters) {
             case 'ao': 
                 return substr($singular, 0, -2).'oes';
+            case 'al': 
+                return substr($singular, 0, -2).'ais';
             case 'el': 
                 return substr($singular, 0, -2).'eis';
+            case 'il': 
+                return substr($singular, 0, -2).'is';
+            case 'ol': 
+                return substr($singular, 0, -2).'ois';
         }
 
         $last_letter = strtolower($singular[strlen($singular)-1]);
         switch($last_letter) {
+            case 'm':
+                return substr($singular,0,-1).'ns';
             case 'y':
                 return substr($singular,0,-1).'ies';
             case 's':
@@ -610,6 +621,8 @@ class LaravueCommand extends Command
                 return substr($word,0,-3).'ões';
             case 'eis':
                 return substr($word,0,-3).'éis';
+            case 'ois':
+                return substr($word,0,-3).'óis';
         }
 
         $til = substr($word, -2);
