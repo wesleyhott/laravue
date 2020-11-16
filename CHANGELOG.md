@@ -2,6 +2,10 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
+## 8.4.81 - 16/nov/2020
+### Adicionado
+- Geração de relacionamentos 1*n nos modelos.
+
 ## 8.4.80 - 13/nov/2020
 ### Adicionado
 - Suporte a geração no frontend de campos do tipo 'time'.

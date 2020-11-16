@@ -2,6 +2,8 @@
 
 namespace Mpmg\Laravue\Commands;
 
+use Illuminate\Support\Str;
+
 class LaravueModelCommand extends LaravueCommand
 {
     /**
@@ -37,7 +39,8 @@ class LaravueModelCommand extends LaravueCommand
         $date = now();
 
         $path = $this->getPath($model);
-        $this->files->put($path, $this->sortImports($this->buildModel($model)));
+        $fields =  $this->option('fields') ? $this->getFieldsArray( $this->option('fields') ) : [];
+        $this->files->put($path, $this->buildModel($model, $fields));
 
         $this->info("$date - [ $model ] >> $model.php");
     }
@@ -63,5 +66,60 @@ class LaravueModelCommand extends LaravueCommand
         $returnFields .= "\t\t";
 
         return str_replace( '{{ fields }}', $returnFields , $stub );
+    }
+
+    /**
+     * Replace the relationship for the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $model
+     * @return string $stub
+     */
+    protected function replaceRelation($modelFile, $model, $fields)
+    {
+        $newRelations = $modelFile;
+
+        foreach ($fields as $key => $value) {
+            if( $this->isFk( $key ) ) {
+                $fieldRelationModel = Str::studly( str_replace( "_id", "", $key ) );
+                $relationName = lcfirst( $fieldRelationModel );
+
+                $newRelation = "/**" . PHP_EOL;
+                $newRelation .= $this->tabs(1) . " * Retorna $fieldRelationModel que $model contém." . PHP_EOL;
+                $newRelation .= $this->tabs(1) . " */" . PHP_EOL;
+                $newRelation .= $this->tabs(1) . "public function $relationName()" . PHP_EOL;
+                $newRelation .= $this->tabs(1) . "{" . PHP_EOL;
+                $newRelation .= $this->tabs(2) . "return \$this->belongsTo('App\Models\\$fieldRelationModel');" . PHP_EOL;
+                $newRelation .= $this->tabs(1) . "}" . PHP_EOL;
+                $newRelation .= PHP_EOL;
+                $newRelation .= $this->tabs(1) ."// {{ laravue-insert:relationship }}";
+
+                $newRelations = str_replace( '// {{ laravue-insert:relationship }}', $newRelation, $newRelations );
+
+                $this->reverseRelation($fieldRelationModel, $model);
+            }
+        }
+
+        return $newRelations;
+    }
+
+    protected function reverseRelation($reverseModel, $model) {
+        $currentDirectory =  getcwd();
+        $path = "$currentDirectory/app/Models/$reverseModel.php";
+        $modelFile = $this->files->get($path);
+        
+        $relationName = lcfirst( $this->pluralize( 2, $model ) );
+
+        $newRelation = "/**" . PHP_EOL;
+        $newRelation .= $this->tabs(1) . " * Retorna os $relationName de $reverseModel." . PHP_EOL;
+        $newRelation .= $this->tabs(1) . " */" . PHP_EOL;
+        $newRelation .= $this->tabs(1) . "public function $relationName()" . PHP_EOL;
+        $newRelation .= $this->tabs(1) . "{" . PHP_EOL;
+        $newRelation .= $this->tabs(2) . "return \$this->hasMany('App\Models\\$model');" . PHP_EOL;
+        $newRelation .= $this->tabs(1) . "}" . PHP_EOL;
+        $newRelation .= PHP_EOL;
+        $newRelation .= $this->tabs(1) ."// {{ laravue-insert:relationship }}";
+
+        $this->files->put($path, str_replace( '// {{ laravue-insert:relationship }}', $newRelation, $modelFile ) );
     }
 }

@@ -331,7 +331,7 @@ class LaravueCommand extends Command
      * Replace the fields for the given stub.
      *
      * @param  string  $stub
-     * @param  string  $name
+     * @param  string  $model
      * @return string
      */
     protected function replaceField($stub, $model)
@@ -340,10 +340,24 @@ class LaravueCommand extends Command
     }
 
     /**
+     * Replace the relationship for the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $model
+     * @param  string  $fields
+     * @return string $stub
+     */
+    protected function replaceRelation($stub, $model, $fields)
+    {
+        // {{ laravue-insert:relationship }} must be implemented
+        return $stub;
+    }
+
+    /**
      * Replace the plural for class in the given stub.
      *
      * @param  string  $stub
-     * @param  string  $name
+     * @param  string  $model
      * @return string
      */
     protected function replacePluralClass($stub, $model)
@@ -355,7 +369,7 @@ class LaravueCommand extends Command
      * Replace the plural for class in the given stub.
      *
      * @param  string  $stub
-     * @param  string  $name
+     * @param  string  $model
      * @return string
      */
     protected function replaceTable($stub, $model)
@@ -367,36 +381,40 @@ class LaravueCommand extends Command
      * Replace the title for the given stub.
      *
      * @param  string  $stub
-     * @param  string  $name
+     * @param  string  $model
+     * @param  string  $isPlural
      * @return string
      */
-    protected function replaceTitle( $stub, $model, $plural = false )
+    protected function replaceTitle( $stub, $model, $isPlural = false )
     { 
-        return str_replace( '{{ title }}',  $this->getTitle( $model, $plural ), $stub );
+        return str_replace( '{{ title }}',  $this->getTitle( $model, $isPlural ), $stub );
     }
 
     /**
-     * Build the class with the given name.
+     * Build the model.
      *
-     * @param  string  $name
+     * @param  string  $model
+     * @param  string  $fields = null
      * @return string
      *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    protected function buildModel($model)
+    protected function buildModel($model, $fields = null)
     {
         $stub = $this->files->get($this->getStub());
-        $title = $this->replaceTitle($stub, $model, true); // third parameter defines plural conversion
+        $isPlural = true;
+        $title = $this->replaceTitle($stub, $model, $isPlural);
         $route = $this->replaceRoute($title, $model);
         $field = $this->replaceField($route, $model);
+        $relation = $this->replaceRelation($field, $model, $fields);
 
-        return $this->replaceModel($field, $model);
+        return $this->replaceModel($relation, $model);
     }
 
     /**
-     * Build the class with the given name.
+     * Build the class with the given model.
      *
-     * @param  string  $name
+     * @param  string  $model
      * @return string
      *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
@@ -411,9 +429,9 @@ class LaravueCommand extends Command
     }
 
     /**
-     * Build the class with the given name.
+     * Build the class with the given model.
      *
-     * @param  string  $name
+     * @param  string  $model
      * @return string
      *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException

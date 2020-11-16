@@ -46,6 +46,8 @@ class MakeLaravueModelCommandTest extends TestCase
             public function mapColumns() {
                 return [];
             }
+
+            // {{ laravue-insert:relationship }}
         }
         CLASS;
 
