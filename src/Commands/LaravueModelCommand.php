@@ -48,22 +48,25 @@ class LaravueModelCommand extends LaravueCommand
     protected function replaceField($stub, $model)
     {
         if(!$this->option('fields')){
-            return str_replace( '{{ fields }}', "" , $stub );
+            return str_replace( '{{ fields }}', "[]" , $stub );
         }
 
         $fields = $this->getFieldsArray( $this->option('fields') );
 
-        $returnFields = PHP_EOL . "\t\t\t";
+        $returnFields = '[' . PHP_EOL . $this->tabs(3);
         $first = true;
         foreach ($fields as $key => $value) {
+            $title = $this->getTitle( str_replace( "_id", "", $key ) );
             if( $first ) {
                 $first = false;
-                $returnFields .= "'$key' => '".ucfirst($key)."',". PHP_EOL;
+                $returnFields .=  "'$key' => '".$title."',". PHP_EOL;
+                $returnFields .=  $this->tabs(3);
             } else {
-                $returnFields .= "\t\t\t'$key' => '".ucfirst($key)."'," . PHP_EOL;
+                $returnFields .=   "'$key' => '".$title."',";
+                $returnFields .=  $this->hasNext( $fields ) ? PHP_EOL . $this->tabs(3) : "";
             }  
         }
-        $returnFields .= "\t\t";
+        $returnFields .= "]";
 
         return str_replace( '{{ fields }}', $returnFields , $stub );
     }

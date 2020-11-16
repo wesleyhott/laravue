@@ -13,7 +13,7 @@ class {{ class }} extends LaravueModel
      * @return array ('nome da coluna do banco', 'nome mapeado')
      */
     public function mapColumns() {
-        return [{{ fields }}];
+        return {{ fields }};
     }
 
     // {{ laravue-insert:relationship }}
