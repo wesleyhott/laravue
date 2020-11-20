@@ -2,7 +2,7 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.4.90 - 20/nov/2020
+## 8.4.91 - 20/nov/2020
 ### Adicionado
 - Geração de código com suporte a VeeValidate 3.x
 - Transformação para CamelCase o modelo passado no comando build
