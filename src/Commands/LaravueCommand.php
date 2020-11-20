@@ -114,15 +114,11 @@ class LaravueCommand extends Command
                 break;
             case 'controller': 
                 $model = $model . "Controller";
-                $controllerPath = "$currentDirectory/app/http/Controllers";
-                if( !is_dir($controllerPath) ) {
-                    mkdir( $controllerPath, 0777, true);
-                }
-                $path = "$controllerPath/$model.$ext";
+                $path = "$currentDirectory/app/Http/controllers/$model.$ext";
                 break;
             case 'report':
                 $model =  $model .  "ReportController";
-                $path = "$currentDirectory/app/http/Controllers/Reports/$model.$ext";
+                $path = "$currentDirectory/app/Http/Controllers/Reports/$model.$ext";
                 break;
             case 'route':
                 $path = "$currentDirectory/routes/api.php";
@@ -204,9 +200,9 @@ class LaravueCommand extends Command
         $currentDirectory =  getcwd();
         $paths = explode( "/", $currentDirectory );
 
-        if( end( $paths ) == "api") { // laravel
-            $frontDirectory = Str::replaceFirst( end( $paths ),"frontend/src/components/$this->projectName/Views/Pages/$name/forms", $currentDirectory);
-        } else { // docker
+        if( end( $paths ) == "laravue") { // Laravue Tests
+            $frontDirectory = "$currentDirectory/Frontend/LaravueTest/Views/Pages/$name/forms";
+        } else { 
             $frontDirectory = Str::replaceFirst( end( $paths ), "src/components/$this->projectName/Views/Pages/$name/forms", $currentDirectory);
         }
 
