@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Mpmg\Laravue\Tests\TestCase;
 
-class MakeDataBaseSeederFileTest extends TestCase
+class MakeDatabaseSeederFileTest extends TestCase
 {
     /** @test */
     function it_creates_a_database_seeder_file()

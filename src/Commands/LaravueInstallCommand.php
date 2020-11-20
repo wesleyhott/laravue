@@ -45,7 +45,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeProjectModuleSeeder();
         $this->makeTaskSeeder();
         $this->makeVersionSeeder();
-        $this->makeDataBaseSeeder();
+        $this->makeDatabaseSeeder();
         $this->makeLaravueSeeder();
         // Filters
         $this->makeAtivoFilter();
@@ -228,7 +228,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
-    protected function makeDataBaseSeeder() {
+    protected function makeDatabaseSeeder() {
         $this->setStub('install/seeder-database');
         $fileName = "database/seeders/DatabaseSeeder.php";
         $outsideApp = true;

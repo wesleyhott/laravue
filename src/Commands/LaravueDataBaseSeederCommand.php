@@ -2,7 +2,7 @@
 
 namespace Mpmg\Laravue\Commands;
 
-class LaravueDataBaseSeederCommand extends LaravueCommand
+class LaravueDatabaseSeederCommand extends LaravueCommand
 {
     /**
      * The name and signature of the console command.
