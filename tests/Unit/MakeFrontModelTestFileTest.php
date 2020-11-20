@@ -12,7 +12,7 @@ class MakeFrontModelTestFileTest extends TestCase
     function it_creates_a_front_model_test_file()
     {
         $model = 'TestFieldOption';
-        // destination path of the Foo class
+        // destination path of the FrontModel class
         $testClass = str_replace( "tests/Unit", "", __DIR__) . "Frontend/LaravueTest/Views/Pages/TestFieldOption/forms/Model.vue";
 
         // Run the make command

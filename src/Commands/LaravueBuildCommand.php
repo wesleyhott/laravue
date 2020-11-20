@@ -2,6 +2,8 @@
 
 namespace Mpmg\Laravue\Commands;
 
+use Illuminate\Support\Str;
+
 class LaravueBuildCommand extends LaravueCommand
 {
     /**
@@ -48,7 +50,7 @@ class LaravueBuildCommand extends LaravueCommand
     protected function backend()
     {
         $this->call('laravue:api', [
-            'model' => $this->argument('model'),
+            'model' => Str::studly( $this->argument('model') ),
             '--fields' =>  $this->option('fields'),
         ]);
     }
@@ -61,7 +63,7 @@ class LaravueBuildCommand extends LaravueCommand
     protected function frontend()
     {
         $this->call('laravue:front', [
-            'model' => $this->argument('model'),
+            'model' => Str::studly( $this->argument('model') ),
             '--fields' =>  $this->option('fields'),
         ]);
     }
