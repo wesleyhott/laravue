@@ -3,7 +3,6 @@
     titulo="Cadastro de {{ title }}"
     rota="{{ route }}"
     rotaVoltar="{{ route }}"
-    @on-submit="onValidationSubmit"
   ></model-form>
 </template>
 
@@ -11,11 +10,6 @@
 import ModelForm from "./forms/Model"
 
 export default {
-  components: { ModelForm },
-  methods: {
-      onValidationSubmit (model, isValid) {
-        this.ModelForm = model
-      }
-    }
+  components: { ModelForm }
 }
 </script>

@@ -37,7 +37,7 @@ class LaravueSeedCommand extends LaravueCommand
         $date = now();
 
         $path = $this->getPath($model);
-        $this->files->put($path, $this->sortImports($this->buildSeed($model)));
+        $this->files->put( $path, $this->buildSeed( $model ) );
     
         $this->info("$date - [ $model ] >> $model"."Seeder.php");
     }

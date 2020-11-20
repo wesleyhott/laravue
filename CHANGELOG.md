@@ -2,6 +2,13 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
+## 8.4.86 - 19/nov/2020
+### Adicionado
+- Geração de código com suporte a VeeValidate 3.x
+### Alterado
+- Atualização do VeeValidate para a versão 3.x.
+- Correções menores.
+
 ## 8.4.83 - 16/nov/2020
 ### Adicionado
 - Geração de relacionamentos 1*n nos modelos.
