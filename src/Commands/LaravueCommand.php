@@ -110,39 +110,37 @@ class LaravueCommand extends Command
         $currentDirectory =  getcwd();
         switch ($this->type) {
             case 'model':
-                $path = $this->makePath("Models/$model.$ext");
+                $path = $this->makePath( "Models/$model.$ext" );
                 break;
             case 'controller': 
-                $model = $model . "Controller";
-                $path = "$currentDirectory/app/Http/controllers/$model.$ext";
+                $path = $this->makePath( "$currentDirectory/app/Http/controllers/${model}Controller.$ext" );
                 break;
             case 'report':
-                $model =  $model .  "ReportController";
-                $path = "$currentDirectory/app/Http/Controllers/Reports/$model.$ext";
+                $path = $this->makePath( "Http/Controllers/Reports/${model}ReportController.$ext" );
                 break;
             case 'route':
-                $path = "$currentDirectory/routes/api.php";
+                $path = $this->makePath( "routes/api.php", true );
                 break;
             case 'permission':
-                $path = "$currentDirectory/database/seeders/LaravueSeeder.php";
+                $path = $this->makePath( "database/seeders/LaravueSeeder.php", true );
                 break;
             case 'migration':
                 $prefix = date('Y_m_d_His');
                 $model = Str::snake($model);
-                $path = "$currentDirectory/database/migrations/$prefix"."_create_$model"."_table.$ext";
+                $path = $this->makePath( "database/migrations/$prefix"."_create_$model"."_table.$ext", true );
                 break;
             case 'seed':
-                $path = "$currentDirectory/database/seeders/$model"."Seeder.php";
+                $path = $this->makePath( "database/seeders/$model"."Seeder.php", true );
                 break;
             case 'seeder':
-                $path = "$currentDirectory/database/seeders/DatabaseSeeder.php";
+                $path = $this->makePath( "database/seeders/DatabaseSeeder.php", true );
                 break;
             case 'front-modal':
                 $dirs = explode( "/", $currentDirectory );
 
-                if( end( $dirs ) == "api") { // laravel
-                    $frontPath = Str::replaceFirst( end( $dirs ),"frontend/src/components/$this->projectName/Views/Pages/$model/forms", $currentDirectory);
-                } else { // docker
+                if( end( $dirs ) == "laravue") { // Laravue Tests
+                    $frontPath = "$currentDirectory/Frontend/src/components/$this->projectName/Views/Pages/$model/forms";
+                } else { 
                     $frontPath = Str::replaceFirst( end( $dirs ), "src/components/$this->projectName/Views/Pages/$model/forms", $currentDirectory);
                 }
 
@@ -150,14 +148,9 @@ class LaravueCommand extends Command
                     mkdir( $frontPath, 0777, true);
                 }
                 $path = "$frontPath/Modal.vue";
-                // dd($path);
                 break;
             default:
-                $backPath = "$currentDirectory/app";
-                if( !is_dir($backPath) ) {
-                    mkdir( $backPath, 0777, true);
-                }
-                $path = "$backPath/$model.$ext";
+                $path = $this->makePath("/Models/$model.$ext");
         }
         
         return $path;
