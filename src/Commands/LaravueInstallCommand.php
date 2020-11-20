@@ -387,7 +387,7 @@ class LaravueInstallCommand extends LaravueCommand
 
     protected function makeListenerMonitor() {
         $this->setStub('install/listener-monitor');
-        $fileName = "Listeners/Monitor.php";
+        $fileName = "Listeners/MonitorListener.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );

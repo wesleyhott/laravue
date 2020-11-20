@@ -12,7 +12,7 @@ class MakeListenerMonitorFileTest extends TestCase
     function it_creates_a_monitor_listener_file()
     {
         // destination path of the Foo class
-        $testClass = str_replace( "tests/Feature", "", __DIR__) . "app/Listeners/Monitor.php";
+        $testClass = str_replace( "tests/Feature", "", __DIR__) . "app/Listeners/MonitorListener.php";
 
         // make sure we're starting from a clean state
         if (File::exists($testClass)) {
