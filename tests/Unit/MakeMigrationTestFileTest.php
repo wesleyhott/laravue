@@ -19,7 +19,7 @@ class MakeMigrationTestFileTest extends TestCase
         // Run the make command
         Artisan::call('laravue:migration', [
             'model' => $model,
-            '--fields' => 'name:s.50n,age:i,user_id:i.n,file_id:i,descricao:s.nu,modelo:s.u*,fabrica:s.u*',
+            '--fields' => 'name:s.50u,age:i,user_id:i.n,file_id:i,descricao:s.nu,modelo_id:i.u*,fabrica_id:i.nu*',
         ]);
 
         // Assert a new file is created

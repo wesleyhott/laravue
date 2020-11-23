@@ -39,20 +39,12 @@ class {{ model }}Controller extends LaravueController
      * @return array de validação dos campos do modelo
      */
     public function getModelValidation($data)
-    {
+    {       
         return [
 			'rules' =>  [
                 {{ rules }}
-                // Exemplo de unique composta
-                // 'field' => 'required | string | unique:table,field,'
-                //     . $data['id'] . ',id,'
-                //     . 'foreing_key_id,' .  $data['foreing_key_id'],
-                // Exemplo de unique simples
-                // 'field' => 'required|unique:table,field,' . $data['id'],
             ],
-            // 'messages'=> [
-            //    'field.unique' => 'Já existe ...'
-            // ]
+            {{ unique:messages }}
         ];
     }
 
