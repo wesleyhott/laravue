@@ -113,7 +113,7 @@ class LaravueCommand extends Command
                 $path = $this->makePath( "Models/$model.$ext" );
                 break;
             case 'controller': 
-                $path = $this->makePath( "$currentDirectory/app/Http/controllers/${model}Controller.$ext" );
+                $path = $this->makePath( "Http/Controllers/${model}Controller.$ext" );
                 break;
             case 'report':
                 $path = $this->makePath( "Http/Controllers/Reports/${model}ReportController.$ext" );
