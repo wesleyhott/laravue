@@ -18,8 +18,6 @@ class Create{{ class }}Table extends Migration
             {{ fields }}
             $table->string('usuario_ult_alteracao', 40);
             $table->timestamps();
-
-            // $table->unique(['unique_01', 'unique_02']);
         });
     }
 

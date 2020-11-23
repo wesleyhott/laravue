@@ -2,10 +2,12 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.4.92 - 20/nov/2020
+## 8.5.93 - 23/nov/2020
 ### Adicionado
 - Geração de código com suporte a VeeValidate 3.x
-- Transformação para CamelCase o modelo passado no comando build
+- Transformação para CamelCase no modelo passado para o comando build
+- Suporte Unique (.u) nas migrations e controllers.
+- Suporte Unique Array (.u*) nas migrations e controllers.
 ### Alterado
 - Atualização do VeeValidate para a versão 3.x.
 - Correções menores.

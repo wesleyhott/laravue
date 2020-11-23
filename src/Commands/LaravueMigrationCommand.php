@@ -55,6 +55,7 @@ class LaravueMigrationCommand extends LaravueCommand
         $fields = $this->getFieldsArray( $this->option('fields') );
 
         $returnFields = "";
+        $uniqueArray = [];
         
         $first = true;
         foreach ($fields as $key => $value) {
@@ -71,6 +72,15 @@ class LaravueMigrationCommand extends LaravueCommand
                     $size = ", " . $isNumbers[0];
                 }
             }
+            // Unique 
+            $isUnique = $this->isUnique($value);
+            $unique = $isUnique ? '->unique()' : '';
+            // Unique Array
+            $isUniqueArray = $this->isUniqueArray($value);
+            if ( $isUniqueArray ) {
+                array_push( $uniqueArray, $key );
+            }
+            
             if( $first ) {
                 $first = false;
             } else {
@@ -84,6 +94,8 @@ class LaravueMigrationCommand extends LaravueCommand
                 $returnFields .= "$"."table->$type('$key')" . PHP_EOL;
                 if( $isNullable ) {
                     $returnFields .= $this->tabs(4) . $nullable . PHP_EOL;
+                } else if ( $isUnique ) {
+                    $returnFields .= $this->tabs(4) . $unique . PHP_EOL;
                 }
                 $returnFields .= $this->tabs(4) . "->unsigned();" . PHP_EOL;
                 $returnFields .= $this->tabs(3) . "\$table->foreign('$key')" . PHP_EOL;
@@ -91,8 +103,17 @@ class LaravueMigrationCommand extends LaravueCommand
                 $returnFields .= $this->tabs(4) . "->on('$referenced_table')" . PHP_EOL;
                 $returnFields .= $this->tabs(4) . "->onDelete('$onDelete');";
             } else {
-                $returnFields .= "$"."table->$type('$key'$size)$nullable;";
+                if( $isNullable && $isUnique ) {
+                    $returnFields .= "$"."table->$type('$key'$size)${nullable}" . PHP_EOL;
+                    $returnFields .= $this->tabs(4) . "${unique};";
+                } else {
+                    $returnFields .= "$"."table->$type('$key'$size)${nullable}${unique};";
+                } 
             }
+        }
+        if( count( $uniqueArray ) > 0 ){
+            $uniques = implode("','",$uniqueArray);
+            $returnFields .= PHP_EOL . $this->tabs(3) . "\$table->unique(['$uniques']);";
         }
 
         return str_replace( '{{ fields }}', $returnFields , $stub );
