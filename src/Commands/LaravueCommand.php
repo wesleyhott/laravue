@@ -511,6 +511,40 @@ class LaravueCommand extends Command
     }
 
     /**
+     * Retorna verdade se o field contém a letra u e não contém * (unique single); falso caso contrário.
+     *
+     * @param  string  $field
+     * @return boolean nullable
+     */
+    protected function isUnique($field) {
+        $options = $this->getOptionsArray($field);
+        $nullable = false;
+        foreach ($options as $option){
+            if( ( strpos( $option, 'u') !== false ) && ( strpos( $option, '*') === false ) ) {
+                $nullable = true;
+            }
+        }
+        return $nullable;
+    }
+
+    /**
+     * Retorna verdade se o field contém a letra u e não contém * (unique single); falso caso contrário.
+     *
+     * @param  string  $field
+     * @return boolean nullable
+     */
+    protected function isUniqueArray($field) {
+        $options = $this->getOptionsArray($field);
+        $nullable = false;
+        foreach ($options as $option){
+            if( strpos( $option, 'u*') !== false ) {
+                $nullable = true;
+            }
+        }
+        return $nullable;
+    }
+
+    /**
      * Retorna falso se não contém número ou retorna o número
      *
      * @param  string  $field
