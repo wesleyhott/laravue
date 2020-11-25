@@ -14,6 +14,9 @@ class MakeLaravueInstallCommandTest extends TestCase
         $deleteAfterCreation = true;
 
         // destination path of the Test class
+        // .gitignore
+        $dotGitIgnoreStorageApp = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "storage/app/.gitignore" );
+        $dotGitIgnoreStorageAppReports = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "storage/app/reports/.gitignore" );
         // Config
         $ConfigAuthClass = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "config/auth.php" );
         // Provider
@@ -23,6 +26,9 @@ class MakeLaravueInstallCommandTest extends TestCase
         Artisan::call('laravue:install');
 
         // Assert a new files are created
+        // .gitignore
+        $this->makeTest($dotGitIgnoreStorageApp, $deleteAfterCreation);
+        $this->makeTest($dotGitIgnoreStorageAppReports, $deleteAfterCreation);
         // Config
         $this->makeTest($ConfigAuthClass, $deleteAfterCreation);
         // Provider
@@ -42,7 +48,7 @@ class MakeLaravueInstallCommandTest extends TestCase
 
     function makeTest($file, $deleteAfter = true){
         // Assert a new file is created
-        $this->assertTrue(File::exists($testClass));
+        $this->assertTrue(File::exists($file));
 
         if( $deleteAfter && File::exists( $file ) ) {
             unlink($file);

@@ -35,6 +35,9 @@ class LaravueInstallCommand extends LaravueCommand
         // .env
         $this->makeDotEnvExample();
         $this->makeDotEnv();
+        // .gitignore
+        $this->makeDotGitIgnoreStorageApp();
+        $this->makeDotGitIgnoreStorageAppReports();
         // migration
         $this->makeUserMigration();
         // Seeder
@@ -123,6 +126,30 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeDotEnvExample() {
         $this->setStub('install/.env-example');
         $fileName = ".env.example";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp);
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeDotGitIgnoreStorageApp() {
+        $this->setStub('install/.gitignore-storage-app');
+        $fileName = "storage/app/.gitignore";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp);
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeDotGitIgnoreStorageAppReports() {
+        $this->setStub('install/.gitignore-storage-app-reports');
+        $fileName = "storage/app/reports/.gitignore";
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp);
 
