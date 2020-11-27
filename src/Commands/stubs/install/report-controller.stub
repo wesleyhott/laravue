@@ -121,6 +121,15 @@ abstract class LaravueReportController extends Controller
       $this->reportType = $reportType;
       $this->dataset = $this->filter( $request );
 
+      if ( $this->$dataset->isEmpty() ) {
+         return response(
+            [
+               'message' => "Relatório não possui dados."
+            ],
+            Response::HTTP_BAD_REQUEST
+        );
+      }
+
       switch( $reportType ) {
          case Report::XLSX: return $this->generateXlsxReport();
          case Report::PDF: return $this->generatePdfReport();

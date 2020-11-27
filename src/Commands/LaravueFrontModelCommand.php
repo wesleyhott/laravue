@@ -56,12 +56,8 @@ class LaravueFrontModelCommand extends LaravueCommand
                     '{{ fields:data-submit }}',
                     '{{ fields:method }}',
                 ], "// Insira código aqui.", $stub );
-            $toBlank = str_replace( 
-                [
-                    '{{ fields:report }}'
-                ], "", $toComment );
             
-            return str_replace( '{{ fields }}', $default , $toBlank );
+            return str_replace( '{{ fields }}', $default , $$toComment  );
         }
 
         $fields = $this->getFieldsArray( $this->option('fields') );
@@ -113,8 +109,7 @@ class LaravueFrontModelCommand extends LaravueCommand
         $parsedDataSelect = $this->replaceDataSelect($stub, $model);
         $parsedModel = $this->replaceFieldModel($parsedDataSelect, $model);
         $parsedModel2 = $this->replaceFieldModel2($parsedModel, $model);
-        $parsedReport = $this->replaceFieldReport($parsedModel2, $model);
-        $parsedComputed = $this->replaceFieldComputed($parsedReport, $model);
+        $parsedComputed = $this->replaceFieldComputed($parsedModel2, $model);
         $parsedMethod = $this->replaceFieldMethod($parsedComputed, $model);
         $parsedSubmit = $this->replaceFieldSubmit($parsedMethod, $model);
 
@@ -126,18 +121,18 @@ class LaravueFrontModelCommand extends LaravueCommand
         $label = $this->getTitle( $key );
 
         $input = "";
-        $input .= "<div class=\"row formSpace\">"  . PHP_EOL;
-        $input .= $this->tabs(7) . "<div class=\"col-sm-12\">"  . PHP_EOL;
-        $input .= $this->tabs(8) . "<ValidationProvider name=\"$label\" rules=\"$rules\" v-slot=\"{ errors }\">"  . PHP_EOL;
-        $input .= $this->tabs(9) . "<fg-input "  . PHP_EOL;
-        $input .= $this->tabs(10) . ":placeholder=\"relatorio ? 'Não filtrar' :'Digite $label'\" "  . PHP_EOL;
-        $input .= $this->tabs(10) . "label=\"$label\""  . PHP_EOL;
-        $input .= $this->tabs(10) . "v-model=\"model.$field\">"  . PHP_EOL;
-        $input .= $this->tabs(9) . "</fg-input>"  . PHP_EOL;
+        $input .= "<div class=\"row formSpace\">" . PHP_EOL;
+        $input .= $this->tabs(7) . "<div class=\"col-sm-12\">" . PHP_EOL;
+        $input .= $this->tabs(8) . "<ValidationProvider name=\"$label\" rules=\"$rules\" v-slot=\"{ errors }\">" . PHP_EOL;
+        $input .= $this->tabs(9) . "<fg-input " . PHP_EOL;
+        $input .= $this->tabs(10) . ":placeholder=\"relatorio ? 'Não filtrar' :'Digite $label'\" " . PHP_EOL;
+        $input .= $this->tabs(10) . "label=\"$label\"" . PHP_EOL;
+        $input .= $this->tabs(10) . "v-model=\"model.$field\">" . PHP_EOL;
+        $input .= $this->tabs(9) . "</fg-input>" . PHP_EOL;
         $input .= $this->tabs(9) . "<div v-if=\"!relatorio\" class=\"text-danger\" style=\"font-size: .8271em; margin-top: 4px;\">{{ errors[0] }}</div>" . PHP_EOL;
-        $input .= $this->tabs(8) . "</ValidationProvider>"  . PHP_EOL;
-        $input .= $this->tabs(7) . "</div>"  . PHP_EOL;
-        $input .= $this->tabs(6) . "</div>"  . PHP_EOL;
+        $input .= $this->tabs(8) . "</ValidationProvider>" . PHP_EOL;
+        $input .= $this->tabs(7) . "</div>" . PHP_EOL;
+        $input .= $this->tabs(6) . "</div>" . PHP_EOL;
         $input .= $this->tabs(6) . "";
         
         return $input;
@@ -148,26 +143,26 @@ class LaravueFrontModelCommand extends LaravueCommand
         $label = $this->getTitle( $key );
 
         $input = "";
-        $input .= "<div class=\"row formSpace\">"  . PHP_EOL;
-        $input .= $this->tabs(7) . "<div v-if=\"relatorio\" class=\"col-sm-12\">"  . PHP_EOL;
-        $input .= $this->tabs(8) . "<ValidationProvider name=\"$label\" rules=\"$rules\" v-slot=\"{ errors }\">"  . PHP_EOL;
-        $input .= $this->tabs(9) . "<div style=\"margin-bottom: 5px; color: #9A9A9A; font-size: .8571em;\">$label</div>"  . PHP_EOL;
-        $input .= $this->tabs(9) . "<el-select  v-model=\"model.$field\">"  . PHP_EOL;
-        $input .= $this->tabs(10) . "<el-option label=\"Não filtrar\" value=\"\"></el-option>"  . PHP_EOL;
-        $input .= $this->tabs(10) . "<el-option label=\"Sim\" value=\"1\"></el-option>"  . PHP_EOL;
-        $input .= $this->tabs(10) . "<el-option label=\"Não\" value=\"-1\"></el-option>"  . PHP_EOL;
-        $input .= $this->tabs(9) . "</el-select>"  . PHP_EOL;
+        $input .= "<div class=\"row formSpace\">" . PHP_EOL;
+        $input .= $this->tabs(7) . "<div v-if=\"relatorio\" class=\"col-sm-12\">" . PHP_EOL;
+        $input .= $this->tabs(8) . "<ValidationProvider name=\"$label\" rules=\"$rules\" v-slot=\"{ errors }\">" . PHP_EOL;
+        $input .= $this->tabs(9) . "<div style=\"margin-bottom: 5px; color: #9A9A9A; font-size: .8571em;\">$label</div>" . PHP_EOL;
+        $input .= $this->tabs(9) . "<el-select  v-model=\"model.$field\">" . PHP_EOL;
+        $input .= $this->tabs(10) . "<el-option label=\"Não filtrar\" value=\"\"></el-option>" . PHP_EOL;
+        $input .= $this->tabs(10) . "<el-option label=\"Sim\" value=\"true\"></el-option>" . PHP_EOL;
+        $input .= $this->tabs(10) . "<el-option label=\"Não\" value=\"false\"></el-option>" . PHP_EOL;
+        $input .= $this->tabs(9) . "</el-select>" . PHP_EOL;
         $input .= $this->tabs(9) . "<div v-if=\"!relatorio\" class=\"text-danger\" style=\"font-size: .8271em; margin-top: 4px;\">{{ errors[0] }}</div>" . PHP_EOL;
-        $input .= $this->tabs(8) . "</ValidationProvider>"  . PHP_EOL;
-        $input .= $this->tabs(7) . "</div>"  . PHP_EOL;
-        $input .= $this->tabs(8) . "<div v-else class=\"col-sm-12\">"  . PHP_EOL;
-        $input .= $this->tabs(9) . "<ValidationProvider name=\"$label\" rules=\"$rules\" v-slot=\"{ errors }\">"  . PHP_EOL;
-        $input .= $this->tabs(9) . "<div style=\"margin-bottom: 5px; color: #9A9A9A; font-size: .9971em;\">&nbsp;⠀⠀</div>"  . PHP_EOL;
-        $input .= $this->tabs(9) . "<p-checkbox v-model=\"$field\">$label</p-checkbox>"  . PHP_EOL;
+        $input .= $this->tabs(8) . "</ValidationProvider>" . PHP_EOL;
+        $input .= $this->tabs(7) . "</div>" . PHP_EOL;
+        $input .= $this->tabs(8) . "<div v-else class=\"col-sm-12\">" . PHP_EOL;
+        $input .= $this->tabs(9) . "<ValidationProvider name=\"$label\" rules=\"$rules\" v-slot=\"{ errors }\">" . PHP_EOL;
+        $input .= $this->tabs(9) . "<div style=\"margin-bottom: 5px; color: #9A9A9A; font-size: .9971em;\">&nbsp;⠀⠀</div>" . PHP_EOL;
+        $input .= $this->tabs(9) . "<p-checkbox v-model=\"$field\">$label</p-checkbox>" . PHP_EOL;
         $input .= $this->tabs(9) . "<div v-if=\"!relatorio\" class=\"text-danger\" style=\"font-size: .8271em; margin-top: 4px;\">{{ errors[0] }}</div>" . PHP_EOL;
-        $input .= $this->tabs(8) . "</ValidationProvider>"  . PHP_EOL;
-        $input .= $this->tabs(7) . "</div>"  . PHP_EOL;
-        $input .= $this->tabs(6) . "</div>"  . PHP_EOL;
+        $input .= $this->tabs(8) . "</ValidationProvider>" . PHP_EOL;
+        $input .= $this->tabs(7) . "</div>" . PHP_EOL;
+        $input .= $this->tabs(6) . "</div>" . PHP_EOL;
         $input .= $this->tabs(6) . "";
         
         return $input;
@@ -178,21 +173,21 @@ class LaravueFrontModelCommand extends LaravueCommand
         $label = $this->getTitle( $key );
 
         $input = "";
-        $input .= "<div class=\"row formSpace\">"  . PHP_EOL;
-        $input .= $this->tabs(7) . "<div class=\"col-sm-12\">"  . PHP_EOL;
-        $input .= $this->tabs(8) . "<ValidationProvider name=\"$label\" rules=\"$rules\" v-slot=\"{ errors }\">"  . PHP_EOL;
-        $input .= $this->tabs(9) . "<div style=\"margin-bottom: 5px; color: #9A9A9A; font-size: .8571em;\">$label</div>"  . PHP_EOL;
-        $input .= $this->tabs(9) . "<el-date-picker"  . PHP_EOL;
-        $input .= $this->tabs(10) . "v-model=\"model.$field\""  . PHP_EOL;
-        $input .= $this->tabs(10) . "type=\"date\""  . PHP_EOL;
-        $input .= $this->tabs(10) . "format=\"dd/MM/yyyy\""  . PHP_EOL;
-        $input .= $this->tabs(10) . "value-format=\"yyyy-MM-dd\""  . PHP_EOL;
-        $input .= $this->tabs(10) . ":placeholder=\"relatorio ? 'Não filtrar' : 'Selecione data'\">"  . PHP_EOL;
-        $input .= $this->tabs(9) . "</el-date-picker>"  . PHP_EOL;
+        $input .= "<div class=\"row formSpace\">" . PHP_EOL;
+        $input .= $this->tabs(7) . "<div class=\"col-sm-12\">" . PHP_EOL;
+        $input .= $this->tabs(8) . "<ValidationProvider name=\"$label\" rules=\"$rules\" v-slot=\"{ errors }\">" . PHP_EOL;
+        $input .= $this->tabs(9) . "<div style=\"margin-bottom: 5px; color: #9A9A9A; font-size: .8571em;\">$label</div>" . PHP_EOL;
+        $input .= $this->tabs(9) . "<el-date-picker" . PHP_EOL;
+        $input .= $this->tabs(10) . "v-model=\"model.$field\"" . PHP_EOL;
+        $input .= $this->tabs(10) . "type=\"date\"" . PHP_EOL;
+        $input .= $this->tabs(10) . "format=\"dd/MM/yyyy\"" . PHP_EOL;
+        $input .= $this->tabs(10) . "value-format=\"yyyy-MM-dd\"" . PHP_EOL;
+        $input .= $this->tabs(10) . ":placeholder=\"relatorio ? 'Não filtrar' : 'Selecione data'\">" . PHP_EOL;
+        $input .= $this->tabs(9) . "</el-date-picker>" . PHP_EOL;
         $input .= $this->tabs(9) . "<div v-if=\"!relatorio\" class=\"text-danger\" style=\"font-size: .8271em; margin-top: 4px;\">{{ errors[0] }}</div>" . PHP_EOL;
-        $input .= $this->tabs(8) . "</ValidationProvider>"  . PHP_EOL;
-        $input .= $this->tabs(7) . "</div>"  . PHP_EOL;
-        $input .= $this->tabs(6) . "</div>"  . PHP_EOL;
+        $input .= $this->tabs(8) . "</ValidationProvider>" . PHP_EOL;
+        $input .= $this->tabs(7) . "</div>" . PHP_EOL;
+        $input .= $this->tabs(6) . "</div>" . PHP_EOL;
         $input .= $this->tabs(6) . "";
         
         return $input;
@@ -203,23 +198,23 @@ class LaravueFrontModelCommand extends LaravueCommand
         $label = $this->getTitle( $key );
 
         $time = "";
-        $time .= "<div class=\"row formSpace\">  <!-- TODO: [build] Change picker options -->"  . PHP_EOL;
-        $time .= $this->tabs(7) . "<div class=\"col-sm-12\">"  . PHP_EOL;
-        $time .= $this->tabs(8) . "<ValidationProvider name=\"$label\" rules=\"$rules\" v-slot=\"{ errors }\">"  . PHP_EOL;
+        $time .= "<div class=\"row formSpace\">  <!-- TODO: [build] Change picker options -->" . PHP_EOL;
+        $time .= $this->tabs(7) . "<div class=\"col-sm-12\">" . PHP_EOL;
+        $time .= $this->tabs(8) . "<ValidationProvider name=\"$label\" rules=\"$rules\" v-slot=\"{ errors }\">" . PHP_EOL;
         $time .= $this->tabs(9) . "<div style=\"margin-bottom: 5px; color: #9A9A9A; font-size: .8571em;\">$label</div>" . PHP_EOL;
-        $time .= $this->tabs(9) . "<el-time-select"  . PHP_EOL;
-        $time .= $this->tabs(10) . "v-model=\"model.$field\""  . PHP_EOL;
-        $time .= $this->tabs(10) . ":picker-options=\"{"  . PHP_EOL;
-        $time .= $this->tabs(11) . "start: '08:00',"  . PHP_EOL;
-        $time .= $this->tabs(11) . "step: '02:00',"  . PHP_EOL;
-        $time .= $this->tabs(11) . "end: '18:00',"  . PHP_EOL;
-        $time .= $this->tabs(10) . "}\""  . PHP_EOL;
-        $time .= $this->tabs(10) . "placeholder=\"Selecione hora\">"  . PHP_EOL;
-        $time .= $this->tabs(9) . "</el-time-select>"  . PHP_EOL;
-        $time .= $this->tabs(9) . "<div v-if=\"!relatorio\" class=\"text-danger\" style=\"font-size: .8271em; margin-top: 4px;\">{{ errors[0] }}</div>"  . PHP_EOL;
-        $time .= $this->tabs(8) . "</ValidationProvider>"  . PHP_EOL;
-        $time .= $this->tabs(7) . "</div>"  . PHP_EOL;
-        $time .= $this->tabs(6) . "</div>"  . PHP_EOL;
+        $time .= $this->tabs(9) . "<el-time-select" . PHP_EOL;
+        $time .= $this->tabs(10) . "v-model=\"model.$field\"" . PHP_EOL;
+        $time .= $this->tabs(10) . ":picker-options=\"{" . PHP_EOL;
+        $time .= $this->tabs(11) . "start: '08:00'," . PHP_EOL;
+        $time .= $this->tabs(11) . "step: '02:00'," . PHP_EOL;
+        $time .= $this->tabs(11) . "end: '18:00'," . PHP_EOL;
+        $time .= $this->tabs(10) . "}\"" . PHP_EOL;
+        $time .= $this->tabs(10) . "placeholder=\"Selecione hora\">" . PHP_EOL;
+        $time .= $this->tabs(9) . "</el-time-select>" . PHP_EOL;
+        $time .= $this->tabs(9) . "<div v-if=\"!relatorio\" class=\"text-danger\" style=\"font-size: .8271em; margin-top: 4px;\">{{ errors[0] }}</div>" . PHP_EOL;
+        $time .= $this->tabs(8) . "</ValidationProvider>" . PHP_EOL;
+        $time .= $this->tabs(7) . "</div>" . PHP_EOL;
+        $time .= $this->tabs(6) . "</div>" . PHP_EOL;
         $time .= $this->tabs(6) . "";
 
         return $time;
@@ -232,30 +227,30 @@ class LaravueFrontModelCommand extends LaravueCommand
         $label = str_replace(" Id", "", $label);
 
         $input = "";
-        $input .= "<div class=\"row formSpace\">  <!-- TODO: [build] Change label field -->"  . PHP_EOL;
-        $input .= $this->tabs(5) .  "<div class=\"col-sm-12\">"  . PHP_EOL;
-        $input .= $this->tabs(6) .  "<ValidationProvider name=\"$label\" rules=\"$rules\" v-slot=\"{ errors }\">"  . PHP_EOL;
-        $input .= $this->tabs(7) .  "<div style=\"margin-bottom: 5px; color: #9A9A9A; font-size: .8571em;\">$label</div>"  . PHP_EOL;
-        $input .= $this->tabs(7) .  "<el-select"  . PHP_EOL;
-        $input .= $this->tabs(8) .  "filterable"  . PHP_EOL;
-        $input .= $this->tabs(8) .  "class=\"baseSelect\""  . PHP_EOL;
+        $input .= "<div class=\"row formSpace\">  <!-- TODO: [build] Change label field -->" . PHP_EOL;
+        $input .= $this->tabs(5) .  "<div class=\"col-sm-12\">" . PHP_EOL;
+        $input .= $this->tabs(6) .  "<ValidationProvider name=\"$label\" rules=\"$rules\" v-slot=\"{ errors }\">" . PHP_EOL;
+        $input .= $this->tabs(7) .  "<div style=\"margin-bottom: 5px; color: #9A9A9A; font-size: .8571em;\">$label</div>" . PHP_EOL;
+        $input .= $this->tabs(7) .  "<el-select" . PHP_EOL;
+        $input .= $this->tabs(8) .  "filterable" . PHP_EOL;
+        $input .= $this->tabs(8) .  "class=\"baseSelect\"" . PHP_EOL;
         $input .= $this->tabs(8) .  "size=\"large\"" . PHP_EOL;
         $input .= $this->tabs(8) .  ":placeholder=\"relatorio ? 'Não filtrar' : '$label'\"" . PHP_EOL;
         $input .= $this->tabs(8) .  "v-model=\"model.$key\" >" . PHP_EOL;
-        $input .= $this->tabs(9) .  "<el-option v-if=\"relatorio\" label=\"Não filtrar\" value=\"\"></el-option>"  . PHP_EOL;
-        $input .= $this->tabs(9) .  "<el-option"  . PHP_EOL;
-        $input .= $this->tabs(10) .  "v-for=\"item in selects.$pluralField\""  . PHP_EOL;
-        $input .= $this->tabs(10) .  "class=\"select-danger\""  . PHP_EOL;
-        $input .= $this->tabs(10) .  "style=\"width: 100%;\""  . PHP_EOL;
-        $input .= $this->tabs(10) .  ":value=\"item.id\""  . PHP_EOL;
-        $input .= $this->tabs(10) .  ":label=\"item.id\""  . PHP_EOL;
-        $input .= $this->tabs(10) .  ":key=\"item.id\" >"  . PHP_EOL;
-        $input .= $this->tabs(9) .  "</el-option>"  . PHP_EOL;
-        $input .= $this->tabs(7) .  "</el-select>"  . PHP_EOL;
-        $input .= $this->tabs(7) .  "<div v-if=\"!relatorio\" class=\"text-danger\" style=\"font-size: .8271em; margin-top: 4px;\">{{ errors[0] }}</div>"  . PHP_EOL;
-        $input .= $this->tabs(6) .  "</ValidationProvider>"  . PHP_EOL;
-        $input .= $this->tabs(5) .  "</div>"  . PHP_EOL;
-        $input .= $this->tabs(4) .  "</div>"  . PHP_EOL;
+        $input .= $this->tabs(9) .  "<el-option v-if=\"relatorio\" label=\"Não filtrar\" value=\"\"></el-option>" . PHP_EOL;
+        $input .= $this->tabs(9) .  "<el-option" . PHP_EOL;
+        $input .= $this->tabs(10) .  "v-for=\"item in selects.$pluralField\"" . PHP_EOL;
+        $input .= $this->tabs(10) .  "class=\"select-danger\"" . PHP_EOL;
+        $input .= $this->tabs(10) .  "style=\"width: 100%;\"" . PHP_EOL;
+        $input .= $this->tabs(10) .  ":value=\"item.id\"" . PHP_EOL;
+        $input .= $this->tabs(10) .  ":label=\"item.id\"" . PHP_EOL;
+        $input .= $this->tabs(10) .  ":key=\"item.id\" >" . PHP_EOL;
+        $input .= $this->tabs(9) .  "</el-option>" . PHP_EOL;
+        $input .= $this->tabs(7) .  "</el-select>" . PHP_EOL;
+        $input .= $this->tabs(7) .  "<div v-if=\"!relatorio\" class=\"text-danger\" style=\"font-size: .8271em; margin-top: 4px;\">{{ errors[0] }}</div>" . PHP_EOL;
+        $input .= $this->tabs(6) .  "</ValidationProvider>" . PHP_EOL;
+        $input .= $this->tabs(5) .  "</div>" . PHP_EOL;
+        $input .= $this->tabs(4) .  "</div>" . PHP_EOL;
         $input .= $this->tabs(4) .  "";
         
         return $input;
@@ -330,32 +325,6 @@ class LaravueFrontModelCommand extends LaravueCommand
 
     protected function ending2($index, $size){
         return $index == $size ? "" : PHP_EOL . $this->tabs(9);
-    }
-
-    protected function ending3($index, $size){
-        return $index == $size ? "" : PHP_EOL;
-    }
-
-    protected function replaceFieldReport($stub, $model)
-    {
-        $fields = $this->getFieldsArray( $this->option('fields') );
-
-        $return = "";
-        $first = true;
-        $index = 0;
-        $size = count( $fields );
-        foreach ($fields as $key => $value) {
-            $index++;
-            if( $first ){
-                $first = false;
-                $return .= "?";
-            } else {
-                $return .= $this->tabs(7) . "&";
-            }
-            $return .= "$key=\${this.model.$key}" . $this->ending3( $index, $size );
-        }
-
-        return str_replace( '{{ fields:report }}', $return , $stub );
     }
 
     protected function replaceFieldComputed($stub, $model)

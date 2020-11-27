@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Filters;
+
+class ModelFilter
+{
+    public function filter( $builder, $model )
+    {   
+        foreach ( json_decode( $model ) as $key => $value ) {
+            switch( $value ){
+                case 'true':
+                    $builder->where( $key, 1 );
+                break;
+                case 'false':
+                    $builder->where( $key, 0 );
+                break;
+                default:
+                    $builder->where( $key, 'like', '%'. $value .'%' );
+            }
+        }
+
+        return $builder;
+    }
+}

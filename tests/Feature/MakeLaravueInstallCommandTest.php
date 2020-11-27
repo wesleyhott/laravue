@@ -21,6 +21,14 @@ class MakeLaravueInstallCommandTest extends TestCase
         $ConfigAuthClass = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "config/auth.php" );
         // Provider
         $ProviderAuthClass = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Providers/AuthServiceProvider.php" );
+        // Filter
+        $AbstractFilter = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Filters/AbstractFilter.php" );
+        $LaravueFilter = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Filters/LaravueFilter.php" );
+        $ModelFilter = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Filters/ModelFilter.php" );
+        $FieldLikeFilter = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Filters/FieldLike.php" );
+        $ActiveEditionFilter = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Filters/AtivoEdicao.php" );
+        $OrderByIdFilter = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Filters/OrderById.php" );
+        $OrderByNameFilter = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Filters/OrderByName.php" );
 
         // Run the make command
         Artisan::call('laravue:install');
@@ -33,6 +41,14 @@ class MakeLaravueInstallCommandTest extends TestCase
         $this->makeTest($ConfigAuthClass, $deleteAfterCreation);
         // Provider
         $this->makeTest($ProviderAuthClass, $deleteAfterCreation);
+        // Filter
+        $this->makeTest($AbstractFilter, $deleteAfterCreation);
+        $this->makeTest($LaravueFilter, $deleteAfterCreation);
+        $this->makeTest($ModelFilter, $deleteAfterCreation);
+        $this->makeTest($FieldLikeFilter, $deleteAfterCreation);
+        $this->makeTest($ActiveEditionFilter, $deleteAfterCreation);
+        $this->makeTest($OrderByIdFilter, $deleteAfterCreation);
+        $this->makeTest($OrderByNameFilter, $deleteAfterCreation);
     }
 
     function makeTestClass($testClass){

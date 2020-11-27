@@ -81,7 +81,7 @@ export default {
       this.loadingMessage = message
     },
     getReportFilter() {
-      return `{{ fields:report }}`
+      return `?model_filter=${JSON.stringify(this.model)}`
     },
     getReport(modelo) {
       this.setLoading(true, "Gerando Arquivo")
@@ -92,7 +92,7 @@ export default {
           this.$getReport(response, modelo)
         })
         .catch(e => {
-          this.setLoading(true, "Falha ao Gerar Arquivo")
+          this.setLoading(false, "Não foi possível gerar arquivo")
           laravueNotify.failure(this, e)
         })
     },

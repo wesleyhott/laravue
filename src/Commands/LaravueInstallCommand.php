@@ -51,12 +51,11 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeDatabaseSeeder();
         $this->makeLaravueSeeder();
         // Filters
-        $this->makeAtivoFilter();
         $this->makeAtivoEdicaoFilter();
         $this->makeFieldLikeFilter();
+        $this->makeModelFilter();
         $this->makeOrderByIdFilter();
         $this->makeOrderByNameFilter();
-        $this->makeUserIdFilter();
         $this->makeAbstractFilter();
         $this->makeLaravueFilter();
         // Events
@@ -291,17 +290,6 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
-    protected function makeAtivoFilter() {
-        $this->setStub('install/filter-ativo');
-        $fileName = "Filters/Ativo.php";
-        $path = $this->makePath( $fileName );
-
-        $this->files->put( $path, $this->files->get( $this->getStub() ) );
-
-        $date = now();
-        $this->info("$date - [ Installing ] >> $fileName");
-    }
-
     protected function makeAtivoEdicaoFilter() {
         $this->setStub('install/filter-ativo-edicao');
         $fileName = "Filters/AtivoEdicao.php";
@@ -324,6 +312,17 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
+    protected function makeModelFilter() {
+        $this->setStub('install/filter-model');
+        $fileName = "Filters/ModelFilter.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
     protected function makeOrderByIdFilter() {
         $this->setStub('install/filter-orderby-id');
         $fileName = "Filters/OrderById.php";
@@ -338,17 +337,6 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeOrderByNameFilter() {
         $this->setStub('install/filter-orderby-name');
         $fileName = "Filters/OrderByName.php";
-        $path = $this->makePath( $fileName );
-
-        $this->files->put( $path, $this->files->get( $this->getStub() ) );
-
-        $date = now();
-        $this->info("$date - [ Installing ] >> $fileName");
-    }
-
-    protected function makeUserIdFilter() {
-        $this->setStub('install/filter-user-id');
-        $fileName = "Filters/UserId.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
