@@ -41,10 +41,10 @@ class LaravueFrontIndexCommand extends LaravueCommand
     {
         $fieldSize = 330;
         $default = "{" . PHP_EOL;
-        $default .= "\t\t\t\t\tprop: \"id\"," . PHP_EOL;
-        $default .= "\t\t\t\t\tlabel: \"ID\"," . PHP_EOL;
-        $default .= "\t\t\t\t\tminWidth: {{ fieldSize }}" . PHP_EOL;
-        $default .= "\t\t\t\t},";
+        $default .=  $this->tabs(3) . "prop: \"id\"," . PHP_EOL;
+        $default .=  $this->tabs(3) . "label: \"ID\"," . PHP_EOL;
+        $default .=  $this->tabs(3) . "minWidth: {{ fieldSize }}" . PHP_EOL;
+        $default .=  $this->tabs(2) . "},";
 
         if(!$this->option('fields')){
             $default = str_replace( '{{ fieldSize }}', "330" , $default );
@@ -58,14 +58,18 @@ class LaravueFrontIndexCommand extends LaravueCommand
             $default = str_replace( '{{ fieldSize }}', $fieldSize + $rest , $default );
         } 
 
-        $returnFields = $default . PHP_EOL;
+        $returnFields = $default;
         foreach ($fields as $key => $value) {
             $label = $this->isFk($key) ? $this->getTitle( str_replace( "_id", "", $key ) ) : $this->getTitle( $key );
-            $returnFields .= "\t\t\t\t{" . PHP_EOL;
-            $returnFields .= "\t\t\t\t\tprop: \"$key\"," . PHP_EOL;
-            $returnFields .= "\t\t\t\t\tlabel: \"$label\"," . PHP_EOL;
-            $returnFields .= "\t\t\t\t\tminWidth: $fieldSize" . PHP_EOL;
-            $returnFields .= "\t\t\t\t},";
+            $returnFields .= PHP_EOL;
+            $returnFields .= $this->tabs(2) . "{" . PHP_EOL;
+            $returnFields .= $this->tabs(3) . "prop: \"$key\"," . PHP_EOL;
+            $returnFields .= $this->tabs(3) . "label: \"$label\"," . PHP_EOL;
+            $returnFields .= $this->tabs(3) . "minWidth: $fieldSize," . PHP_EOL;
+            if( $this->isBoolean( $value ) ) {
+                $returnFields .= $this->tabs(3) . "type: \"bit\"," . PHP_EOL;
+            }
+            $returnFields .= $this->tabs(2) . "},";
         }
 
         return str_replace( '{{ fields }}', $returnFields , $stub );

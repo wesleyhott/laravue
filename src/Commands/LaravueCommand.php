@@ -167,9 +167,9 @@ class LaravueCommand extends Command
         $currentDirectory =  getcwd();
         $paths = explode( "/", $currentDirectory );
 
-        if( end( $paths ) == "api") { // laravel
-            $frontDirectory = Str::replaceFirst( end( $paths ),"frontend/src/components/$this->projectName/Views/Pages/$name", $currentDirectory);
-        } else { // docker
+        if( end( $paths ) == "laravue") { // Laravue Tests
+            $frontDirectory ="$currentDirectory/Frontend/LaravueTest/Views/Pages/$name";
+        } else {
             $frontDirectory = Str::replaceFirst( end( $paths ), "src/components/$this->projectName/Views/Pages/$name", $currentDirectory);
         }
 
@@ -561,6 +561,23 @@ class LaravueCommand extends Command
             }
         }
         return $numbers;
+    }
+
+    /**
+     * Retorna verdade se o field contém a letra b (boolean); falso caso contrário.
+     *
+     * @param  string  $field
+     * @return boolean boolean
+     */
+    protected function isBoolean($field) {
+        $options = $this->getOptionsArray($field);
+        $boolean = false;
+        foreach ($options as $option){
+            if( strpos( $option, 'b') !== false ) {
+                $boolean = true;
+            }
+        }
+        return $boolean;
     }
 
     /**
