@@ -12,9 +12,10 @@ class LaravueFilter extends AbstractFilter
         'ativo_edicao' => AtivoEdicao::class,
         'field_like' => FieldLike::class,
         'user_id' => UserId::class,
+        // {{ laravue-insert:filter }}
         
         // Sorters ( put in alphabetical order )
-        'orderById' => OrderById::class,
-        'orderByName' => OrderByName::class,
+        'orderby_id' => OrderById::class,
+        'orderby_name' => OrderByName::class,
     ];
 }
