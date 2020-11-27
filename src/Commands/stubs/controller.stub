@@ -43,8 +43,7 @@ class {{ model }}Controller extends LaravueController
         return [
 			'rules' =>  [
                 {{ rules }}
-            ],
-            {{ unique:messages }}
+            ], {{ unique:messages }}
         ];
     }
 

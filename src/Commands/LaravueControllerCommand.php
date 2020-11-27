@@ -78,10 +78,13 @@ class LaravueControllerCommand extends LaravueCommand
         }
 
         $messageFields .= implode(", ",$uniqueArrayTitle) . " fornecidos.'" . PHP_EOL;
-
-        $message = "'messages' => [" . PHP_EOL;
-        $message .= $this->tabs(4) . $messageFields;
-        $message .= $this->tabs(3) . "]";
+        $message = '';
+        if (count( $uniqueArray ) > 0 ) {
+            $message .= PHP_EOL . $this->tabs(3);
+            $message .= "'messages' => [" . PHP_EOL;
+            $message .= $this->tabs(4) . $messageFields;
+            $message .= $this->tabs(3) . "]";
+        }
         return str_replace( '{{ unique:messages }}', $message , $stub );
     }
 
