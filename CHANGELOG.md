@@ -2,7 +2,14 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.5.98 - 27/nov/2020
+## 8.5.99 - 01/dez/2020
+### Adicionado
+- 
+### Alterado
+- Foto de avatar no perfil de acesso.
+- Correções menores.
+  
+- ## 8.5.98 - 27/nov/2020
 ### Adicionado
 - Geração de código com suporte a VeeValidate 3.x.
 - Transformação para CamelCase no modelo passado para o comando build.

@@ -287,7 +287,7 @@ class AccessTokenController extends ATC
     private function setUserAvatar($mamp){
         $img = "public/img/users/avatar/000000.jpg";
         try {
-            $foto = DB::table('VW_FUNCIONARIO_MPS')->where('mamp', $mamp)->first();
+            $foto = DB::table('vw_funcionario_mps')->where('mamp', $mamp)->first();
 
             if (isset($foto->foto)) {
                 $im = @imagecreatefromstring($foto->foto);
@@ -305,7 +305,7 @@ class AccessTokenController extends ATC
                 ModelsMonitor::setLogNoUserAuth("Sem acesso a foto->foto", __LINE__, __FUNCTION__, __FILE__, __CLASS__);
             }
         }catch(Exception $e){
-            ModelsMonitor::setLogNoUserAuth("Sem acesso a VW_FUNCIONARIO_MPS.", __LINE__, __FUNCTION__, __FILE__, __CLASS__);
+            ModelsMonitor::setLogNoUserAuth("Erro: $e", __LINE__, __FUNCTION__, __FILE__, __CLASS__);
         }
 
         return "img/users/avatar/$mamp.jpeg";

@@ -46,6 +46,7 @@ class LaravueServiceProvider extends ServiceProvider
                 $this->publishes([
                     __DIR__.'/../publishes/assets/img/logo_header.png' => public_path('img/logo_header.png'),
                     __DIR__.'/../publishes/assets/img/logo_mpmg.png' => public_path('img/logo_mpmg.png'),
+                    __DIR__.'/../publishes/assets/img/000000.jpg' => public_path('img/users/avatar/000000.jpg'),
                 ], 'public');
             }
         }

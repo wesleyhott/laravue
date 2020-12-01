@@ -38,6 +38,7 @@ class LaravueInstallCommand extends LaravueCommand
         // .gitignore
         $this->makeDotGitIgnoreStorageApp();
         $this->makeDotGitIgnoreStorageAppReports();
+        $this->makeDotGitIgnorePublicImgAvatar();
         // migration
         $this->makeUserMigration();
         // Seeder
@@ -149,6 +150,18 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeDotGitIgnoreStorageAppReports() {
         $this->setStub('install/.gitignore-storage-app-reports');
         $fileName = "storage/app/reports/.gitignore";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp);
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeDotGitIgnorePublicImgAvatar() {
+        $this->setStub('install/.gitignore-public-img-avatar');
+        $fileName = "public/img/avatar/.gitignore";
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp);
 

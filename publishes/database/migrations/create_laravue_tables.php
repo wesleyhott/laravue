@@ -100,6 +100,14 @@ class CreateLaravueTables extends Migration
             $table->String('usuario_ult_alteracao', 40);
             $table->timestamps();
         });
+
+        Schema::create('vw_funcionario_mps', function (Blueprint $table) {
+            $table->integer('pessoa_id');
+            $table->string('mamp', 6)->nullable();
+            $table->binary('foto')->nullable();
+            $table->string('usuario_ult_alteracao', 40);
+            $table->timestamps();
+        });
     }
 
     /**
@@ -109,6 +117,7 @@ class CreateLaravueTables extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('vw_funcionario_mps');
         Schema::dropIfExists('versions');
         Schema::dropIfExists('tasks');
         Schema::dropIfExists('project_modules');
