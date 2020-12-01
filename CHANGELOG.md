@@ -2,11 +2,12 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.5.99 - 01/dez/2020
+## 8.5.100 - 01/dez/2020
 ### Adicionado
 - 
 ### Alterado
 - Foto de avatar no perfil de acesso.
+- Ordenação no LaravueDatatale
 - Correções menores.
   
 - ## 8.5.98 - 27/nov/2020
