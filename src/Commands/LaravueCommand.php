@@ -629,7 +629,7 @@ class LaravueCommand extends Command
         if($plural) {
             $title = $this->pluralize( 2, $model );
         }
-        $title = ucwords( str_replace( "_", " ", $this->tilCedilha( $title ) ) );
+        $title = ucwords( str_replace( "_", " ", $title ) );
         // Setting space before uppercase letters
         preg_match_all( '/[A-Z]/', $model, $matches, PREG_OFFSET_CAPTURE );
         for($i = 0; $i < count($matches[0]); $i++) {
@@ -638,7 +638,14 @@ class LaravueCommand extends Command
         }
         $title = preg_replace('/\s+/', ' ', $title); // same initial letter issue
 
-        return trim( $title );
+        $words = explode( ' ', trim( $title ) );
+        foreach ( $words as $key => $value ) {
+            $words[$key] = $this->tilCedilha( $value );
+        }
+
+        $title = implode( ' ', $words );
+
+        return $title;
     }
 
     /**

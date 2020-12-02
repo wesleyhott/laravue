@@ -13,7 +13,7 @@ class MakeFrontIndexTestFileTest extends TestCase
     {
         $model = 'TestFieldOption';
         // destination path of the FrontModel class
-        $testClass = str_replace( "tests/Unit", "", __DIR__) . "Frontend/LaravueTest/Views/Pages/TestFieldOption/Index.vue";
+        $testClass = str_replace( "tests/Unit", "", __DIR__) . "Frontend/LaravueTest/Views/Pages/$model/Index.vue";
 
         // Run the make command
         Artisan::call('laravue:frontindex', [
