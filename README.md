@@ -93,7 +93,7 @@ php artisan laravue:build Post -f user_id:i,text:s,age:i.n,created_at:dt,approve
 |    tt     | $table->timestamps();                         | Adds created_at and updated_at columns                                             |
 |    rt     | $table->rememberToken();                      | Adds remember_token as VARCHAR(100) NULL                                           |
 |    .n     | ->nullable()                                  | Designate that the column allows NULL values                                       |
-|    .!5    | ->default(5)                                  | Declare a default value for a column                                               |
+|   .#5#    | ->default(5)                                  | Declare a default value for a column                                               |
 |    .+     | ->unsigned()                                  | Unsigned integer                                                                   |
 |    .u     | ->unique()                                    | Unique field                                                                       |
 |    .u*    | $table->unique['un1','unN'];                  | Fields that are unique together                                                    |

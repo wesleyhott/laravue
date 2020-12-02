@@ -80,6 +80,9 @@ class LaravueMigrationCommand extends LaravueCommand
             if ( $isUniqueArray ) {
                 array_push( $uniqueArray, $key );
             }
+            // Default
+            $default = $this->hasDefault($value);
+            $default = $default !== false ? "->default($default)" : '';
             
             if( $first ) {
                 $first = false;
@@ -104,10 +107,15 @@ class LaravueMigrationCommand extends LaravueCommand
                 $returnFields .= $this->tabs(4) . "->onDelete('$onDelete');";
             } else {
                 if( $isNullable && $isUnique ) {
-                    $returnFields .= "$"."table->$type('$key'$size)${nullable}" . PHP_EOL;
+                    $returnFields .= "$"."table->$type('$key'$size)" . PHP_EOL;
+                    $returnFields .= $this->tabs(4) . "${nullable}" . PHP_EOL;
                     $returnFields .= $this->tabs(4) . "${unique};";
+                } else if( $default !== false && $isUnique ) {
+                    $returnFields .= "$"."table->$type('$key'$size)" . PHP_EOL;
+                    $returnFields .= $this->tabs(4) . "${unique}" . PHP_EOL;
+                    $returnFields .= $this->tabs(4) . "${default};";
                 } else {
-                    $returnFields .= "$"."table->$type('$key'$size)${nullable}${unique};";
+                    $returnFields .= "$"."table->$type('$key'$size)${nullable}${unique}${default};";
                 } 
             }
         }
