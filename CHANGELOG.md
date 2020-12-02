@@ -2,7 +2,7 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.5.100 - 01/dez/2020
+## 8.5.101 - 02/dez/2020
 ### Adicionado
 - 
 ### Alterado
