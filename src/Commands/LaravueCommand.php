@@ -406,7 +406,8 @@ class LaravueCommand extends Command
         $title = $this->replaceTitle($stub, $model, $isPlural);
         $route = $this->replaceRoute($title, $model);
         $field = $this->replaceField($route, $model);
-        $relation = $this->replaceRelation($field, $model, $fields);
+        $table = $this->replaceTable($field, $model);
+        $relation = $this->replaceRelation($table, $model, $fields);
 
         return $this->replaceModel($relation, $model);
     }

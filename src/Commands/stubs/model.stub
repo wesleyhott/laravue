@@ -4,8 +4,7 @@ namespace App\Models;
 
 class {{ class }} extends LaravueModel
 {
-    // Redefinir nome da tabela quando ele não seguir o padrão de pluralização.
-    // protected $table = '';
+    protected $table = '{{ table }}';
 
     /**
      * Implementação do método da classe abstrata em BaseModel

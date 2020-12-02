@@ -2,9 +2,9 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.5.101 - 02/dez/2020
+## 8.5.102 - 02/dez/2020
 ### Adicionado
-- 
+- Geração do nome da tabela no modelo.
 ### Alterado
 - Foto de avatar no perfil de acesso.
 - Ordenação no LaravueDatatale

@@ -13,7 +13,7 @@ class MakeModelTestFileTest extends TestCase
     {
         $model = 'TestFieldOption';
         // destination path of the Foo class
-        $testClass = str_replace( "tests/Unit", "", __DIR__) . "app/Models/TestFieldOption.php";
+        $testClass = str_replace( "tests/Unit", "", __DIR__) . "app/Models/$model.php";
 
         // Run the make command
         Artisan::call('laravue:model', [
