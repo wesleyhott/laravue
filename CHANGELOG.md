@@ -6,6 +6,7 @@ Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 ### Adicionado
 - Geração do nome da tabela no modelo.
 - Acentuação de todas as palavras em títulos compostos.
+- Geração de valores default para os fields. Ex: laravue:build Nacao -f estado:s.#'Minas Gerais'#,indice:i.#1002# 
 ### Alterado
 - Foto de avatar no perfil de acesso.
 - Ordenação no LaravueDatatale

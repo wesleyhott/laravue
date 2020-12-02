@@ -493,6 +493,16 @@ class LaravueCommand extends Command
     protected function getOptionsArray($field) {
         return explode( ".", $field );
     }
+    
+    protected function dropDefault($field) {
+        $default = $this->hasDefault($field);
+
+        if( $default !== false ) {
+            $field = str_replace( $default, '', $field );
+        }
+
+        return $field;
+    }
 
     /**
      * Retorna verdade se o field contém a letra n (nullable); falso caso contrário.
@@ -501,6 +511,9 @@ class LaravueCommand extends Command
      * @return boolean nullable
      */
     protected function hasNullable($field) {
+        // default may contain letter n
+        $field = $this->dropDefault( $field );
+
         $options = $this->getOptionsArray($field);
         $nullable = false;
         foreach ($options as $option){
@@ -512,37 +525,61 @@ class LaravueCommand extends Command
     }
 
     /**
-     * Retorna verdade se o field contém a letra u e não contém * (unique single); falso caso contrário.
+     * Retorna verdade se o field contém o caractere ! (default); falso caso contrário.
      *
      * @param  string  $field
-     * @return boolean nullable
+     * @return any default
      */
-    protected function isUnique($field) {
+    protected function hasDefault($field) {
         $options = $this->getOptionsArray($field);
-        $nullable = false;
+        $hasDefault = false;
         foreach ($options as $option){
-            if( ( strpos( $option, 'u') !== false ) && ( strpos( $option, '*') === false ) ) {
-                $nullable = true;
+            if( strpos( $option, '#') !== false ) {
+                $defaultArray = explode( '#', $option );
+                $hasDefault = $defaultArray[1];
             }
         }
-        return $nullable;
+        return $hasDefault;
     }
 
     /**
      * Retorna verdade se o field contém a letra u e não contém * (unique single); falso caso contrário.
      *
      * @param  string  $field
-     * @return boolean nullable
+     * @return boolean unique
      */
-    protected function isUniqueArray($field) {
+    protected function isUnique($field) {
+        // default may contain letter u
+        $field = $this->dropDefault( $field );
+
         $options = $this->getOptionsArray($field);
-        $nullable = false;
+        $unique = false;
         foreach ($options as $option){
-            if( strpos( $option, 'u*') !== false ) {
-                $nullable = true;
+            if( ( strpos( $option, 'u') !== false ) && ( strpos( $option, '*') === false ) ) {
+                $unique = true;
             }
         }
-        return $nullable;
+        return $unique;
+    }
+
+    /**
+     * Retorna verdade se o field contém a letra u e não contém * (unique single); falso caso contrário.
+     *
+     * @param  string  $field
+     * @return boolean uniqueArray
+     */
+    protected function isUniqueArray($field) {
+        // default may contain letter u*
+        $field = $this->dropDefault( $field );
+
+        $options = $this->getOptionsArray($field);
+        $uniqueArray = false;
+        foreach ($options as $option){
+            if( strpos( $option, 'u*') !== false ) {
+                $uniqueArray = true;
+            }
+        }
+        return $uniqueArray;
     }
 
     /**
