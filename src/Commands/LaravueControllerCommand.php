@@ -129,6 +129,14 @@ class LaravueControllerCommand extends LaravueCommand
                     $maxSize = "|max:" . $isNumbers[0];
                 }
             }
+            // Unsigned Integer
+            $unsigned = '';
+            if( $type == 'integer' ) {
+                $isUnsigned = $this->isUnsigned($value);
+                if( $isUnsigned !== false ) {
+                    $unsigned = "|min:0";
+                }
+            }
             // Unique 
             $isUnique = $this->isUnique($value);
             $table = $this->pluralize( 2, Str::snake( $model ) );
@@ -170,7 +178,8 @@ class LaravueControllerCommand extends LaravueCommand
                 $ending = "";
             }
 
-            $returnRules .= "'$key' => '${type}${required}${maxSize}${unique}${uniqueArray}${ending}"; 
+            $returnRules .= "'$key' => '${type}${required}${maxSize}${unique}${uniqueArray}${unsigned}"; 
+            $returnRules .= "${ending}"; 
         }
 
         return str_replace( '{{ rules }}', $returnRules , $parsedfFields );
