@@ -2,11 +2,12 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.5.103 - 02/dez/2020
+## 8.7.103 - 02/dez/2020
 ### Adicionado
 - Geração do nome da tabela no modelo.
 - Acentuação de todas as palavras em títulos compostos.
-- Geração de valores default para os fields. Ex: laravue:build Nacao -f estado:s.#'Minas Gerais'#,indice:i.#1002# 
+- Geração de valores default para os fields. Ex: laravue:build Model -f stringField:s.#'string Value'#,indexField:i.#1002# 
+- Geração da cláusa unsigned. (Valores numerais não negativos): field:i.+
 ### Alterado
 - Foto de avatar no perfil de acesso.
 - Ordenação no LaravueDatatale

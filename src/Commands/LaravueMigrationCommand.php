@@ -83,6 +83,12 @@ class LaravueMigrationCommand extends LaravueCommand
             // Default
             $default = $this->hasDefault($value);
             $default = $default !== false ? "->default($default)" : '';
+            // Unsigned integer
+            $unsigned = '';
+            $isUnsigned = $this->isUnsigned($value);
+            if( $type == 'integer' && $isUnsigned) {
+                $unsigned = '->unsigned()';
+            }
             
             if( $first ) {
                 $first = false;
@@ -109,13 +115,19 @@ class LaravueMigrationCommand extends LaravueCommand
                 if( $isNullable && $isUnique ) {
                     $returnFields .= "$"."table->$type('$key'$size)" . PHP_EOL;
                     $returnFields .= $this->tabs(4) . "${nullable}" . PHP_EOL;
+                    if( $isUnsigned ) {
+                        $returnFields .= $this->tabs(4) . "${unsigned}" . PHP_EOL;
+                    }
                     $returnFields .= $this->tabs(4) . "${unique};";
                 } else if( $default !== false && $isUnique ) {
                     $returnFields .= "$"."table->$type('$key'$size)" . PHP_EOL;
                     $returnFields .= $this->tabs(4) . "${unique}" . PHP_EOL;
+                    if( $isUnsigned ) {
+                        $returnFields .= $this->tabs(4) . "${unsigned}" . PHP_EOL;
+                    }
                     $returnFields .= $this->tabs(4) . "${default};";
                 } else {
-                    $returnFields .= "$"."table->$type('$key'$size)${nullable}${unique}${default};";
+                    $returnFields .= "$"."table->$type('$key'$size)${nullable}${unique}${default}${unsigned};";
                 } 
             }
         }

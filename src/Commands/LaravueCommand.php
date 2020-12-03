@@ -525,7 +525,7 @@ class LaravueCommand extends Command
     }
 
     /**
-     * Retorna verdade se o field contém o caractere ! (default); falso caso contrário.
+     * Retorna verdade se o field contém o caractere # (default); falso caso contrário.
      *
      * @param  string  $field
      * @return any default
@@ -540,6 +540,26 @@ class LaravueCommand extends Command
             }
         }
         return $hasDefault;
+    }
+
+    /**
+     * Retorna verdade se o field contém o caractere + (unsigned); falso caso contrário.
+     *
+     * @param  string  $field
+     * @return any default
+     */
+    protected function isUnsigned($field) {
+        // default may contain carcater +
+        $field = $this->dropDefault( $field );
+
+        $options = $this->getOptionsArray($field);
+        $isUnsigned = false;
+        foreach ( $options as $option ) {
+            if( strpos( $option, '+') !== false ) {
+                $isUnsigned = true;
+            }
+        }
+        return $isUnsigned;
     }
 
     /**
