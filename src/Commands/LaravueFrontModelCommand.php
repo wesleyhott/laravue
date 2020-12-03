@@ -79,6 +79,14 @@ class LaravueFrontModelCommand extends LaravueCommand
                     $rules .= $rules == '' ? "max:$size" : "|max:$size";
                 }
             }
+            // Unsigned Integer
+            $unsigned = '';
+            if( $type == 'integer' ) {
+                $isUnsigned = $this->isUnsigned($value);
+                if( $isUnsigned !== false ) {
+                    $rules .= $rules == '' ? "min_value:0" : "|min_value:0";
+                }
+            }
 
             if( $this->isFk( $key ) ) {
                 $returnFields .= $this->getSelect( $key, $rules );
