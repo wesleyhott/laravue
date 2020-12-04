@@ -10,7 +10,7 @@ class LaravueFrontSideBarCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:frontsidebar {model}';
+    protected $signature = 'laravue:frontsidebar {model} {--o|outdocker}';
 
     /**
      * The console command description.

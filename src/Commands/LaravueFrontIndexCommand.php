@@ -11,7 +11,7 @@ class LaravueFrontIndexCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:frontindex {model} {--f|fields=}';
+    protected $signature = 'laravue:frontindex {model} {--f|fields=} {--o|outdocker}';
 
     /**
      * The console command description.

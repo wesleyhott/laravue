@@ -9,7 +9,7 @@ class LaravueFrontCreateCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:frontcreate {model}';
+    protected $signature = 'laravue:frontcreate {model} {--o|outdocker}';
 
     /**
      * The console command description.
