@@ -9,7 +9,7 @@ class LaravueFrontDeleteCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:frontdelete {model}';
+    protected $signature = 'laravue:frontdelete {model} {--o|outdocker}';
 
     /**
      * The console command description.

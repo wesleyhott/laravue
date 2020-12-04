@@ -10,7 +10,7 @@ class LaravueFrontRouteCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:frontroute {model}';
+    protected $signature = 'laravue:frontroute {model} {--o|outdocker}';
 
     /**
      * The console command description.

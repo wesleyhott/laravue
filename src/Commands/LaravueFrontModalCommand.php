@@ -9,7 +9,7 @@ class LaravueFrontModalCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:frontmodal {model} {--f|fields=}';
+    protected $signature = 'laravue:frontmodal {model} {--f|fields=} {--o|outdocker}';
 
     /**
      * The console command description.

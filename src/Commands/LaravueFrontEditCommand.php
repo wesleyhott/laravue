@@ -9,7 +9,7 @@ class LaravueFrontEditCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:frontedit {model}';
+    protected $signature = 'laravue:frontedit {model}  {--o|outdocker}';
 
     /**
      * The console command description.

@@ -9,7 +9,7 @@ class LaravueFrontShowCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:frontshow {model}';
+    protected $signature = 'laravue:frontshow {model} {--o|outdocker}';
 
     /**
      * The console command description.
