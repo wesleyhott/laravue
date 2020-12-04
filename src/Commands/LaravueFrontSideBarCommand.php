@@ -40,7 +40,7 @@ class LaravueFrontSideBarCommand extends LaravueCommand
         $currentDirectory =  getcwd();
         $paths = explode( "/", $currentDirectory );
 
-        if ( end( $dirs ) == "laravue") { // Laravue Tests
+        if ( end( $paths ) == "laravue") { // Laravue Tests
             $routeDirectory = "$currentDirectory/Frontend/src";
         } else if ( $this->option('outdocker') ) {
             $routeDirectory = Str::replaceFirst( end( $paths ), "frontend/src", $currentDirectory);
@@ -69,7 +69,7 @@ class LaravueFrontSideBarCommand extends LaravueCommand
         $currentDirectory =  getcwd();
         $paths = explode( "/", $currentDirectory );
 
-        if ( end( $dirs ) == "laravue") { // Laravue Tests
+        if ( end( $paths ) == "laravue") { // Laravue Tests
             $routeDirectory = "$currentDirectory/Frontend/src/sidebarLinks.js";
         } else if ( $this->option('outdocker') ) {
             $routeDirectory = Str::replaceFirst( end( $paths ), "frontend/src/sidebarLinks.js", $currentDirectory);
