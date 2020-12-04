@@ -82,6 +82,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeLaravueConfigAuth();
         $this->makeLaravueConfigServer();
         // Provider
+        $this->makeLaravueProviderApp();
         $this->makeLaravueProviderAuth();
         // Controller
         $this->makeLaravueController();
@@ -564,6 +565,17 @@ class LaravueInstallCommand extends LaravueCommand
         $fileName = "config/laravue.php";
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeLaravueProviderApp() {
+        $this->setStub('install/provider-app');
+        $fileName = "Providers/AppServiceProvider.php";
+        $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
 

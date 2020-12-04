@@ -21,6 +21,7 @@ class MakeLaravueInstallCommandTest extends TestCase
         // Config
         $ConfigAuthClass = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "config/auth.php" );
         // Provider
+        $ProviderAppClass = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Providers/AppServiceProvider.php" );
         $ProviderAuthClass = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Providers/AuthServiceProvider.php" );
         // Filter
         $AbstractFilter = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Filters/AbstractFilter.php" );
@@ -42,6 +43,7 @@ class MakeLaravueInstallCommandTest extends TestCase
         // Config
         $this->makeTest($ConfigAuthClass, $deleteAfterCreation);
         // Provider
+        $this->makeTest($ProviderAppClass, $deleteAfterCreation);
         $this->makeTest($ProviderAuthClass, $deleteAfterCreation);
         // Filter
         $this->makeTest($AbstractFilter, $deleteAfterCreation);
