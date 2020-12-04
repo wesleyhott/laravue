@@ -703,7 +703,7 @@ class LaravueCommand extends Command
 
         $words = explode( ' ', trim( $title ) );
         foreach ( $words as $key => $value ) {
-            $words[$key] = $this->tilCedilha( $value );
+            $words[$key] = $this->tilCedilha( $this->accentuation( $value ) );
         }
 
         $title = implode( ' ', $words );
@@ -811,5 +811,34 @@ class LaravueCommand extends Command
         }
 
         return "$backPath/$file";
+    }
+
+    protected function accentuation( $word ) {
+        switch( $word ) {
+            case 'Analise': return 'Análise';
+            case 'Analises': return 'Análises';
+            case 'Ausencia': return 'Ausência';
+            case 'Ausencias': return 'Ausências';
+            case 'Codigo': return 'Código';
+            case 'Codigos': return 'Códigos';
+            case 'Horaria': return 'Horária';
+            case 'Horarias': return 'Horárias';
+            case 'Inicio': return 'Início';
+            case 'Inicios': return 'Inícios';
+            case 'Matricula': return 'Matrícula';
+            case 'Matriculas': return 'Matrículas';
+            case 'Mes': return 'Mês';
+            case 'Obrigatoria': return 'Obrigatória';
+            case 'Obrigatorias': return 'Obrigatórias';
+            case 'Ocorrencia': return 'Ocorrência';
+            case 'Ocorrencias': return 'Ocorrências';
+            case 'Responsavel': return 'Responsável';
+            case 'Responsaveis': return 'Responsáveis';
+            case 'Tacita': return 'Tácita';
+            case 'Tacitas': return 'Tácitas';
+            case 'Usuario': return 'Usuário';
+            case 'Usuarios': return 'Usuários';
+            default: return $word;
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.8.105 - 04/dez/2020
+## 8.9.105 - 04/dez/2020
 ### Adicionado
 - Geração do nome da tabela no modelo.
 - Acentuação de todas as palavras em títulos compostos.
@@ -10,6 +10,7 @@ Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 - Geração da cláusa unsigned. (Valores numerais não negativos): field:i.+
 - Obrigação de HTTPS nos ambientes de homologação e produção.
 - Opção de geração fora do docker (--outdocker ou -o).
+- Acentuação das palavras nos títulos.
 ### Alterado
 - Foto de avatar no perfil de acesso.
 - Ordenação no LaravueDatatale
