@@ -172,7 +172,7 @@ class LaravueCommand extends Command
         if ( end( $paths ) == "laravue" ) { // Laravue Tests
             $frontDirectory ="$currentDirectory/Frontend/LaravueTest/Views/Pages/$name";
         } else if ( $this->option('outdocker') ) {
-            $frontPath = Str::replaceFirst( end( $dirs ), "frontend/src/components/$this->projectName/Views/Pages/$name", $currentDirectory);
+            $frontPath = Str::replaceFirst( end( $paths ), "frontend/src/components/$this->projectName/Views/Pages/$name", $currentDirectory);
         } else {
             $frontDirectory = Str::replaceFirst( end( $paths ), "src/components/$this->projectName/Views/Pages/$name", $currentDirectory);
         }
@@ -200,7 +200,7 @@ class LaravueCommand extends Command
         if( end( $paths ) == "laravue") { // Laravue Tests
             $frontDirectory = "$currentDirectory/Frontend/LaravueTest/Views/Pages/$name/forms";
         } else if ( $this->option('outdocker') ) {
-            $frontPath = Str::replaceFirst( end( $dirs ), "frontend/src/components/$this->projectName/Views/Pages/$name", $currentDirectory);
+            $frontPath = Str::replaceFirst( end( $paths ), "frontend/src/components/$this->projectName/Views/Pages/$name", $currentDirectory);
         } else { 
             $frontDirectory = Str::replaceFirst( end( $paths ), "src/components/$this->projectName/Views/Pages/$name/forms", $currentDirectory);
         }
