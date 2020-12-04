@@ -40,9 +40,11 @@ class LaravueFrontRouteCommand extends LaravueCommand
         $currentDirectory =  getcwd();
         $paths = explode( "/", $currentDirectory );
 
-        if( end( $paths ) == "api") { // laravel
+        if ( end( $dirs ) == "laravue") { // Laravue Tests
+            $routeDirectory = "$currentDirectory/Frontend/src/routes/";
+        } else if ( $this->option('outdocker') ) {
             $routeDirectory = Str::replaceFirst( end( $paths ), "frontend/src/routes", $currentDirectory);
-        } else { // docker
+        } else { 
             $routeDirectory = Str::replaceFirst( end( $paths ), "src/routes", $currentDirectory);
         }
 
@@ -68,9 +70,11 @@ class LaravueFrontRouteCommand extends LaravueCommand
         $currentDirectory =  getcwd();
         $paths = explode( "/", $currentDirectory );
 
-        if( end( $paths ) == "api") { // laravel
+        if ( end( $dirs ) == "laravue") { // Laravue Tests
+            $routeDirectory = "$currentDirectory/Frontend/src/routes/routes.js";
+        } else if ( $this->option('outdocker') ) {
             $routeDirectory = Str::replaceFirst( end( $paths ), "frontend/src/routes/routes.js", $currentDirectory);
-        } else { // docker
+        } else { 
             $routeDirectory = Str::replaceFirst( end( $paths ), "src/routes/routes.js", $currentDirectory);
         }
 
