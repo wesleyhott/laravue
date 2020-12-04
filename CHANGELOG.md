@@ -2,6 +2,12 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
+## 8.9.106 - 09/dez/2020
+### Adicionado
+- Seeder Funcionário MP na instalação.
+### Alterado
+- Correções menores.
+  
 ## 8.9.105 - 04/dez/2020
 ### Adicionado
 - Geração do nome da tabela no modelo.

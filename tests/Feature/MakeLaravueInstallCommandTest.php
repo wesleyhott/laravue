@@ -23,6 +23,8 @@ class MakeLaravueInstallCommandTest extends TestCase
         // Provider
         $ProviderAppClass = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Providers/AppServiceProvider.php" );
         $ProviderAuthClass = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Providers/AuthServiceProvider.php" );
+        // Seeder
+        $FuncionarioMpSeeder = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "database/seeders/FuncionarioMpSeeder.php" );
         // Filter
         $AbstractFilter = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Filters/AbstractFilter.php" );
         $LaravueFilter = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Filters/LaravueFilter.php" );
@@ -45,6 +47,8 @@ class MakeLaravueInstallCommandTest extends TestCase
         // Provider
         $this->makeTest($ProviderAppClass, $deleteAfterCreation);
         $this->makeTest($ProviderAuthClass, $deleteAfterCreation);
+        // Seeders
+        $this->makeTest($FuncionarioMpSeeder, $deleteAfterCreation);
         // Filter
         $this->makeTest($AbstractFilter, $deleteAfterCreation);
         $this->makeTest($LaravueFilter, $deleteAfterCreation);

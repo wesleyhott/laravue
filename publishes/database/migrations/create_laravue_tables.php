@@ -103,10 +103,8 @@ class CreateLaravueTables extends Migration
 
         Schema::create('vw_funcionario_mps', function (Blueprint $table) {
             $table->integer('pessoa_id');
-            $table->string('mamp', 6)->nullable();
-            $table->binary('foto')->nullable();
-            $table->string('usuario_ult_alteracao', 40);
-            $table->timestamps();
+            $table->string('mamp', 6);
+            $table->binary('foto');
         });
     }
 

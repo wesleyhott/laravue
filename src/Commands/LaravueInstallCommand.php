@@ -43,6 +43,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeUserMigration();
         // Seeder
         $this->makeUserSeeder();
+        $this->makeFuncionarioMPSeeder();
         $this->makeOauthClientSeeder();
         $this->makeTaskGroupSeeder();
         $this->makeTaskStatusSeeder();
@@ -187,6 +188,18 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeUserSeeder() {
         $this->setStub('install/seeder-user');
         $fileName = "database/seeders/UserSeeder.php";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp);
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeFuncionarioMPSeeder() {
+        $this->setStub('install/seeder-funcionario-mp');
+        $fileName = "database/seeders/FuncionarioMpSeeder.php";
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp);
 
