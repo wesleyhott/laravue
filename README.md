@@ -8,6 +8,9 @@ composer require mpmg/laravue
 
 ```
 php artisan laravue:install
+
+```
+php artisan vendor:publish --provider="Mpmg\Laravue\LaravueServiceProvider"
 ```
 
 ```

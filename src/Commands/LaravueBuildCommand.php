@@ -16,7 +16,8 @@ class LaravueBuildCommand extends LaravueCommand
         {--b|backward : Indicates to rebuild entire database}
         {--bw : Indicates to rebuild entire database}
         {--w|forward : Indicates to entry new data on database}
-        {--fw : Indicates to entry new data on database}';
+        {--fw : Indicates to entry new data on database}
+        {--o|outdocker : Indicates running outside docker}';
 
     /**
      * The console command description.
@@ -65,6 +66,7 @@ class LaravueBuildCommand extends LaravueCommand
         $this->call('laravue:front', [
             'model' => Str::studly( $this->argument('model') ),
             '--fields' =>  $this->option('fields'),
+            '--outdocker' =>  $this->option('outdocker'),
         ]);
     }
 
