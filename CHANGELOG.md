@@ -2,7 +2,7 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.8.104 - 04/dez/2020
+## 8.8.105 - 04/dez/2020
 ### Adicionado
 - Geração do nome da tabela no modelo.
 - Acentuação de todas as palavras em títulos compostos.
