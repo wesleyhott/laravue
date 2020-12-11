@@ -38,46 +38,30 @@ class LaravueFrontSideBarCommand extends LaravueCommand
     protected function getFrontMenuPath()
     {
         $currentDirectory =  getcwd();
-        $paths = explode( "/", $currentDirectory );
+        $paths = explode( "/", str_replace( '\\', '/', $currentDirectory) );
 
         if ( end( $paths ) == "laravue") { // Laravue Tests
-            $routeDirectory = "$currentDirectory/Frontend/src";
+            $menuDirectory = $this->fileBuildPath($currentDirectory, 'Frontend', 'src' );
         } else if ( $this->option('outdocker') ) {
-            $routeDirectory = Str::replaceFirst( end( $paths ), "frontend/src", $currentDirectory);
+            $menuDirectory = Str::replaceFirst( end( $paths ), $this->fileBuildPath( 'frontend', 'src' ), $currentDirectory);
         } else { 
-            $routeDirectory = Str::replaceFirst( end( $paths ), "src", $currentDirectory);
+            $menuDirectory = Str::replaceFirst( end( $paths ), $this->fileBuildPath( 'src' ), $currentDirectory);
         }
 
-        if( !is_dir($routeDirectory) ) {
-            mkdir( $routeDirectory, 0777, true);
+        if( !is_dir($menuDirectory) ) {
+            mkdir( $menuDirectory, 0777, true);
         }
 
-        $file = "$routeDirectory/sidebarLinks.js";
+        $file = $this->fileBuildPath( $menuDirectory, 'sidebarLinks.js' );
         
         return $file;
     }
 
     protected function buildMenu($model)
     {
-        $routes = $this->files->get($this->resolveFrontMenuPath());
+        $routes = $this->files->get($this->getFrontMenuPath());
 
         return $this->replaceRouteRoutes($routes, $model);
-    }
-
-    protected function resolveFrontMenuPath()
-    {
-        $currentDirectory =  getcwd();
-        $paths = explode( "/", $currentDirectory );
-
-        if ( end( $paths ) == "laravue") { // Laravue Tests
-            $routeDirectory = "$currentDirectory/Frontend/src/sidebarLinks.js";
-        } else if ( $this->option('outdocker') ) {
-            $routeDirectory = Str::replaceFirst( end( $paths ), "frontend/src/sidebarLinks.js", $currentDirectory);
-        } else { 
-            $routeDirectory = Str::replaceFirst( end( $paths ), "src/sidebarLinks.js", $currentDirectory);
-        }
-
-        return $routeDirectory;
     }
 
     protected function replaceRouteRoutes($routeFile, $model)

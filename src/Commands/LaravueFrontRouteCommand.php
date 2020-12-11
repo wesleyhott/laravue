@@ -38,47 +38,31 @@ class LaravueFrontRouteCommand extends LaravueCommand
     protected function getFrontRoutePath()
     {
         $currentDirectory =  getcwd();
-        $paths = explode( "/", $currentDirectory );
+        $paths = explode( "/", str_replace( '\\', '/', $currentDirectory) );
 
         if ( end( $paths ) == "laravue") { // Laravue Tests
-            $routeDirectory = "$currentDirectory/Frontend/src/routes/";
+            $routeDirectory = $this->fileBuildPath($currentDirectory, 'Frontend', 'src', 'routes');
         } else if ( $this->option('outdocker') ) {
-            $routeDirectory = Str::replaceFirst( end( $paths ), "frontend/src/routes", $currentDirectory);
+            $routeDirectory = Str::replaceFirst( end( $paths ), $this->fileBuildPath( 'frontend', 'src', 'routes' ), $currentDirectory);
         } else { 
-            $routeDirectory = Str::replaceFirst( end( $paths ), "src/routes", $currentDirectory);
+            $routeDirectory = Str::replaceFirst( end( $paths ), $this->fileBuildPath('src', 'routes' ), $currentDirectory);
         }
 
         if( !is_dir($routeDirectory) ) {
             mkdir( $routeDirectory, 0777, true);
         }
 
-        $file = "$routeDirectory/routes.js";
+        $file = $this->fileBuildPath( $routeDirectory, 'routes.js' );
         
         return $file;
     }
 
     protected function buildRoute($model)
     {
-        $routes = $this->files->get($this->resolveFrontRoutePath());
+        $routes = $this->files->get($this->getFrontRoutePath());
         $imports = $this->replaceRouteImports($routes, $model);
 
         return $this->replaceRouteRoutes($imports, $model);
-    }
-
-    protected function resolveFrontRoutePath()
-    {
-        $currentDirectory =  getcwd();
-        $paths = explode( "/", $currentDirectory );
-
-        if ( end( $paths ) == "laravue") { // Laravue Tests
-            $routeDirectory = "$currentDirectory/Frontend/src/routes/routes.js";
-        } else if ( $this->option('outdocker') ) {
-            $routeDirectory = Str::replaceFirst( end( $paths ), "frontend/src/routes/routes.js", $currentDirectory);
-        } else { 
-            $routeDirectory = Str::replaceFirst( end( $paths ), "src/routes/routes.js", $currentDirectory);
-        }
-
-        return $routeDirectory;
     }
 
     protected function replaceRouteImports($routeFile, $model)

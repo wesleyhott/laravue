@@ -136,23 +136,24 @@ class LaravueCommand extends Command
                 $path = $this->makePath( "database/seeders/DatabaseSeeder.php", true );
                 break;
             case 'front-modal':
-                $dirs = explode( "/", $currentDirectory );
+                $paths = explode( "/", str_replace( '\\', '/', $currentDirectory) );
 
-                if ( end( $dirs ) == "laravue") { // Laravue Tests
-                    $frontPath = "$currentDirectory/Frontend/src/components/$this->projectName/Views/Pages/$model/forms";
+                $buildPath = $this->fileBuildPath( 'src', 'components', $this->projectName, 'Views', 'Pages', $model, 'forms' );
+                if ( end( $paths ) == "laravue") { // Laravue Tests
+                    $frontPath = $this->fileBuildPath( $currentDirectory, 'Frontend', $buildPath);
                 } else if ( $this->option('outdocker') ) {
-                    $frontPath = Str::replaceFirst( end( $dirs ), "frontend/src/components/$this->projectName/Views/Pages/$model/forms", $currentDirectory);
+                    $frontPath = Str::replaceFirst( end( $paths ), $this->fileBuildPath( 'frontend', $buildPath ), $currentDirectory);
                 } else { 
-                    $frontPath = Str::replaceFirst( end( $dirs ), "src/components/$this->projectName/Views/Pages/$model/forms", $currentDirectory);
+                    $frontPath = Str::replaceFirst( end( $paths ), $buildPath, $currentDirectory);
                 }
 
                 if( !is_dir($frontPath) ) {
                     mkdir( $frontPath, 0777, true);
                 }
-                $path = "$frontPath/Modal.vue";
+                $path = $this->fileBuildPath($frontPath, 'Modal.vue' );
                 break;
             default:
-                $path = $this->makePath("/Models/$model.$ext");
+                $path = $this->makePath( $this->fileBuildPath( 'Models', "$model.$ext" ) );
         }
         
         return $path;
@@ -167,14 +168,16 @@ class LaravueCommand extends Command
     protected function getFrontPath($name, $filename = null,  $ext = 'vue')
     {
         $currentDirectory = getcwd();
-        $paths = explode( "/", $currentDirectory );
+        $paths = explode( "/", str_replace( '\\', '/', $currentDirectory ) );
 
         if ( end( $paths ) == "laravue" ) { // Laravue Tests
-            $frontDirectory = "$currentDirectory/Frontend/LaravueTest/Views/Pages/$name";
+            $frontDirectory = $this->fileBuildPath( $currentDirectory, 'Frontend', 'LaravueTest', 'Views', 'Pages', $name );
         } else if ( $this->option('outdocker') ) {
-            $frontDirectory = Str::replaceFirst( end( $paths ), "frontend/src/components/$this->projectName/Views/Pages/$name", $currentDirectory);
+            $buildPath = $this->fileBuildPath( 'frontend', 'src', 'components', $this->projectName, 'Views', 'Pages', $name );
+            $frontDirectory = Str::replaceFirst( end( $paths ), $buildPath, $currentDirectory);
         } else {
-            $frontDirectory = Str::replaceFirst( end( $paths ), "src/components/$this->projectName/Views/Pages/$name", $currentDirectory);
+            $buildPath = $this->fileBuildPath( 'src', 'components', $this->projectName, 'Views', 'Pages', $name );
+            $frontDirectory = Str::replaceFirst( end( $paths ), $buildPath, $currentDirectory );
         }
 
         if( !is_dir($frontDirectory) ) {
@@ -195,14 +198,16 @@ class LaravueCommand extends Command
     protected function getFrontFormsPath($name, $filename = null,  $ext = 'vue')
     {
         $currentDirectory =  getcwd();
-        $paths = explode( "/", $currentDirectory );
+        $paths = explode( "/", str_replace( '\\', '/', $currentDirectory ) );
 
         if( end( $paths ) == "laravue") { // Laravue Tests
-            $frontDirectory = "$currentDirectory/Frontend/LaravueTest/Views/Pages/$name/forms";
+            $frontDirectory = $this->fileBuildPath( $currentDirectory, 'Frontend', 'LaravueTest', 'Views', 'Pages', $name, 'forms' );
         } else if ( $this->option('outdocker') ) {
-            $frontDirectory = Str::replaceFirst( end( $paths ), "frontend/src/components/$this->projectName/Views/Pages/$name/forms", $currentDirectory);
+            $buildPath = $this->fileBuildPath( 'frontend', 'src', 'components', $this->projectName, 'Views', 'Pages', $name, 'forms' );
+            $frontDirectory = Str::replaceFirst( end( $paths ), $buildPath, $currentDirectory);
         } else { 
-            $frontDirectory = Str::replaceFirst( end( $paths ), "src/components/$this->projectName/Views/Pages/$name/forms", $currentDirectory);
+            $buildPath = $this->fileBuildPath( 'src', 'components', $this->projectName, 'Views', 'Pages', $name, 'forms' );
+            $frontDirectory = Str::replaceFirst( end( $paths ), $buildPath, $currentDirectory);
         }
 
         if( !is_dir($frontDirectory) ) {
@@ -840,5 +845,14 @@ class LaravueCommand extends Command
             case 'Usuarios': return 'Usuários';
             default: return $word;
         }
+    }
+
+    /**
+    * Builds a file path with the appropriate directory separator.
+    * @param string $segments,... unlimited number of path segments
+    * @return string Path
+    */
+    function fileBuildPath(...$segments) {
+        return join(DIRECTORY_SEPARATOR, $segments);
     }
 }

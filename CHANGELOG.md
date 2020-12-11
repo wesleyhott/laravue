@@ -2,9 +2,10 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.9.106 - 09/dez/2020
+## 8.10.106 - 09/dez/2020
 ### Adicionado
 - Seeder Funcionário MP na instalação.
+- Geração de códigos pode ser feita em Windows com a opção -o ( --outdocker ).
 ### Alterado
 - Correções menores.
   
