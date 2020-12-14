@@ -50,7 +50,7 @@ class {{ model }}Controller extends LaravueController
     /**
      * Métodos de inserção de lógica específica.
      */
-    // public function beforeIndex($data) { return $data; }
+    {{ beforeIndex }}
     // public function beforeShow($data) { return $data; }
     // public function beforeSave($model) { return $model; }
     // public function afterSave($model) { return $model; }

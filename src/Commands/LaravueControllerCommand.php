@@ -49,12 +49,16 @@ class LaravueControllerCommand extends LaravueCommand
         $stub = $this->files->get($this->getStub());
         $uniqueMessages = $this->replaceUniqueMessages($stub, $model);
         $field = $this->replaceField($uniqueMessages, $model);
+        $beforeIndex = $this->replaceBeforeIndex($field, $model);
 
-        return $this->replaceModel($field, $model);
+        return $this->replaceModel($beforeIndex, $model);
     }
 
     protected function replaceUniqueMessages($stub, $model)
     {
+        if(!$this->option('fields')){
+            return str_replace( '{{ unique:messages }}', '' , $stub );
+        }
         $fields = $this->getFieldsArray( $this->option('fields') );
 
         $messageFields = '';
@@ -105,11 +109,11 @@ class LaravueControllerCommand extends LaravueCommand
                 $first = false;
             } else {
                 $returnFields .= PHP_EOL;
-                $returnFields .= "\t\t";
+                $returnFields .= $this->tabs(2);
             } 
             $returnFields .= "$"."model->$key = $"."request->input('$key');"; 
         }
-        $returnFields .= "\t\t";
+        $returnFields .= $this->tabs(2);
         $parsedfFields = str_replace( '{{ fields }}', $returnFields , $stub );
 
         //rules
@@ -183,5 +187,34 @@ class LaravueControllerCommand extends LaravueCommand
         }
 
         return str_replace( '{{ rules }}', $returnRules , $parsedfFields );
+    }
+
+    protected function replaceBeforeIndex( $stub, $model ) {
+        if(!$this->option('fields')){
+            return str_replace( '{{ beforeIndex }}', "// public function beforeIndex(\$data) { return \$data; }" , $stub );
+        }
+        $booleanArray = array();
+        $fields = $this->getFieldsArray( $this->option('fields') );
+        foreach ($fields as $key => $value) {
+            $type = $this->getType($value);
+            if( $type === 'boolean' ) {
+                array_push( $booleanArray, $key );
+            }
+        }
+
+        if( count( $booleanArray ) == 0 ){
+            return str_replace( '{{ beforeIndex }}', "// public function beforeIndex(\$data) { return \$data; }" , $stub );
+        }
+
+        $beforeIndex = "public function beforeIndex(\$data) { " . PHP_EOL;
+        $beforeIndex .= $this->tabs(2) . "foreach(\$data as \$item){" . PHP_EOL;
+        foreach ( $booleanArray as $field ) {
+            $beforeIndex .= $this->tabs(3) . "\$item->$field = \$item->$field == 1 ? \"Sim\" : \"Não\";" . PHP_EOL;
+        }
+        $beforeIndex .= $this->tabs(2) . "}" . PHP_EOL;
+        $beforeIndex .= $this->tabs(2) . "return \$data; " . PHP_EOL;
+        $beforeIndex .= $this->tabs(1) . "}" . PHP_EOL;
+
+        return str_replace( '{{ beforeIndex }}', $beforeIndex, $stub );
     }
 }
