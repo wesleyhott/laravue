@@ -41,17 +41,7 @@ class {{ model }}ReportController extends LaravueReportController
      * @return \App\Models\{{ model }}
      */
     public function beforeIndex($data)
-    {
-        // os nomes são os definidos em mapColumns() do modelo.
-        // foreach($data as $item){
-            // Transformando colunas
-            // $item["pk_id"] = ( \App\Models\ModelPk::find( $item["pk_id"] ) )->name;
-            // $item["created_at"] = date( 'd/m/Y', strtotime( $item["created_at"] ) );
-            // $item["booleanFiled"] = $item["booleanFiled"] == 1 ? "Sim" : "Não";
-            
-            // Removendo colunas
-            // unset($item["CampoDesnecessario"]);
-        // }
+    { {{ beforeIndex }}
         return $data;
     }
 }

@@ -111,6 +111,7 @@ class LaravueApiCommand extends Command
     {
         $this->call('laravue:report', [
             'model' => $this->argument('model'),
+            '--fields' =>  $this->option('fields'),
         ]);
     }
 
