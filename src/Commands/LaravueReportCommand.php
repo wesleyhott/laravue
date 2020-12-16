@@ -63,11 +63,15 @@ class LaravueReportCommand extends LaravueCommand
         }
 
         $booleanArray = array();
+        $dateArray = array();
         $fields = $this->getFieldsArray( $this->option('fields') );
         foreach ($fields as $key => $value) {
             $type = $this->getType($value);
             if( $type === 'boolean' ) {
                 array_push( $booleanArray, $key );
+            }
+            if( $type === 'date' ) {
+                array_push( $dateArray, $key );
             }
         }
 
@@ -81,6 +85,9 @@ class LaravueReportCommand extends LaravueCommand
         $beforeIndex .= $this->tabs(2) . "foreach(\$data as \$item) {" . PHP_EOL;
         foreach ( $booleanArray as $field ) {
             $beforeIndex .= $this->tabs(3) . "\$item[\"$field\"] = \$item[\"$field\"] == 1 ? \"Sim\" : \"Não\";" . PHP_EOL;
+        }
+        foreach ( $dateArray as $field ) {
+            $beforeIndex .= $this->tabs(3) . "\$item[\"$field\"] = date( 'd/m/Y', strtotime( \$item[\"$field\"] ) );" . PHP_EOL;
         }
         $beforeIndex .= $this->tabs(2) . "}" . PHP_EOL;
 
