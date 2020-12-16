@@ -2,6 +2,12 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
+## 8.14.107 - 16/dez/2020
+### Adicionado
+- Plural de palavras terminadas em 'r'.
+### Alterado
+- Correções menores.
+
 ## 8.14.106 - 16/dez/2020
 ### Adicionado
 - Seeder Funcionário MP na instalação.

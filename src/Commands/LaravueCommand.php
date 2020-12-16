@@ -296,6 +296,7 @@ class LaravueCommand extends Command
             case 'y':
                 return substr($singular,0,-1).'ies';
             case 's':
+            case 'r':
                 return $singular.'es';
             default:
                 return $singular.'s';
