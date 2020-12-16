@@ -2,12 +2,13 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.12.106 - 15/dez/2020
+## 8.13.106 - 16/dez/2020
 ### Adicionado
 - Seeder Funcionário MP na instalação.
 - Geração de códigos pode ser feita em Windows com a opção -o ( --outdocker ).
 - Geração de tratamento de campos booleanos nos controladores.
 - Geração de tratamento de campos booleanos nos relatórios.
+- Geração de tratamento de campos de data nos controladores.
 ### Alterado
 - Correções menores.
   
