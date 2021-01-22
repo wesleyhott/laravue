@@ -84,10 +84,12 @@ class LaravueReportCommand extends LaravueCommand
         $beforeIndex .= $this->tabs(2) . "// Para remover colunas use: unset(\$item[\"CampoDesnecessario\"]);" . PHP_EOL;
         $beforeIndex .= $this->tabs(2) . "foreach(\$data as \$item) {" . PHP_EOL;
         foreach ( $booleanArray as $field ) {
-            $beforeIndex .= $this->tabs(3) . "\$item[\"$field\"] = \$item[\"$field\"] == 1 ? \"Sim\" : \"Não\";" . PHP_EOL;
+            $title = ucwords( $field );
+            $beforeIndex .= $this->tabs(3) . "\$item[\"$title\"] = \$item[\"$title\"] == 1 ? \"Sim\" : \"Não\";" . PHP_EOL;
         }
         foreach ( $dateArray as $field ) {
-            $beforeIndex .= $this->tabs(3) . "\$item[\"$field\"] = date( 'd/m/Y', strtotime( \$item[\"$field\"] ) );" . PHP_EOL;
+            $title = ucwords( $field );
+            $beforeIndex .= $this->tabs(3) . "\$item[\"$title\"] = date( 'd/m/Y', strtotime( \$item[\"$title\"] ) );" . PHP_EOL;
         }
         $beforeIndex .= $this->tabs(2) . "}" . PHP_EOL;
 
