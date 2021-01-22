@@ -8,7 +8,7 @@ class {{ model }}ReportController extends LaravueReportController
 {
     // Overrided Superclass methods
     public function getFileName(){
-        return '{{ route }}' ;
+        return '{{ route }}';
     }
 
     public function getPdfOrientation(){
@@ -22,7 +22,7 @@ class {{ model }}ReportController extends LaravueReportController
      */
     protected function getModel()
     {
-        return  \App\Models\{{ model }}::class;
+        return \App\Models\{{ model }}::class;
     }
 
     /**

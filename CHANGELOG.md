@@ -2,7 +2,7 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.14.108 - 22/jan/2021
+## 8.14.109 - 22/jan/2021
 ### Adicionado
 - Plural de palavras terminadas em 'r'.
 ### Alterado
