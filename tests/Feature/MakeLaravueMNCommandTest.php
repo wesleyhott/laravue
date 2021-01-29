@@ -16,12 +16,14 @@ class MakeLaravueMNCommandTest extends TestCase
         // destination path of the Test class
         $prefix = date('Y_m_d_His');
         $migrationFile = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "database/migrations/${prefix}_create_big_file_user_table.php" );
+        $seederFile = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "database/seeders/BigFileUserSeeder.php" );
 
         // Run the make command
         Artisan::call('laravue:mxn BigFile User -k user_id:s.n -p ativo:b.n');
 
         // Assert a new files are created
         $this->makeTest($migrationFile, $deleteAfterCreation);
+        $this->makeTest($seederFile, $deleteAfterCreation);
     }
 
     function makeTestClass($testClass){

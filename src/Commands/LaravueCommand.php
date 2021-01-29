@@ -136,7 +136,13 @@ class LaravueCommand extends Command
                 }
                 break;
             case 'seed':
-                $path = $this->makePath( "database/seeders/$model"."Seeder.php", true );
+                if( is_array( $model )) {
+                    $model1 = $model[0];
+                    $model2 = $model[1];
+                    $path = $this->makePath( "database/seeders/${model1}${model2}Seeder.php", true );
+                } else {
+                    $path = $this->makePath( "database/seeders/${model}Seeder.php", true );
+                }
                 break;
             case 'seeder':
                 $path = $this->makePath( "database/seeders/DatabaseSeeder.php", true );
@@ -280,6 +286,13 @@ class LaravueCommand extends Command
             case 'Missil': return 'Misseis';
             case 'Reptil': return 'Repteis';
             case 'User': return 'Users';
+        }
+
+        $ending_letters = substr($singular, -4);
+        switch($ending_letters) {
+            case 'user': 
+            case 'User': 
+                return substr($singular, 0, -3).'sers';
         }
 
         $ending_letters = substr($singular, -2);
@@ -469,6 +482,13 @@ class LaravueCommand extends Command
     protected function buildSeed($model)
     {
         $stub = $this->files->get($this->getStub());
+
+        if( is_array($model) ) { // mxn
+            $class = $this->replaceClass($stub, $model[0] . $model[1]);
+            $table = $this->replaceTable($class, $model[0] . $model[1], $plural = false);
+            return $this->replaceField($table, $model);
+        }
+
         $class = $this->replaceClass($stub, $model);
         $table = $this->replaceTable($class, $model);
 
