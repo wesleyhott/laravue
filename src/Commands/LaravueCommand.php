@@ -126,8 +126,14 @@ class LaravueCommand extends Command
                 break;
             case 'migration':
                 $prefix = date('Y_m_d_His');
-                $model = Str::snake($model);
-                $path = $this->makePath( "database/migrations/$prefix"."_create_$model"."_table.$ext", true );
+                if( is_array( $model )) {
+                    $model1 = Str::snake( $model[0] );
+                    $model2 = Str::snake( $model[1] );
+                    $path = $this->makePath( "database/migrations/${prefix}_create_${model1}_${model2}_table.$ext", true );
+                } else {
+                    $model = Str::snake($model);
+                    $path = $this->makePath( "database/migrations/${prefix}_create_${model}_table.$ext", true );
+                }
                 break;
             case 'seed':
                 $path = $this->makePath( "database/seeders/$model"."Seeder.php", true );
@@ -273,6 +279,7 @@ class LaravueCommand extends Command
             case 'Mal': return 'Males';
             case 'Missil': return 'Misseis';
             case 'Reptil': return 'Repteis';
+            case 'User': return 'Users';
         }
 
         $ending_letters = substr($singular, -2);
@@ -384,9 +391,12 @@ class LaravueCommand extends Command
      * @param  string  $model
      * @return string
      */
-    protected function replaceTable($stub, $model)
+    protected function replaceTable($stub, $model, $plural = true )
     {
-        return str_replace( '{{ table }}', Str::snake( $this->pluralize( 2, $model ) ) , $stub );
+        if( $plural ) {
+            $model = $this->pluralize( 2, $model );
+        }
+        return str_replace( '{{ table }}', Str::snake( $model ) , $stub );
     }
 
     /**
@@ -435,6 +445,13 @@ class LaravueCommand extends Command
     protected function buildMigration($model)
     {
         $stub = $this->files->get($this->getStub());
+
+        if( is_array($model) ) { // mxn
+            $class = $this->replaceClass($stub, $model[0] . $model[1]); 
+            $table = $this->replaceTable($class, $model[0] . $model[1], $plural = false);
+            return $this->replaceField($table, $model);
+        } 
+
         $class = $this->replaceClass($stub, $model);
         $table = $this->replaceTable($class, $model);
 
@@ -484,6 +501,9 @@ class LaravueCommand extends Command
      * @return array
      */
     protected function getFieldsArray($options) {
+        if( !isset( $options) ) {
+            return [];
+        }
         $pureOptions = str_replace( "=", "", 
                        str_replace("[", "", 
                        str_replace("]", "", $options) ) );

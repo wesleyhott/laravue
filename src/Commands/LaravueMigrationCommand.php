@@ -11,7 +11,7 @@ class LaravueMigrationCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:migration {model} {--f|fields=}';
+    protected $signature = 'laravue:migration {model*} {--f|fields=} {--x|mxn}';
 
     /**
      * The console command description.
@@ -34,25 +34,41 @@ class LaravueMigrationCommand extends LaravueCommand
      */
     public function handle()
     {
-        $this->setStub('/migration');
-        $model = trim($this->argument('model'));
-        $date = now();
+        if( $this->option('mxn') ) {
+            $this->setStub('/migration-mxn');
+        } else {
+            $this->setStub('/migration'); 
+        }
+        
+        $model = $this->option('mxn') ? $this->argument('model') : trim( $this->argument('model')[0] );
 
-        $path = $this->getPath($model);
+        $path = $this->getPath( $model );
         $this->files->put( $path, $this->buildMigration( $model ) );
 
+        $name = $this->buildName( $model );
+    }
+
+    public function buildName( $model ) {
+        $date = now();
         $prefix = date('Y_m_d_His');
-        $name = Str::snake( $this->pluralize( 2, trim($this->argument('model') ) ) );
-        $this->info("$date - [ $model ] >> $prefix"."_create_$name"."_table.php");
+        if( $this->option('mxn') ) {
+            $model1 = Str::snake( $model[0] );
+            $model2 = Str::snake( $model[1] );
+            $this->info("$date - [ ${model1}_${model2} ] >> ${prefix}_create_${model1}_${model2}_table.php");
+            return Str::snake( $this->pluralize( 2, trim($this->argument('model')[0] ) ) );
+        } else {
+            $this->info("$date - [ ${model1}_${model2} ] >> $prefix"."_create_$name"."_table.php");
+            return Str::snake( $this->pluralize( 2, trim($this->argument('model')[0] ) ) );
+        }
     }
 
     protected function replaceField($stub, $model)
     {
-        if(!$this->option('fields')){
+        if(!$this->option('fields') && !is_array( $model ) ) {
             return str_replace( '{{ fields }}', "// insira código aqui." , $stub );
         }
 
-        $fields = $this->getFieldsArray( $this->option('fields') );
+        $fields = $this->buildFields( $model );
 
         $returnFields = "";
         $uniqueArray = [];
@@ -137,5 +153,28 @@ class LaravueMigrationCommand extends LaravueCommand
         }
 
         return str_replace( '{{ fields }}', $returnFields , $stub );
+    }
+
+    public function buildFields( $model ) {
+        $model1 = $model2 = "";
+        $keys = array();
+        $allFields = $fields = $this->getFieldsArray( $this->option('fields') );
+
+        if( is_array( $model ) ) {
+            $key1 = Str::snake( $model[0] ) . "_id";
+            $model1 = array( $key1 => 'i' );
+            $key2 = Str::snake( $model[1] ) . "_id";
+            $model2 = array( $key2 => 'i' );
+
+            if( !array_key_exists( $key1, $fields ) && !array_key_exists( $key2, $fields ) ) {
+                $allFields = $model1 + $model2 + $fields;
+            } else if ( !array_key_exists( $key1, $fields ) ) {
+                $allFields = $model1 + $fields;
+            } else if ( !array_key_exists( $key2, $fields ) ) {
+                $allFields = $model2 + $fields;
+            }
+        }
+
+        return $allFields;
     }
 }
