@@ -9,7 +9,7 @@ class LaravueFrontModalCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:frontmodal {model} {--f|fields=} {--o|outdocker}';
+    protected $signature = 'laravue:frontmodal {model*} {--f|fields=} {--o|outdocker}';
 
     /**
      * The console command description.
@@ -33,7 +33,7 @@ class LaravueFrontModalCommand extends LaravueCommand
     public function handle()
     {
         $this->setStub('/front/forms/modal');
-        $model = trim($this->argument('model'));
+        $model = trim($this->argument('model')[0]);
         $date = now();
 
         $path = $this->getPath($model, "Show");

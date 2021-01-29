@@ -11,7 +11,7 @@ class LaravueFrontModelCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:frontmodel {model} {--f|fields=} {--o|outdocker}';
+    protected $signature = 'laravue:frontmodel {model*} {--f|fields=} {--o|outdocker}';
 
     /**
      * The console command description.
@@ -28,7 +28,7 @@ class LaravueFrontModelCommand extends LaravueCommand
     public function handle()
     {
         $this->setStub('/front/forms/model');
-        $model = trim($this->argument('model'));
+        $model = trim($this->argument('model')[0]);
         $date = now();
 
         $path = $this->getFrontFormsPath($model, "Model");

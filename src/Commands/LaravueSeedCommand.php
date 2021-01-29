@@ -9,7 +9,7 @@ class LaravueSeedCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:seed {model} {--f|fields=}';
+    protected $signature = 'laravue:seed {model*} {--f|fields=}';
 
     /**
      * The console command description.
@@ -33,7 +33,7 @@ class LaravueSeedCommand extends LaravueCommand
     public function handle()
     {
         $this->setStub('/seed');
-        $model = trim($this->argument('model'));
+        $model = trim($this->argument('model')[0]);
         $date = now();
 
         $path = $this->getPath($model);

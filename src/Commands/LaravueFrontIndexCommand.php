@@ -11,7 +11,7 @@ class LaravueFrontIndexCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:frontindex {model} {--f|fields=} {--o|outdocker}';
+    protected $signature = 'laravue:frontindex {model*} {--f|fields=} {--o|outdocker}';
 
     /**
      * The console command description.
@@ -28,7 +28,7 @@ class LaravueFrontIndexCommand extends LaravueCommand
     public function handle()
     {
         $this->setStub('/front/index');
-        $model = trim($this->argument('model'));
+        $model = trim($this->argument('model')[0]);
         $date = now();
 
         $path = $this->getFrontPath($model, "Index");

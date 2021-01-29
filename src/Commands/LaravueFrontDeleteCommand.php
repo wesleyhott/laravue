@@ -9,7 +9,7 @@ class LaravueFrontDeleteCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:frontdelete {model} {--o|outdocker}';
+    protected $signature = 'laravue:frontdelete {model*} {--o|outdocker}';
 
     /**
      * The console command description.
@@ -26,7 +26,7 @@ class LaravueFrontDeleteCommand extends LaravueCommand
     public function handle()
     {
         $this->setStub('/front/delete');
-        $model = trim($this->argument('model'));
+        $model = trim($this->argument('model')[0]);
         $date = now();
 
         $path = $this->getFrontPath($model, "Delete");

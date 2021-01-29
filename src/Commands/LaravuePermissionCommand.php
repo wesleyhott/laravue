@@ -9,7 +9,7 @@ class LaravuePermissionCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:permission {model}';
+    protected $signature = 'laravue:permission {model*}';
 
     /**
      * The console command description.
@@ -32,7 +32,7 @@ class LaravuePermissionCommand extends LaravueCommand
      */
     public function handle()
     {
-        $model = trim($this->argument('model'));
+        $model = trim($this->argument('model')[0]);
         $date = now();
 
         $path = $this->getPath($model);

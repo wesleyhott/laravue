@@ -11,7 +11,7 @@ class LaravueControllerCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:controller {model} {--f|fields=}';
+    protected $signature = 'laravue:controller {model*} {--f|fields=}';
 
     /**
      * The console command description.
@@ -35,7 +35,7 @@ class LaravueControllerCommand extends LaravueCommand
     public function handle()
     {
         $this->setStub('/controller');
-        $model = trim($this->argument('model'));
+        $model = trim($this->argument('model')[0]);
         $date = now();
 
         $path = $this->getPath($model);
