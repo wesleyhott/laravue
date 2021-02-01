@@ -9,7 +9,7 @@ class LaravueDbSeederCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:dbseeder {model*}';
+    protected $signature = 'laravue:dbseeder {model*} {--x|mxn}';
 
     /**
      * The console command description.
@@ -32,13 +32,23 @@ class LaravueDbSeederCommand extends LaravueCommand
      */
     public function handle()
     {
-        $model = trim($this->argument('model')[0]);
+        $model = "";
+        if( $this->option('mxn') ) { 
+            $model = $this->argument('model');
+        } else {
+            $model = trim($this->argument('model')[0]);
+        }
+
         $date = now();
 
         $path = $this->getPath($model);
         $this->files->put( $path, $this->buildDataSeeder($model) );
 
-        $this->info("$date - [ $model ] >> DatabaseSeeder.php");
+        $formatedModel = $model;
+        if( $this->option('mxn') ) { 
+            $formatedModel = $model[0] . $model[1];
+        }
+        $this->info("$date - [ $formatedModel ] >> DatabaseSeeder.php");
     }
 
     /**
@@ -51,17 +61,22 @@ class LaravueDbSeederCommand extends LaravueCommand
      */
     protected function buildDataSeeder($model)
     {
-        $stub = $this->files->get( $this->getPath($model) );
+        $formatedModel = "";
+        if( $this->option('mxn') ) { 
+            $formatedModel = $model[0] . $model[1];
+        } else {
+            $formatedModel = $model;
+        }
 
-        return $this->replaceSeeder($stub, $model);
+        $stub = $this->files->get( $this->getPath($formatedModel) );
+
+        return $this->replaceSeeder($stub, $formatedModel);
     }
 
     protected function replaceSeeder($databaseSeederFile, $model)
     {
-        $formatedModel = ucfirst( $model );
-
         $newSeeder = "";
-        $newSeeder .= "$"."this->call($formatedModel"."Seeder::class);" . PHP_EOL;
+        $newSeeder .= "$"."this->call($model"."Seeder::class);" . PHP_EOL;
         $newSeeder .= "\t\t// {{ laravue-insert:seed }}";
         
         return str_replace( '// {{ laravue-insert:seed }}', $newSeeder, $databaseSeederFile );

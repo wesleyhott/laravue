@@ -42,6 +42,7 @@ class LaravueMNCommand extends LaravueCommand
 
         $this->createMigration( $fields );
         $this->createSeeder( $fields );
+        $this->createDataSeeder();
     }
 
     /**
@@ -68,6 +69,19 @@ class LaravueMNCommand extends LaravueCommand
         $this->call('laravue:seed', [
             'model' => $this->argument('model'),
             '--fields' =>  $fields,
+            '--mxn' =>  true,
+        ]);
+    }
+
+    /**
+     * Create a database seeder entry for the model.
+     *
+     * @return void
+     */
+    protected function createDataSeeder()
+    {
+        $this->call('laravue:dbseeder', [
+            'model' => $this->argument('model'),
             '--mxn' =>  true,
         ]);
     }
