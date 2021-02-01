@@ -152,6 +152,13 @@ class LaravueMigrationCommand extends LaravueCommand
             $returnFields .= PHP_EOL . $this->tabs(3) . "\$table->unique(['$uniques']);";
         }
 
+        if( is_array( $model ) ) {
+            $key1 = Str::snake( $model[0] );
+            $key2 = Str::snake( $model[1] );
+            $returnFields .= PHP_EOL;
+            $returnFields .= $this->tabs(3) . "\$table->primary(['${key1}_id', '${key2}_id'], '${key1}_${key2}_${key1}_id_${key2}_id_primary');";
+        }
+
         return str_replace( '{{ fields }}', $returnFields , $stub );
     }
 
