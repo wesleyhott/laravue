@@ -38,4 +38,6 @@ class Task extends LaravueModel
     {
         return $this->belongsTo(Version::class);
     }
+
+    // {{ laravue-insert:relationship }}
 }

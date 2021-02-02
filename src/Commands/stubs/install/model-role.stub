@@ -11,4 +11,6 @@ class Role extends SpatieRole
     {
         return (new LaravueFilter($request))->filter($builder);
     }
+
+    // {{ laravue-insert:relationship }}
 }

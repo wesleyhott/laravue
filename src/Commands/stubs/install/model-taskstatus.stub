@@ -12,4 +12,6 @@ class TaskStatus extends LaravueModel
     {
         return $this->hasMany(Task::class);
     }
+
+    // {{ laravue-insert:relationship }}
 }

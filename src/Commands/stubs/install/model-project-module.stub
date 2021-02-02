@@ -12,4 +12,6 @@ class ProjectModule extends LaravueModel
     {
         return $this->hasMany(Project::class);
     }
+
+    // {{ laravue-insert:relationship }}
 }
