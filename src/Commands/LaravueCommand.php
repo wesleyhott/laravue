@@ -386,6 +386,20 @@ class LaravueCommand extends Command
     }
 
     /**
+     * Replace the relationship for the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $model
+     * @param  string  $fields
+     * @return string $stub
+     */
+    protected function replaceMxNRelation($stub, $model, $fields)
+    {
+        // {{ laravue-insert:relationship }} must be implemented
+        return $stub;
+    }
+
+    /**
      * Replace the plural for class in the given stub.
      *
      * @param  string  $stub
@@ -436,6 +450,10 @@ class LaravueCommand extends Command
      */
     protected function buildModel($model, $fields = null)
     {
+        if( is_array( $model ) ) {
+            return $this->replaceRelation($table, $model, $fields);
+        }
+        
         $stub = $this->files->get($this->getStub());
         $isPlural = true;
         $title = $this->replaceTitle($stub, $model, $isPlural);

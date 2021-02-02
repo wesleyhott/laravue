@@ -11,7 +11,7 @@ class LaravueModelCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:model {model*} {--f|fields=}';
+    protected $signature = 'laravue:model {model*} {--f|fields=} {--x|mxn}';
 
     /**
      * The console command description.
@@ -34,6 +34,12 @@ class LaravueModelCommand extends LaravueCommand
      */
     public function handle()
     {
+        if( $this->option('mxn') ){
+            $this->mxnRelation($this->argument('model')[0], $this->argument('model')[1] );
+            $this->mxnRelation($this->argument('model')[1], $this->argument('model')[0] );
+            return;
+        }
+
         $this->setStub('/model');
         $model = trim($this->argument('model')[0]);
         $date = now();
@@ -119,6 +125,31 @@ class LaravueModelCommand extends LaravueCommand
         $newRelation .= $this->tabs(1) . "public function $relationName()" . PHP_EOL;
         $newRelation .= $this->tabs(1) . "{" . PHP_EOL;
         $newRelation .= $this->tabs(2) . "return \$this->hasMany('App\Models\\$model');" . PHP_EOL;
+        $newRelation .= $this->tabs(1) . "}" . PHP_EOL;
+        $newRelation .= PHP_EOL;
+        $newRelation .= $this->tabs(1) ."// {{ laravue-insert:relationship }}";
+
+        $this->files->put($path, str_replace( '// {{ laravue-insert:relationship }}', $newRelation, $modelFile ) );
+    }
+
+    protected function mxnRelation($modelM, $modelN) {
+        $currentDirectory =  getcwd();
+        $path = "$currentDirectory/app/Models/$modelM.php";
+        $modelFile = "";
+        try {
+            $modelFile = $this->files->get($path);
+        } catch (\Exception $e) {
+            $this->error("Arquivo - $currentDirectory/app/Models/$modelM.php - não encontrado.");
+        }
+
+        $relationName = lcfirst( $this->pluralize( 2, $modelN ) );
+
+        $newRelation = "/**" . PHP_EOL;
+        $newRelation .= $this->tabs(1) . " * Retorna os $relationName de $modelM." . PHP_EOL;
+        $newRelation .= $this->tabs(1) . " */" . PHP_EOL;
+        $newRelation .= $this->tabs(1) . "public function $relationName()" . PHP_EOL;
+        $newRelation .= $this->tabs(1) . "{" . PHP_EOL;
+        $newRelation .= $this->tabs(2) . "return \$this->belongsToMany('App\Models\\$modelN');" . PHP_EOL;
         $newRelation .= $this->tabs(1) . "}" . PHP_EOL;
         $newRelation .= PHP_EOL;
         $newRelation .= $this->tabs(1) ."// {{ laravue-insert:relationship }}";
