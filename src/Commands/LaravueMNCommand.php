@@ -44,6 +44,7 @@ class LaravueMNCommand extends LaravueCommand
         $this->createSeeder( $fields );
         $this->createDataSeeder();
         $this->createModel();
+        $this->createPermission();
     }
 
     /**
@@ -97,6 +98,19 @@ class LaravueMNCommand extends LaravueCommand
         $this->call('laravue:model', [
             'model' => $this->argument('model'),
             '--mxn' =>  true,
+        ]);
+    }
+
+    /**
+     * Cria as rotas para o modelo.
+     *
+     * @return void
+     */
+    protected function createPermission()
+    {
+        $model = array( $this->argument('model')[0] . $this->argument('model')[1] );
+        $this->call('laravue:permission', [
+            'model' => $model,
         ]);
     }
 }
