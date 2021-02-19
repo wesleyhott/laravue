@@ -31,6 +31,8 @@ class LaravueServiceProvider extends ServiceProvider
                 Commands\LaravueMigrationCommand::class,
                 Commands\LaravueModelCommand::class,
                 Commands\LaravueMNCommand::class,
+                Commands\LaravueMNApiCommand::class,
+                Commands\LaravueMNFrontCommand::class,
                 Commands\LaravuePermissionCommand::class,
                 Commands\LaravueReportCommand::class,
                 Commands\LaravueRouteCommand::class,

@@ -2,14 +2,16 @@
 
 namespace Mpmg\Laravue\Commands;
 
-class LaravueMNCommand extends LaravueCommand
+use Illuminate\Support\Str;
+
+class LaravueMNFrontCommand extends LaravueCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'laravue:mxn {model* : The model to be builded} 
+    protected $signature = 'laravue:mxnfront {model* : The model to be builded} 
         {--k|keys= : custom foreing keys that belongs to relationship}
         {--p|pivots= : Feilds that belongs to relationship}
         {--o|outdocker : indicates the origin of command}';
@@ -39,35 +41,16 @@ class LaravueMNCommand extends LaravueCommand
             $fields .= $virgula . $this->option('pivots');
         }
 
-        $this->backend( $fields );
-        $this->frontend( $fields );
-
+        $this->createModel( $fields );
     }
 
     /**
-     * Cria o backend para o modelo.
+     * Create a migration file for the model.
      *
      * @return void
      */
-    protected function backend( $pivots )
+    protected function createModel( $fields )
     {
-        $this->call('laravue:mxnapi', [
-            'model' => $this->argument('model'),
-            '--pivots' =>  $pivots,
-        ]);
-    }
-
-    /**
-     * Cria o frontend para o modelo.
-     *
-     * @return void
-     */
-    protected function frontend( $pivots )
-    {
-        $this->call('laravue:mxnfront', [
-            'model' => $this->argument('model'),
-            '--pivots' =>  $pivots,
-            '--outdocker' =>  $this->option('outdocker'),
-        ]);
+        print_r('creating model..');
     }
 }
