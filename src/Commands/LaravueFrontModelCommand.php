@@ -57,7 +57,7 @@ class LaravueFrontModelCommand extends LaravueCommand
                     '{{ fields:method }}',
                 ], "// Insira código aqui.", $stub );
             
-            return str_replace( '{{ fields }}', $default , $$toComment  );
+            return str_replace( '{{ fields }}', $default , $toComment  );
         }
 
         $fields = $this->getFieldsArray( $this->option('fields') );
