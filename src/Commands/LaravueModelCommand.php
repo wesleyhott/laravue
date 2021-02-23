@@ -154,6 +154,23 @@ class LaravueModelCommand extends LaravueCommand
         $newRelation .= PHP_EOL;
         $newRelation .= $this->tabs(1) ."// {{ laravue-insert:relationship }}";
 
-        $this->files->put($path, str_replace( '// {{ laravue-insert:relationship }}', $newRelation, $modelFile ) );
+        $parsedNewRelation = str_replace( '// {{ laravue-insert:relationship }}', $newRelation, $modelFile );
+
+        $parsedWith = $this->makeWith($parsedNewRelation, $relationName);
+
+        $this->files->put( $path, $parsedWith );
+    }
+
+    protected function makeWith( $parsedNewRelation, $relationName) {
+        if( strpos( $parsedNewRelation, "protected \$with = [") === false ) {
+            $with = "protected \$with = ['$relationName'];" . PHP_EOL;
+            $with .= $this->tabs(1) . "// {{ laravue-insert:with }}";
+
+            return str_replace( '// {{ laravue-insert:with }}', $with, $parsedNewRelation );
+        } else {
+            $with = "protected \$with = ['$relationName', ";
+
+            return str_replace( "protected \$with = [", $with, $parsedNewRelation );
+        }
     }
 }

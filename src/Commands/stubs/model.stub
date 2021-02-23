@@ -5,6 +5,7 @@ namespace App\Models;
 class {{ class }} extends LaravueModel
 {
     protected $table = '{{ table }}';
+    // {{ laravue-insert:with }}
 
     /**
      * Implementação do método da classe abstrata em BaseModel
