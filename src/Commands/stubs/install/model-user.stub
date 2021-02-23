@@ -118,4 +118,6 @@ class User extends Authenticatable
         }
         return $user;
     }
+
+    // {{ laravue-insert:relationship }}
 }

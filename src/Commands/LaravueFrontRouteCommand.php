@@ -10,7 +10,7 @@ class LaravueFrontRouteCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:frontroute {model} {--o|outdocker}';
+    protected $signature = 'laravue:frontroute {model*} {--o|outdocker}';
 
     /**
      * The console command description.
@@ -26,7 +26,7 @@ class LaravueFrontRouteCommand extends LaravueCommand
      */
     public function handle()
     {
-        $model = trim($this->argument('model'));
+        $model = trim($this->argument('model')[0]);
         $date = now();
 
         $path = $this->getFrontRoutePath();

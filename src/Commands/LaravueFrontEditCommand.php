@@ -9,7 +9,7 @@ class LaravueFrontEditCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:frontedit {model}  {--o|outdocker}';
+    protected $signature = 'laravue:frontedit {model*}  {--o|outdocker}';
 
     /**
      * The console command description.
@@ -26,7 +26,7 @@ class LaravueFrontEditCommand extends LaravueCommand
     public function handle()
     {
         $this->setStub('/front/edit');
-        $model = trim($this->argument('model'));
+        $model = trim($this->argument('model')[0]);
         $date = now();
 
         $path = $this->getFrontPath($model, "Edit");

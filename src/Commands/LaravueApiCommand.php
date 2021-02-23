@@ -12,7 +12,7 @@ class LaravueApiCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'laravue:api {model} {--f|fields=}';
+    protected $signature = 'laravue:api {model*} {--f|fields=}';
 
     /**
      * The console command description.
@@ -46,7 +46,7 @@ class LaravueApiCommand extends Command
     protected function createMigration()
     {
         $this->call('laravue:migration', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
             '--fields' =>  $this->option('fields'),
         ]);
     }
@@ -59,7 +59,7 @@ class LaravueApiCommand extends Command
     protected function createSeeder()
     {
         $this->call('laravue:seed', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
             '--fields' =>  $this->option('fields'),
         ]);
     }
@@ -72,7 +72,7 @@ class LaravueApiCommand extends Command
     protected function createDataSeeder()
     {
         $this->call('laravue:dbseeder', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
         ]);
     }
 
@@ -84,7 +84,7 @@ class LaravueApiCommand extends Command
     protected function createController()
     {
         $this->call('laravue:controller', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
             '--fields' =>  $this->option('fields'),
         ]);
     }
@@ -97,7 +97,7 @@ class LaravueApiCommand extends Command
     protected function createModel()
     {
         $this->call('laravue:model', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
             '--fields' =>  $this->option('fields'),
         ]);
     }
@@ -110,7 +110,7 @@ class LaravueApiCommand extends Command
     protected function createReport()
     {
         $this->call('laravue:report', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
             '--fields' =>  $this->option('fields'),
         ]);
     }
@@ -123,7 +123,7 @@ class LaravueApiCommand extends Command
     protected function createRoute()
     {
         $this->call('laravue:route', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
         ]);
     }
 
@@ -135,7 +135,7 @@ class LaravueApiCommand extends Command
     protected function createPermission()
     {
         $this->call('laravue:permission', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
         ]);
     }
 }

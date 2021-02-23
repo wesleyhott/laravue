@@ -9,7 +9,7 @@ class LaravueFrontCreateCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:frontcreate {model} {--o|outdocker}';
+    protected $signature = 'laravue:frontcreate {model*} {--o|outdocker}';
 
     /**
      * The console command description.
@@ -26,7 +26,7 @@ class LaravueFrontCreateCommand extends LaravueCommand
     public function handle()
     {
         $this->setStub('/front/create');
-        $model = trim($this->argument('model'));
+        $model = trim($this->argument('model')[0]);
         $date = now();
 
         $path = $this->getFrontPath($model, "Create");

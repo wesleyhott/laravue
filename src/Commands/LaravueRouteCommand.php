@@ -9,7 +9,7 @@ class LaravueRouteCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:route {model}';
+    protected $signature = 'laravue:route {model*}';
 
     /**
      * The console command description.
@@ -32,7 +32,7 @@ class LaravueRouteCommand extends LaravueCommand
      */
     public function handle()
     {
-        $model = trim($this->argument('model'));
+        $model = trim($this->argument('model')[0]);
         $date = now();
 
         $path = $this->getPath($model);

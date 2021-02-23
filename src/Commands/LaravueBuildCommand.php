@@ -11,7 +11,7 @@ class LaravueBuildCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:build {model : The model to be builded} 
+    protected $signature = 'laravue:build {model* : The model to be builded} 
         {--f|fields= : Feilds that belongs to model} 
         {--b|backward : Indicates to rebuild entire database}
         {--bw : Indicates to rebuild entire database}
@@ -51,7 +51,7 @@ class LaravueBuildCommand extends LaravueCommand
     protected function backend()
     {
         $this->call('laravue:api', [
-            'model' => Str::studly( $this->argument('model') ),
+            'model' => Str::studly( $this->argument('model')[0] ),
             '--fields' =>  $this->option('fields'),
         ]);
     }
@@ -64,7 +64,7 @@ class LaravueBuildCommand extends LaravueCommand
     protected function frontend()
     {
         $this->call('laravue:front', [
-            'model' => Str::studly( $this->argument('model') ),
+            'model' => Str::studly( $this->argument('model')[0] ),
             '--fields' =>  $this->option('fields'),
             '--outdocker' =>  $this->option('outdocker'),
         ]);
@@ -99,7 +99,7 @@ class LaravueBuildCommand extends LaravueCommand
         $this->info("$date - [ composer ] >> dump-autoload");
         $this->composer->dumpAutoloads();
 
-        $permissionName = $this->pluralize( 2, strtolower( $this->argument('model') ) );
+        $permissionName = $this->pluralize( 2, strtolower( $this->argument('model')[0] ) );
         $this->info("$date - [ spatie ] >> permission:create-permission");
         
         $this->call('permission:create-permission', [

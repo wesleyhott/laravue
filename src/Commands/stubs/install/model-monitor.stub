@@ -111,4 +111,6 @@ class Monitor extends LaravueModel
             ]
         );
     }
+
+    // {{ laravue-insert:relationship }}
 }

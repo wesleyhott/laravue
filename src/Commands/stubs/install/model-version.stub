@@ -70,4 +70,6 @@ class Version extends LaravueModel
 
         return array_reverse($roadmap);
     }
+
+    // {{ laravue-insert:relationship }}
 }

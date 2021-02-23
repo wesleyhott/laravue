@@ -15,7 +15,8 @@
         </div>
         <ValidationObserver ref="form">
           <form @submit.prevent="submit">
-            {{ fields }}<br>
+            {{ fields }}<!-- {{ laravue-insert:field }} -->
+            <br>
             <router-link :to="goBack">
               <p-button type="info" round>voltar</p-button>
             </router-link>
@@ -48,9 +49,11 @@ export default {
       loadingMessage: "",
       loading: false,
       selects: { {{ fields:data-selects }}
+        // {{ laravue-insert:dataSelects }}
       },
       model: {
         {{ fields:model }}
+        // {{ laravue-insert:dataModel }}
       }
     }
   },
@@ -72,6 +75,7 @@ export default {
         ? `${this.rota}/${this.$route.params.modelId}`
         : this.rota
     },{{ fields:computed }}
+    // {{ laravue-insert:computed }}
   },
   methods: {
     setLoading(status, message = "") {
@@ -107,6 +111,7 @@ export default {
           method: this.edicao ? "put" : "post",
           url: this.url,
           data: { {{ fields:data-submit }} 
+            // {{ laravue-insert:submit }}
           }
         })
           .then(response => {
@@ -130,6 +135,7 @@ export default {
       })
     },
     loadModel(){
+      // {{ laravue-insert:loadModelMethod }}
       if (this.edicao) {
         this.setLoading(true, "{{ model }}")
         this.$http
@@ -137,6 +143,7 @@ export default {
           .then(response => {
             this.setLoading(false)
             this.model = response.data.data
+            // {{ laravue-insert:loadModelResponse }} 
           })
           .catch(e => {
             laravueNotify.failure(this, e)
@@ -146,6 +153,7 @@ export default {
       }
     },
     {{ fields:method }}
+    // {{ laravue-insert:methods }}
   }
 }
 </script>

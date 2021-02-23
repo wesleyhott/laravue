@@ -9,7 +9,7 @@ class LaravueReportCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:report {model} {--f|fields=}';
+    protected $signature = 'laravue:report {model*} {--f|fields=}';
 
     /**
      * The console command description.
@@ -33,7 +33,7 @@ class LaravueReportCommand extends LaravueCommand
     public function handle()
     {
         $this->setStub('/report');
-        $model = trim($this->argument('model'));
+        $model = trim($this->argument('model')[0]);
         $date = now();
 
         $path = $this->getPath($model);

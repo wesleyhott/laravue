@@ -11,7 +11,7 @@ class LaravueFrontCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'laravue:front {model} {--f|fields=} {--o|outdocker}';
+    protected $signature = 'laravue:front {model*} {--f|fields=} {--o|outdocker}';
 
     /**
      * The console command description.
@@ -47,7 +47,7 @@ class LaravueFrontCommand extends Command
     protected function createIndex()
     {
         $this->call('laravue:frontindex', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
             '--fields' =>  $this->option('fields'),
             '--outdocker' =>  $this->option('outdocker'),
         ]);
@@ -61,7 +61,7 @@ class LaravueFrontCommand extends Command
     protected function createModel()
     {
         $this->call('laravue:frontmodel', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
             '--fields' =>  $this->option('fields'),
             '--outdocker' =>  $this->option('outdocker'),
         ]);
@@ -75,7 +75,7 @@ class LaravueFrontCommand extends Command
     protected function createCreate()
     {
         $this->call('laravue:frontcreate', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
             '--outdocker' =>  $this->option('outdocker'),
         ]);
     }
@@ -88,7 +88,7 @@ class LaravueFrontCommand extends Command
     protected function createEdit()
     {
         $this->call('laravue:frontedit', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
             '--outdocker' =>  $this->option('outdocker'),
         ]);
     }
@@ -101,7 +101,7 @@ class LaravueFrontCommand extends Command
     protected function createReport()
     {
         $this->call('laravue:frontreport', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
             '--outdocker' =>  $this->option('outdocker'),
         ]);
     }
@@ -114,7 +114,7 @@ class LaravueFrontCommand extends Command
     protected function createModal()
     {
         $this->call('laravue:frontmodal', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
             '--fields' =>  $this->option('fields'),
             '--outdocker' =>  $this->option('outdocker'),
         ]);
@@ -128,7 +128,7 @@ class LaravueFrontCommand extends Command
     protected function createShow()
     {
         $this->call('laravue:frontshow', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
             '--outdocker' =>  $this->option('outdocker'),
         ]);
     }
@@ -141,7 +141,7 @@ class LaravueFrontCommand extends Command
     protected function createDelete()
     {
         $this->call('laravue:frontdelete', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
             '--outdocker' =>  $this->option('outdocker'),
         ]);
     }
@@ -154,7 +154,7 @@ class LaravueFrontCommand extends Command
     protected function createFrontRoutes()
     {
         $this->call('laravue:frontroute', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
             '--outdocker' =>  $this->option('outdocker'),
         ]);
     }
@@ -167,7 +167,7 @@ class LaravueFrontCommand extends Command
     protected function createFrontSideBar()
     {
         $this->call('laravue:frontsidebar', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
             '--outdocker' =>  $this->option('outdocker'),
         ]);
     }

@@ -9,7 +9,7 @@ class LaravueFrontReportCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:frontreport {model} {--o|outdocker}';
+    protected $signature = 'laravue:frontreport {model*} {--o|outdocker}';
 
     /**
      * The console command description.
@@ -26,7 +26,7 @@ class LaravueFrontReportCommand extends LaravueCommand
     public function handle()
     {
         $this->setStub('/front/report');
-        $model = trim($this->argument('model'));
+        $model = trim($this->argument('model')[0]);
         $date = now();
 
         $path = $this->getFrontPath($model, "Report");
