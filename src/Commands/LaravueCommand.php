@@ -911,7 +911,58 @@ class LaravueCommand extends Command
     * @param string $segments,... unlimited number of path segments
     * @return string Path
     */
-    function fileBuildPath(...$segments) {
+    protected function fileBuildPath(...$segments) {
         return join(DIRECTORY_SEPARATOR, $segments);
     }
+
+    /**
+    * Returns a proper field that must be used as label for model.
+    *
+    * @param $fields an array of model fields
+    * @return string label field
+    */
+    protected function getLabel( $fields ) {
+        if (array_key_exists("label", $fields)) {
+            return 'label';
+        }
+        if (array_key_exists("name", $fields)) {
+            return 'name';
+        }
+        if (array_key_exists("nome", $fields)) {
+            return 'nome';
+        }
+        if (array_key_exists("title", $fields)) {
+            return 'title';
+        }
+        if (array_key_exists("titulo", $fields)) {
+            return 'titulo';
+        }
+        if (array_key_exists("description", $fields)) {
+            return 'description';
+        }
+        if (array_key_exists("descricao", $fields)) {
+            return 'descricao';
+        }
+        if (array_key_exists("desc", $fields)) {
+            return 'desc';
+        }
+        if (array_key_exists("text", $fields)) {
+            return 'text';
+        }
+        if (array_key_exists("sigla", $fields)) {
+            return 'sigla';
+        }
+        if (array_key_exists("uf", $fields)) {
+            return 'uf';
+        }
+        if (array_key_exists("code", $fields)) {
+            return 'code';
+        }
+        if (array_key_exists("codigo", $fields)) {
+            return 'codigo';
+        }
+
+        return "id";
+    }
+
 }

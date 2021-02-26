@@ -2,10 +2,11 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.15.109 - 23/fev/2021
+## 8.16.109 - 24/fev/2021
 ### Adicionado
 - Plural de palavras terminadas em 'r'.
 - Relacionamento MxN.
+- Suporte para Label nos selects.
 ### Alterado
 - Correções menores.
 

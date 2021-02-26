@@ -24,6 +24,13 @@ class LaravueMNFrontCommand extends LaravueCommand
     protected $description = 'Cria os aruquivos para um modelo';
 
     /**
+     * The model fields.
+     *
+     * @var string
+     */
+    protected $fields = [];
+
+    /**
      * Execute the console command.
      *
      * @return mixed
@@ -41,15 +48,18 @@ class LaravueMNFrontCommand extends LaravueCommand
             $fields .= $virgula . $this->option('pivots');
         }
 
-        $this->createModel( $fields );
+        $this->fields = $this->getFieldsArray( $fields );
+
+        $this->createModel();
+        $this->createModal();
     }
 
     /**
-     * Create a migration file for the model.
+     * Create a model file for the model.
      *
      * @return void
      */
-    protected function createModel( $fields )
+    protected function createModel()
     {
         $date = now();
         $projectName_m = $projectName_n = $this->projectName;
@@ -165,9 +175,9 @@ class LaravueMNFrontCommand extends LaravueCommand
         $items = $this->pluralize( 2, $item );
 
         $response = "this.model.${item}_ids = []" . PHP_EOL;
-        $response .= $this->tabs(6) . "this.model.${items}.forEach(element => {";
-        $response .= $this->tabs(7) . "this.model.${items}_ids.push( element.id )";
-        $response .= $this->tabs(6) . "})";
+        $response .= $this->tabs(6) . "this.model.${items}.forEach(element => {" . PHP_EOL;
+        $response .= $this->tabs(7) . "this.model.${items}_ids.push( element.id )" . PHP_EOL;
+        $response .= $this->tabs(6) . "})" . PHP_EOL;
         $response .= $this->tabs(6) . "// {{ laravue-insert:loadModelResponse }}";
 
         return str_replace( '// {{ laravue-insert:loadModelResponse }}', $response, $path  );
@@ -191,5 +201,66 @@ class LaravueMNFrontCommand extends LaravueCommand
         $method .= $this->tabs(2) . "// {{ laravue-insert:methods }}";
 
         return str_replace( '// {{ laravue-insert:methods }}', $method, $path  );
+    }
+
+    /**
+     * Create a model file for the model.
+     *
+     * @return void
+     */
+    protected function createModal()
+    {
+        $date = now();
+        $projectName_m = $projectName_n = $this->projectName;
+        $model_m = trim($this->argument('model')[0]);
+        $model_n = trim($this->argument('model')[1]);
+
+        if( $model_m == "Monitor" || $model_m == "Permission" || $model_m == "Role" || $model_m == "Task" || $model_m == "User" ) {
+            $projectName_m = "ProjetoBase";
+        }
+
+        if( $model_n == "Monitor" || $model_n == "Permission" || $model_n == "Role" || $model_n == "Task" || $model_n == "User" ) {
+            $projectName_n = "ProjetoBase";
+        }
+
+        $path_m = $this->fileBuildPath( 'frontend', 'src', 'components', $projectName_m, 'Views', 'Pages', $model_m, 'forms', 'Modal.vue' );
+        $path_n = $this->fileBuildPath( 'frontend', 'src', 'components', $projectName_n, 'Views', 'Pages', $model_n, 'forms', 'Modal.vue' );
+        
+        $stub_m = $this->files->get( $path_m );
+        $this->files->put( $path_m, $this->buildMnModal( $model_n, $stub_m ) );
+        $this->info("$date - [ $model_m ] >> forms/Modal.vue");
+        
+        $stub_n = $this->files->get( $path_n );
+        $this->files->put( $path_n, $this->buildMnModal( $model_m, $stub_n ) );
+        $this->info("$date - [ $model_n ] >> forms/Modal.vue");
+    }
+
+    protected function buildMnModal( $model, $path ) {
+        $parsedModalField = $this->getModalField( $model, $path );
+
+        return $parsedModalField;
+    }
+
+    public function getModalField( $model, $path ) {
+        $label = $this->getLabel( $this->fields );
+        $title = $this->getTitle( $model, true);
+        $plural = $this->pluralize( 2, $model );
+        $lowerSingular = lcfirst( $model );
+        $lowerPlural = lcfirst( $plural );
+
+        $modalField = "<div v-if=\"model.$lowerPlural.length > 0\" class=\"row\">" . PHP_EOL;
+        $modalField .= $this->tabs(2) . "<div class=\"col-sm-12\">" . PHP_EOL;
+        $modalField .= $this->tabs(3) . "<p>" . PHP_EOL;
+        $modalField .= $this->tabs(4) . "<b>$title</b>" . PHP_EOL;
+        $modalField .= $this->tabs(4) . "<br/>" . PHP_EOL;
+        $modalField .= $this->tabs(4) . "<ul>" . PHP_EOL;
+        $modalField .= $this->tabs(5) . "<li v-for=\"($lowerSingular, key) in model.$lowerPlural\" :key=\"key\">{{ $lowerSingular.$label }}</li>" . PHP_EOL;
+        $modalField .= $this->tabs(4) . "</ul>" . PHP_EOL;
+        $modalField .= $this->tabs(3) . "</p>" . PHP_EOL;
+        $modalField .= $this->tabs(2) . "</div>" . PHP_EOL;
+        $modalField .= $this->tabs(1) . "</div>" . PHP_EOL;
+        $modalField .= $this->tabs(1) . "<!-- {{ laravue-insert:field }} -->";
+
+        return str_replace( '<!-- {{ laravue-insert:field }} -->', $modalField, $path  );
     }
 }
