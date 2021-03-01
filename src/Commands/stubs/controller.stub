@@ -7,6 +7,8 @@ use Illuminate\Http\Response;
 
 class {{ model }}Controller extends LaravueController
 {
+    // {{ laravue-insert:property }}
+    
     /**
      * Implementação do modelo da classe abstrata em LaravueController
      *
@@ -29,6 +31,7 @@ class {{ model }}Controller extends LaravueController
 
         // Preencher os atributos do modelo
         {{ fields }}
+        // {{ laravue-insert:setModel }}
 
         return  $model;
     }
@@ -55,4 +58,6 @@ class {{ model }}Controller extends LaravueController
     // public function beforeSave($model) { return $model; }
     // public function afterSave($model) { return $model; }
     // public function beforeDestroy($model) { return $model; }
+
+    // {{ laravue-insert:method }}
 }

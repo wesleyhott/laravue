@@ -11,7 +11,7 @@ class LaravueControllerCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:controller {model*} {--f|fields=}';
+    protected $signature = 'laravue:controller {model*} {--f|fields=} {--x|mxn}';
 
     /**
      * The console command description.
@@ -34,6 +34,16 @@ class LaravueControllerCommand extends LaravueCommand
      */
     public function handle()
     {
+        if( $this->option('mxn') ){
+            $this->mxnProperty( $this->argument( 'model')[0], $this->argument('model')[1] );
+            $this->mxnProperty( $this->argument( 'model')[1], $this->argument('model')[0] );
+            $this->mxnModel( $this->argument( 'model')[0], $this->argument('model')[1] );
+            $this->mxnModel( $this->argument( 'model')[1], $this->argument('model')[0] );
+            $this->mxnAfterSave( $this->argument( 'model')[0], $this->argument('model')[1] );
+            $this->mxnAfterSave( $this->argument( 'model')[1], $this->argument('model')[0] );
+            return;
+        }
+
         $this->setStub('/controller');
         $model = trim($this->argument('model')[0]);
         $date = now();
@@ -223,5 +233,87 @@ class LaravueControllerCommand extends LaravueCommand
         $beforeIndex .= $this->tabs(1) . "}" . PHP_EOL;
 
         return str_replace( '{{ beforeIndex }}', $beforeIndex, $stub );
+    }
+
+    protected function mxnProperty($modelM, $modelN) {
+        $currentDirectory =  getcwd();
+        $path = "$currentDirectory/app/Http/Controllers/${modelM}Controller.php";
+        $controllerFile = "";
+        try {
+            $controllerFile = $this->files->get($path);
+        } catch (\Exception $e) {
+            $this->error("Arquivo - $currentDirectory/app/Http/Controllers/${modelM}Controller.php - não encontrado.");
+        }
+
+        $pluraLower = $this->pluralize( 2, lcfirst( $modelN ) );
+
+        $property = "protected \$${pluraLower}_ids = null;" . PHP_EOL;
+        $property .= $this->tabs(1) ."// {{ laravue-insert:property }}";
+
+        $parsedProperty = str_replace( '// {{ laravue-insert:property }}', $property, $controllerFile );;
+
+        $this->files->put( $path, $parsedProperty );
+    }
+
+    protected function mxnModel($modelM, $modelN) {
+        $currentDirectory =  getcwd();
+        $path = "$currentDirectory/app/Http/Controllers/${modelM}Controller.php";
+        $controllerFile = "";
+        try {
+            $controllerFile = $this->files->get($path);
+        } catch (\Exception $e) {
+            $this->error("Arquivo - $currentDirectory/app/Http/Controllers/${modelM}Controller.php - não encontrado.");
+        }
+
+        $singularLower = lcfirst( $modelN );
+
+        $model = "\$this->${singularLower}_ids = \$request->input('${singularLower}_ids');" . PHP_EOL;
+        $model .= $this->tabs(2) ."// {{ laravue-insert:setModel }}";
+
+        $parsedModel = str_replace( '// {{ laravue-insert:setModel }}', $model, $controllerFile );;
+
+        $this->files->put( $path, $parsedModel );
+    }
+
+    protected function mxnAfterSave($modelM, $modelN) {
+        $currentDirectory =  getcwd();
+        $path = "$currentDirectory/app/Http/Controllers/${modelM}Controller.php";
+        $controllerFile = "";
+        try {
+            $controllerFile = $this->files->get($path);
+        } catch (\Exception $e) {
+            $this->error("Arquivo - $currentDirectory/app/Http/Controllers/${modelM}Controller.php - não encontrado.");
+        }
+
+        $singularLower = lcfirst( $modelN );
+        $pluraLower = $this->pluralize( 2, lcfirst( $modelN ) );
+
+        $afterSaveMethod = "public function afterSave(\$model) {" . PHP_EOL;
+
+        $afterSaveIf = $this->tabs(2) . "if( isset( \$this->${singularLower}_ids) ) {" . PHP_EOL;
+        $afterSaveIf .= $this->tabs(3) . "\$model->$pluraLower()->sync(\$this->${singularLower}_ids);" . PHP_EOL;
+        $afterSaveIf .= $this->tabs(2) . "}" . PHP_EOL;
+
+        $afterSaveReturn = $this->tabs(2) . "return \$model; " . PHP_EOL;
+        $afterSaveReturn .= $this->tabs(1) . "}" . PHP_EOL;
+
+        $afterSaveInsert = PHP_EOL;
+        $afterSaveInsert .= $this->tabs(1) ."// {{ laravue-insert:method }}";
+
+        $afterSave = "";
+        $parsedAfterSave = "";
+
+        if( strpos( $controllerFile, '// public function afterSave($model) { return $model; }') !== false ) {
+            $afterSave = $afterSaveMethod . $afterSaveIf . $afterSaveReturn;
+            $parsedAfterSave = str_replace( '// public function afterSave($model) { return $model; }', $afterSave, $controllerFile );
+        } else if ( strpos( $controllerFile, 'public function afterSave($model) {') !== false ) {
+            $afterSave = $afterSaveMethod . $afterSaveIf ;
+            $parsedAfterSave = str_replace( 'public function afterSave($model) {', $afterSave, $controllerFile );
+        } else {
+            $afterSave = $afterSaveMethod . $afterSaveIf . $afterSaveReturn . $afterSaveInsert;
+            $parsedAfterSave = str_replace( '// {{ laravue-insert:method }}', $afterSave, $controllerFile );
+        }
+
+        $this->files->put( $path, $parsedAfterSave );
     }
 }

@@ -13,7 +13,8 @@ class LaravueMNApiCommand extends LaravueCommand
      */
     protected $signature = 'laravue:mxnapi {model* : The model to be builded} 
         {--k|keys= : custom foreing keys that belongs to relationship}
-        {--p|pivots= : Feilds that belongs to relationship}';
+        {--p|pivots= : Feilds that belongs to relationship}
+        {--x|mxn : Determines if is a mxn relationship}';
 
     /**
      * The console command description.
@@ -45,6 +46,7 @@ class LaravueMNApiCommand extends LaravueCommand
         $this->createDataSeeder();
         $this->createModel();
         $this->createPermission();
+        $this->createController();
     }
 
     /**
@@ -111,6 +113,19 @@ class LaravueMNApiCommand extends LaravueCommand
         $model = array( $this->argument('model')[0] . $this->argument('model')[1] );
         $this->call('laravue:permission', [
             'model' => $model,
+        ]);
+    }
+
+    /**
+     * Cria o controller para o modelo.
+     *
+     * @return void
+     */
+    protected function createController()
+    {
+        $this->call('laravue:controller', [
+            'model' => $this->argument('model'),
+            '--mxn' =>  true,
         ]);
     }
 }
