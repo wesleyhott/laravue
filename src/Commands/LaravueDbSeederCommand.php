@@ -36,7 +36,8 @@ class LaravueDbSeederCommand extends LaravueCommand
         if( $this->option('mxn') ) { 
             $model = $this->argument('model');
         } else {
-            $model = trim($this->argument('model')[0]);
+            $argumentModel = $this->argument('model');
+            $model = is_array( $argumentModel ) ? trim( $argumentModel[0] ) : trim( $argumentModel ); 
         }
 
         $date = now();
