@@ -11,9 +11,9 @@ class MakeModelTestFileTest extends TestCase
     /** @test */
     function it_creates_a_model_test_file()
     {
-        $model = 'TestFieldOption';
+        $model = array('TestFieldOption');
         // destination path of the Foo class
-        $testClass = str_replace( "tests/Unit", "", __DIR__) . "app/Models/$model.php";
+        $testClass = str_replace( "tests/Unit", "", __DIR__) . "app/Models/" . $model[0] . ".php";
 
         // Run the make command
         Artisan::call('laravue:model', [
