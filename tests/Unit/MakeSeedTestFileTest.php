@@ -6,18 +6,17 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Mpmg\Laravue\Tests\TestCase;
 
-class MakeMigrationTestFileTest extends TestCase
+class MakeSeedTestFileTest extends TestCase
 {
     /** @test */
-    function it_creates_a_migration_test_file()
+    function it_creates_a_seed_test_file()
     {
-        $prefix = date('Y_m_d_His');
         $model = array('TestFieldOption');
         // destination path of the Foo class
-        $testClass = str_replace( "tests/Unit", "", __DIR__) . "database/migrations/$prefix"."_create_test_field_option"."_table.php";
+        $testClass = str_replace( "tests/Unit", "", __DIR__) . "database/seeders/". $model[0] . "Seeder.php";
 
         // Run the make command
-        Artisan::call('laravue:migration', [
+        Artisan::call('laravue:seed', [
             'model' => $model,
             '--fields' => "name:s.50u#'Fulano'#,age:i.#40#,user_id:i.n,file_id:i,descricao:s.nu,modelo_id:i.u*,fabrica_id:i.nu*,idade:i.+",
         ]);

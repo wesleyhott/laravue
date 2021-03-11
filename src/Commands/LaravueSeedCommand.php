@@ -41,18 +41,19 @@ class LaravueSeedCommand extends LaravueCommand
         }
 
         $model = $this->option('mxn') ? $this->argument('model') : trim( $this->argument('model')[0] );
+        $parsedModel = is_array( $model ) ? trim( $model[0] ) : trim( $model ); 
 
         $date = now();
 
-        $path = $this->getPath($model);
-        $this->files->put( $path, $this->buildSeed( $model ) );
+        $path = $this->getPath( $parsedModel );
+        $this->files->put( $path, $this->buildSeed( $parsedModel ) );
     
         if ( $this->option('mxn') ) {
             $model1 = $model[0];
             $model2 = $model[1];
             $this->info("$date - [ ${model1}${model2} ] >> ${model1}${model2}"."Seeder.php");
         } else {
-            $this->info("$date - [ $model ] >> ${model}Seeder.php");
+            $this->info("$date - [ $parsedModel ] >> ${parsedModel}Seeder.php");
         }
         
     }
