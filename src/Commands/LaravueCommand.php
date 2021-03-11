@@ -126,22 +126,23 @@ class LaravueCommand extends Command
                 break;
             case 'migration':
                 $prefix = date('Y_m_d_His');
-                if( is_array( $model )) {
+                if( is_array( $model ) && count( $model ) > 1 ) {
                     $model1 = Str::snake( $model[0] );
                     $model2 = Str::snake( $model[1] );
                     $path = $this->makePath( "database/migrations/${prefix}_create_${model1}_${model2}_table.$ext", true );
                 } else {
-                    $model = Str::snake($model);
+                    $model = is_array( $model ) ? Str::snake($model[0]) : Str::snake($model);
                     $path = $this->makePath( "database/migrations/${prefix}_create_${model}_table.$ext", true );
                 }
                 break;
             case 'seed':
-                if( is_array( $model )) {
+                if( is_array( $model ) && count( $model ) > 1 ) {
                     $model1 = $model[0];
                     $model2 = $model[1];
                     $path = $this->makePath( "database/seeders/${model1}${model2}Seeder.php", true );
                 } else {
-                    $path = $this->makePath( "database/seeders/${model}Seeder.php", true );
+                    $parsedModel = is_array( $model ) ? $model[0] : $model;
+                    $path = $this->makePath( "database/seeders/${parsedModel}Seeder.php", true );
                 }
                 break;
             case 'seeder':
@@ -477,16 +478,17 @@ class LaravueCommand extends Command
     {
         $stub = $this->files->get($this->getStub());
 
-        if( is_array($model) ) { // mxn
+        if( is_array($model) && count( $model ) > 1 ) { // mxn
             $class = $this->replaceClass($stub, $model[0] . $model[1]); 
             $table = $this->replaceTable($class, $model[0] . $model[1], $plural = false);
             return $this->replaceField($table, $model);
         } 
 
-        $class = $this->replaceClass($stub, $model);
-        $table = $this->replaceTable($class, $model);
+        $parsedModel =  is_array($model) ? $model[0] : $model;
+        $class = $this->replaceClass($stub, $parsedModel);
+        $table = $this->replaceTable($class, $parsedModel);
 
-        return $this->replaceField($table, $model);
+        return $this->replaceField($table, $parsedModel);
     }
 
     /**

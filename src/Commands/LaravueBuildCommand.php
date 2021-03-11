@@ -33,8 +33,13 @@ class LaravueBuildCommand extends LaravueCommand
      */
     public function handle()
     {
-        $this->backend();
-        $this->frontend();
+        $models = [];
+        foreach ($this->argument('model') as $model){
+            array_push( $models,  Str::studly( $model ) );
+        }
+
+        $this->backend( $models );
+        $this->frontend( $models );
 
         if( $this->option('backward') || $this->option('bw') ){
             $this->backward();
@@ -48,10 +53,10 @@ class LaravueBuildCommand extends LaravueCommand
      *
      * @return void
      */
-    protected function backend()
+    protected function backend( $models )
     {
         $this->call('laravue:api', [
-            'model' => Str::studly( $this->argument('model')[0] ),
+            'model' => $models,
             '--fields' =>  $this->option('fields'),
         ]);
     }
@@ -61,10 +66,10 @@ class LaravueBuildCommand extends LaravueCommand
      *
      * @return void
      */
-    protected function frontend()
+    protected function frontend( $models )
     {
         $this->call('laravue:front', [
-            'model' => Str::studly( $this->argument('model')[0] ),
+            'model' => $models,
             '--fields' =>  $this->option('fields'),
             '--outdocker' =>  $this->option('outdocker'),
         ]);
@@ -99,7 +104,7 @@ class LaravueBuildCommand extends LaravueCommand
         $this->info("$date - [ composer ] >> dump-autoload");
         $this->composer->dumpAutoloads();
 
-        $permissionName = $this->pluralize( 2, strtolower( $this->argument('model')[0] ) );
+        $permissionName = $this->pluralize( 2, strtolower( $this->argument('model') ) );
         $this->info("$date - [ spatie ] >> permission:create-permission");
         
         $this->call('permission:create-permission', [

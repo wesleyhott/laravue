@@ -46,7 +46,7 @@ class LaravueApiCommand extends Command
     protected function createMigration()
     {
         $this->call('laravue:migration', [
-            'model' => $this->argument('model')[0],
+            'model' => $this->argument('model'),
             '--fields' =>  $this->option('fields'),
         ]);
     }
@@ -59,7 +59,7 @@ class LaravueApiCommand extends Command
     protected function createSeeder()
     {
         $this->call('laravue:seed', [
-            'model' => $this->argument('model')[0],
+            'model' => $this->argument('model'),
             '--fields' =>  $this->option('fields'),
         ]);
     }

@@ -40,8 +40,7 @@ class LaravueMigrationCommand extends LaravueCommand
             $this->setStub('/migration'); 
         }
         
-        $model = $this->option('mxn') ? $this->argument('model') : trim( $this->argument('model')[0] );
-
+        $model = $this->argument('model');
         $path = $this->getPath( $model );
         $this->files->put( $path, $this->buildMigration( $model ) );
 
@@ -56,10 +55,13 @@ class LaravueMigrationCommand extends LaravueCommand
             $model2 = Str::snake( $model[1] );
             $this->info("$date - [ ${model1}_${model2} ] >> ${prefix}_create_${model1}_${model2}_table.php");
             return Str::snake( $this->pluralize( 2, trim($this->argument('model')[0] ) ) );
-        } else {
-            $this->info("$date - [ ${model1}_${model2} ] >> $prefix"."_create_$name"."_table.php");
-            return Str::snake( $this->pluralize( 2, trim($this->argument('model')[0] ) ) );
         }
+
+        $parsedModel = is_array( $model ) ? trim( $model[0] ) : trim( $model ); 
+        $name = Str::snake( $this->pluralize( 2, $parsedModel ) );
+        $this->info("$date - [ $parsedModel ] >> $prefix"."_create_$name"."_table.php");
+
+        return $name;
     }
 
     protected function replaceField($stub, $model)
