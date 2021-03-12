@@ -32,7 +32,14 @@ class LaravuePermissionCommand extends LaravueCommand
      */
     public function handle()
     {
-        $model = trim($this->argument('model')[0]);
+        $model = "";
+        if( $this->option('mxn') ) { 
+            $argumentModel = $this->argument('model');
+            $model = trim( $argumentModel[0] . $argumentModel[0] );
+        } else {
+            $argumentModel = $this->argument('model');
+            $model = is_array( $argumentModel ) ? trim( $argumentModel[0] ) : trim( $argumentModel ); 
+        }
         $date = now();
 
         $path = $this->getPath($model);
