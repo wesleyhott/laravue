@@ -11,7 +11,7 @@ class MakeReportControllerTestFileTest extends TestCase
     /** @test */
     function it_creates_a_controller_test_file()
     {
-        $model = 'TestFieldOption';
+        $model = array('TestFieldOption');
         // destination path of the Foo class
         $testClass = str_replace( "tests/Unit", "", __DIR__) . "app/Http/Controllers/Reports/TestFieldOptionReportController.php";
 

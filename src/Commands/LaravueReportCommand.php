@@ -33,7 +33,8 @@ class LaravueReportCommand extends LaravueCommand
     public function handle()
     {
         $this->setStub('/report');
-        $model = trim($this->argument('model')[0]);
+        $argumentModel = $this->argument('model');
+        $model = is_array( $argumentModel ) ? trim( $argumentModel[0] ) : trim( $argumentModel ); 
         $date = now();
 
         $path = $this->getPath($model);
