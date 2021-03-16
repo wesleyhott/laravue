@@ -9,7 +9,7 @@ class LaravuePermissionCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:permission {model*}';
+    protected $signature = 'laravue:permission {model*} {--x|mxn}';
 
     /**
      * The console command description.
