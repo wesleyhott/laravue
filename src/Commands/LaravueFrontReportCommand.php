@@ -26,7 +26,8 @@ class LaravueFrontReportCommand extends LaravueCommand
     public function handle()
     {
         $this->setStub('/front/report');
-        $model = trim($this->argument('model')[0]);
+        $argumentModel = $this->argument('model');
+        $model = is_array( $argumentModel ) ? trim( $argumentModel[0] ) : trim( $argumentModel ); 
         $date = now();
 
         $path = $this->getFrontPath($model, "Report");
