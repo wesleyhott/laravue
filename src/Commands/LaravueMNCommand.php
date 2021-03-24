@@ -2,6 +2,8 @@
 
 namespace Mpmg\Laravue\Commands;
 
+use Illuminate\Support\Str;
+
 class LaravueMNCommand extends LaravueCommand
 {
     /**
@@ -37,6 +39,12 @@ class LaravueMNCommand extends LaravueCommand
 
         if( $this->option('pivots') !== null ) {
             $fields .= $virgula . $this->option('pivots');
+        }
+
+        if( $this->option('keys') == null && $this->option('pivots') == null ) {
+            $field_m = Str::snake( $this->argument('model')[0] ) . "_id:i";
+            $field_n = Str::snake( $this->argument('model')[1] ) . "_id:i";
+            $fields = $field_m . ',' . $field_n;
         }
 
         $this->backend( $fields );
