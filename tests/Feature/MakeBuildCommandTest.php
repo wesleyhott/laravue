@@ -11,24 +11,24 @@ class MakeBuildCommandTest extends TestCase
     /** @test */
     function it_creates_a_build_command_test_file()
     {
-        $deleteAfterCreation = false;
-        $model = 'TestFieldOption';
-        $filds = 'name:s.n40,age:i,data_inicio:d,data_fim:d.n,ativo:b,hora:t';
+        $deleteAfterCreation = true;
+        $model = array('TestFieldOption');
+        $fields = 'name:s.n40,age:i,data_inicio:d,data_fim:d.n,ativo:b,hora:t';
 
-        // // destination path of the Controller class
-        // $controller = $this->makeCleanStateTest( "app/Http/Controllers/${model}Controller.php" );
-        // // destination path of the FrontModel class
-        // $frontModel = $this->makeCleanStateTest( "Frontend/LaravueTest/Views/Pages/${model}/forms/Model.vue" );
+        // destination path of the Controller class
+        $controller = $this->makeCleanStateTest( "app/Http/Controllers/${model}Controller.php" );
+        // destination path of the FrontModel class
+        $frontModel = $this->makeCleanStateTest( "Frontend/LaravueTest/Views/Pages/${model}/forms/Model.vue" );
 
-        // // Run the make command
-        // Artisan::call('laravue:build', [
-        //     'model' => $model,
-        //     '--fields' => $filds,
-        // ]);
+        // Run the make command
+        Artisan::call('laravue:build', [
+            'model' => $model,
+            '--fields' => $fields,
+        ]);
 
-        // // Assert a new files were created
-        // $this->makeTest( $controller, $deleteAfterCreation );
-        // $this->makeTest( $frontModel, $deleteAfterCreation );
+        // Assert a new files were created
+        $this->makeTest( $controller, $deleteAfterCreation );
+        $this->makeTest( $frontModel, $deleteAfterCreation );
     }
 
     function makeCleanStateTest( $path ) {

@@ -17,7 +17,9 @@ class LaravueBuildCommand extends LaravueCommand
         {--bw : Indicates to rebuild entire database}
         {--w|forward : Indicates to entry new data on database}
         {--fw : Indicates to entry new data on database}
-        {--o|outdocker : Indicates running outside docker}';
+        {--o|outdocker : Indicates running outside docker}
+        {--k|keys= : custom foreing keys that belongs to relationship}
+        {--p|pivots= : Feilds that belongs to relationship}';
 
     /**
      * The console command description.
@@ -33,8 +35,13 @@ class LaravueBuildCommand extends LaravueCommand
      */
     public function handle()
     {
+        $argumentModel = $this->argument('model');
+        if( gettype( $this->argument('model') ) == 'string' ) {
+            $argumentModel = array( $this->argument('model') );
+        }
+
         $models = [];
-        foreach ($this->argument('model') as $model){
+        foreach ($argumentModel as $model){
             array_push( $models,  Str::studly( $model ) );
         }
 
@@ -55,10 +62,19 @@ class LaravueBuildCommand extends LaravueCommand
      */
     protected function backend( $models )
     {
-        $this->call('laravue:api', [
-            'model' => $models,
-            '--fields' =>  $this->option('fields'),
-        ]);
+        if( count($models) == 1 ) {
+            $this->call('laravue:api', [
+                'model' => $models,
+                '--fields' =>  $this->option('fields'),
+            ]);
+        } else {
+            $this->call('laravue:mxn', [
+                'model' => $models,
+                '--keys' =>  $this->option('keys'),
+                '--pivots' =>  $this->option('pivots'),
+            ]);
+
+        }
     }
 
     /**
@@ -68,11 +84,13 @@ class LaravueBuildCommand extends LaravueCommand
      */
     protected function frontend( $models )
     {
-        $this->call('laravue:front', [
-            'model' => $models,
-            '--fields' =>  $this->option('fields'),
-            '--outdocker' =>  $this->option('outdocker'),
-        ]);
+        if( count($models) == 1 ) {
+            $this->call('laravue:front', [
+                'model' => $models,
+                '--fields' =>  $this->option('fields'),
+                '--outdocker' =>  $this->option('outdocker'),
+            ]);
+        }
     }
 
     /**
