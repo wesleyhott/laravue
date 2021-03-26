@@ -26,12 +26,35 @@ class LaravueInstallCommand extends LaravueCommand
     protected $type = 'install';
 
     /**
+     * Variávies de Instalação.
+     *
+     * @var string
+     */
+    //.env
+    protected $databaseName;
+    protected $databaseUserName;
+    protected $databaseUserPassword;
+
+    protected $casHostName;
+    protected $casLogoutUrl;
+    protected $casLogoutRedirect;
+    protected $casService;
+
+    protected $ldapHosts;
+    protected $ldapBaseDn;
+
+    protected $serverUriIndex;
+
+    /**
      * Execute the console command.
      *
      * @return mixed
      */
     public function handle()
     {
+        // Setting context
+        $this->promptChoices();
+
         // .env
         $this->makeDotEnvExample();
         $this->makeDotEnv();
@@ -125,16 +148,115 @@ class LaravueInstallCommand extends LaravueCommand
         $this->publishLaravue();
     }
 
+    protected function promptChoices() {
+        $this->newLine();
+        $this->line('LARAVUE INSTALAÇÃO');
+        $this->line('-------------------');
+        $this->newLine();
+
+        $this->databaseName = $this->ask('Qual o nome do banco de dados? [dbsLaravue]');
+        if( !isset($this->databaseName) ) {
+            $this->databaseName = "dbsLaravue";
+        }
+        $this->databaseUserName = $this->ask('Qual o nome do usuário banco de dados? [sa]');
+        if( !isset($this->databaseUserName) ) {
+            $this->databaseUserName = "sa";
+        }
+        $this->databaseUserPassword = $this->ask('Qual a senha do usuário banco de dados? [Abcd12345]');
+        if( !isset($this->databaseUserPassword) ) {
+            $this->databaseUserPassword = "Abcd12345";
+        }
+        
+        $this->accessManagement = $this->choice(
+            'Qual o gerenciador de acesso?',
+            ['Keycloak', 'CAS'],
+            0
+        );
+        
+        if( $this->accessManagement == 'CAS' ) {
+            $this->casHostName = $this->ask('Qual o CAS hostname?');
+            $this->casLogoutUrl = $this->ask('Qual o CAS URL?');
+            $this->casLogoutRedirect = $this->ask('Qual o CAS logout redirect?');
+            $this->casService = $this->ask('Qual o CAS service?');
+        }
+
+        $this->permissionManagement = $this->choice(
+            'Qual o gerenciador de permissões?',
+            ['Microsoft Azure', 'LDAP'],
+            0
+        );
+
+        if( $this->permissionManagement == 'LDAP' ) {
+            $this->ldapHosts = $this->ask('Qual o LDAP hosts?');
+            $this->ldapBaseDn = $this->ask('Qual o LDAP base Dn?');
+        }
+
+        $this->serverUriIndex = $this->ask('Qual o Server URI index? [3]');
+        if( !isset($this->serverUriIndex) ) {
+            $this->serverUriIndex = "3";
+        }
+    }
+
+    protected function replaceChoices( $choices ) {
+        $stub = $this->files->get( $this->getStub() );
+
+        foreach( $choices as $key => $choice ) { 
+            $stub = str_replace("{{ $key }}", $choice, $stub);
+        }
+
+        return $stub;
+    }
+
     protected function makeDotEnvExample() {
         $this->setStub('install/.env-example');
         $fileName = ".env.example";
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp);
 
-        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+        $choices = array(
+            "databaseName" => $this->databaseName,
+            "databaseUserName" => $this->databaseUserName,
+            "databaseUserPassword" => $this->databaseUserPassword,
+            "casHostName" => $this->casHostName,
+            "casLogoutUrl" => $this->casLogoutUrl,
+            "casLogoutRedirect" => $this->casLogoutRedirect,
+            "casService" => $this->casService,
+            "ldapHosts" => $this->ldapHosts,
+            "ldapBaseDn" => $this->ldapBaseDn,
+            "serverUriIndex" => $this->serverUriIndex,
+        );
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
 
         $date = now();
         $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeDotEnv() {
+        $this->setStub('install/.env');
+        $fileName = ".env";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp);
+
+        $choices = array(
+            "databaseName" => $this->databaseName,
+            "databaseUserName" => $this->databaseUserName,
+            "databaseUserPassword" => $this->databaseUserPassword,
+            "casHostName" => $this->casHostName,
+            "casLogoutUrl" => $this->casLogoutUrl,
+            "casLogoutRedirect" => $this->casLogoutRedirect,
+            "casService" => $this->casService,
+            "ldapHosts" => $this->ldapHosts,
+            "ldapBaseDn" => $this->ldapBaseDn,
+            "serverUriIndex" => $this->serverUriIndex,
+        );
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName"); dd();
     }
 
     protected function makeDotGitIgnoreStorageApp() {
@@ -296,18 +418,6 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeLaravueSeeder() {
         $this->setStub('install/seeder');
         $fileName = "database/seeders/LaravueSeeder.php";
-        $outsideApp = true;
-        $path = $this->makePath( $fileName, $outsideApp);
-
-        $this->files->put( $path, $this->files->get( $this->getStub() ) );
-
-        $date = now();
-        $this->info("$date - [ Installing ] >> $fileName");
-    }
-
-    protected function makeDotEnv() {
-        $this->setStub('install/.env');
-        $fileName = ".env";
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp);
 
