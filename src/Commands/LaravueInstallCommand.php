@@ -44,6 +44,10 @@ class LaravueInstallCommand extends LaravueCommand
     protected $ldapBaseDn;
 
     protected $serverUriIndex;
+    //seeder user
+    protected $seederUserName;
+    protected $seederUserEmail;
+    protected $seederUserPassword;
 
     /**
      * Execute the console command.
@@ -195,6 +199,21 @@ class LaravueInstallCommand extends LaravueCommand
         if( !isset($this->serverUriIndex) ) {
             $this->serverUriIndex = "3";
         }
+
+        $this->seederUserName = $this->ask('Qual o nome do Usuário Administrador? [Administrador]');
+        if( !isset($this->seederUserName) ) {
+            $this->seederUserName = "Administrador";
+        }
+
+        $this->seederUserEmail = $this->ask('Qual o email do Usuário Administrador? [administrador@mpmg.mp.br]');
+        if( !isset($this->seederUserEmail) ) {
+            $this->seederUserEmail = "administrador@mpmg.mp.br";
+        }
+
+        $this->seederUserPassword = $this->ask('Qual é a senha Usuário Administrador? [05121652Administrador@mpmg.mp.br]');
+        if( !isset($this->seederUserPassword) ) {
+            $this->seederUserPassword = "05121652Administrador@mpmg.mp.br";
+        }
     }
 
     protected function replaceChoices( $choices ) {
@@ -313,7 +332,14 @@ class LaravueInstallCommand extends LaravueCommand
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp);
 
-        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+        $choices = array(
+            "seederUserName" => $this->seederUserName,
+            "seederUserEmail" => $this->seederUserEmail,
+            "seederUserPassword" => $this->seederUserPassword,
+        );
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
 
         $date = now();
         $this->info("$date - [ Installing ] >> $fileName");
