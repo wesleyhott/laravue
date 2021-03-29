@@ -10,6 +10,7 @@ Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 ### Alterado
 - Suporte ao input array command.
 - Correções menores.
+- Processo de Instalação.
 
 ## 8.14.106 - 16/dez/2020
 ### Adicionado
