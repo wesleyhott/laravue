@@ -59,6 +59,9 @@ class LaravueInstallCommand extends LaravueCommand
         // Setting context
         $this->promptChoices();
 
+        // Docker
+        $this->makeDockerFile();
+
         // .env
         $this->makeDotEnvExample();
         $this->makeDotEnv();
@@ -224,6 +227,18 @@ class LaravueInstallCommand extends LaravueCommand
         }
 
         return $stub;
+    }
+
+    protected function makeDockerFile() {
+        $this->setStub('/install/docker/dockerfile');
+        $date = now();
+
+        $path = $this->getDockerPath("Dockerfile");
+        $stub = $this->files->get( $this->getStub() );
+
+        $this->files->put( $path, $stub );
+
+        $this->info("$date - [ Installing ] >> docker/Dockerfile");
     }
 
     protected function makeDotEnvExample() {
