@@ -30,7 +30,8 @@ class LaravueInstallCommand extends LaravueCommand
      *
      * @var string
      */
-    //.env
+    // .env
+    protected $applicationName;
     protected $databaseName;
     protected $databaseUserName;
     protected $databaseUserPassword;
@@ -44,10 +45,13 @@ class LaravueInstallCommand extends LaravueCommand
     protected $ldapBaseDn;
 
     protected $serverUriIndex;
-    //seeder user
+    // seeder user
     protected $seederUserName;
     protected $seederUserEmail;
     protected $seederUserPassword;
+    // docker
+    protected $dockerProxy;
+
 
     /**
      * Execute the console command.
@@ -58,6 +62,15 @@ class LaravueInstallCommand extends LaravueCommand
     {
         // Setting context
         $this->promptChoices();
+
+        // Docker
+        $this->makeDockerFile();
+        $this->makeDockerPhpIni();
+        $this->makeDockerCompose();
+        $this->makeDockerNginxConf();
+        $this->makeDockerMssqlCreateDB();
+        $this->makeDockerMssqlEntryPoint();
+        $this->makeDockerMssqlRunInitialization();
 
         // .env
         $this->makeDotEnvExample();
@@ -158,6 +171,11 @@ class LaravueInstallCommand extends LaravueCommand
         $this->line('-------------------');
         $this->newLine();
 
+        $this->applicationName = $this->ask('Qual o nome da aplicação? [Laravue]');
+        if( !isset($this->$applicationName) ) {
+            $this->applicationName = "Laravue";
+        }
+
         $this->databaseName = $this->ask('Qual o nome do banco de dados? [dbsLaravue]');
         if( !isset($this->databaseName) ) {
             $this->databaseName = "dbsLaravue";
@@ -205,15 +223,49 @@ class LaravueInstallCommand extends LaravueCommand
             $this->seederUserName = "Administrador";
         }
 
-        $this->seederUserEmail = $this->ask('Qual o email do Usuário Administrador? [administrador@mpmg.mp.br]');
+        $this->seederUserEmail = $this->ask('Qual o email do Usuário Administrador do sistema? [administrador@mpmg.mp.br]');
         if( !isset($this->seederUserEmail) ) {
             $this->seederUserEmail = "administrador@mpmg.mp.br";
         }
 
-        $this->seederUserPassword = $this->ask('Qual é a senha Usuário Administrador? [05121652Administrador@mpmg.mp.br]');
+        $this->seederUserPassword = $this->ask('Qual é a senha Usuário Administrador do sistema? [05121652Administrador@mpmg.mp.br]');
         if( !isset($this->seederUserPassword) ) {
             $this->seederUserPassword = "05121652Administrador@mpmg.mp.br";
         }
+
+        $this->dockerProxy = $this->ask('Qual é o proxy da rede? [proxy@proxy.br]');
+        if( !isset($this->dockerProxy) ) {
+            $this->dockerProxy = "proxy@proxy.br";
+        }
+    }
+
+    protected function promptChoicesTest() {
+        $this->applicationName = "Laravue";
+        $this->databaseName = "dbsLaravue";
+        $this->databaseUserName = "sa";
+        $this->databaseUserPassword = "Abcd12345";        
+        $this->accessManagement = 'CAS'; //['Keycloak', 'CAS']
+
+        if( $this->accessManagement == 'CAS' ) {
+            $this->casHostName = 'casHostName';
+            $this->casLogoutUrl = 'casLogoutUrl';
+            $this->casLogoutRedirect = 'casLogoutRedirect';
+            $this->casService = 'casService';
+        }
+
+        $this->permissionManagement = 'LDAP'; //['Microsoft Azure', 'LDAP']
+
+        if( $this->permissionManagement == 'LDAP' ) {
+            $this->ldapHosts = 'ldapHosts';
+            $this->ldapBaseDn = 'ldapBaseDn';
+        }
+
+        $this->serverUriIndex = "3";
+
+        $this->seederUserName = "Administrador";
+        $this->seederUserEmail = "administrador@mpmg.mp.br";
+        $this->seederUserPassword = "05121652Administrador@mpmg.mp.br";
+        $this->dockerProxy = "proxy@proxy.br";
     }
 
     protected function replaceChoices( $choices ) {
@@ -226,6 +278,110 @@ class LaravueInstallCommand extends LaravueCommand
         return $stub;
     }
 
+    protected function makeDockerFile() {
+        $this->setStub('/install/docker/dockerfile');
+        $date = now();
+
+        $path = $this->getDockerPath("Dockerfile");
+
+        $choices = array(
+            "dockerProxy" => $this->dockerProxy,
+        );
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
+
+        $this->info("$date - [ Installing ] >> docker/Dockerfile");
+    }
+
+    protected function makeDockerCompose() {
+        $this->setStub('/install/docker/docker-compose');
+        $date = now();
+
+        $path = $this->getDockerPath("docker-compose.yml");
+
+        $choices = array(
+            "applicationName" => strtolower( $this->applicationName ),
+            "databaseUserPassword" => $this->databaseUserPassword,
+        );
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
+
+        $this->info("$date - [ Installing ] >> docker/docker-compose.yml");
+    }
+
+    protected function makeDockerPhpIni() {
+        $this->setStub('/install/docker/php-ini');
+        $date = now();
+
+        $path = $this->getDockerPath("php/local.ini");
+        $stub = $this->files->get( $this->getStub() );
+
+        $this->files->put( $path, $stub );
+
+        $this->info("$date - [ Installing ] >> docker/php/local.ini");
+    }
+
+    protected function makeDockerNginxConf() {
+        $this->setStub('/install/docker/nginx-conf');
+        $date = now();
+
+        $appName = strtolower( $this->applicationName );
+        $path = $this->getDockerPath("nginx/conf.d/$appName.conf");
+
+        $choices = array(
+            "applicationName" => $appName,
+        );
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
+
+        $this->info("$date - [ Installing ] >> docker/docker-compose.yml");
+    }
+
+    protected function makeDockerMssqlEntryPoint() {
+        $this->setStub('/install/docker/mssql-entrypoint');
+        $date = now();
+        $path = $this->getDockerPath("mssql/usr/src/entrypoint.sh");
+        $stub = $this->files->get( $this->getStub() );
+        $this->files->put( $path, $stub );
+        $this->info("$date - [ Installing ] >> docker/mssql/usr/src/entrypoint.sql");
+    }
+
+    protected function makeDockerMssqlCreateDB() {
+        $this->setStub('/install/docker/mssql-create-database');
+        $date = now();
+
+        $path = $this->getDockerPath("mssql/usr/src/create-database.sql");
+
+        $choices = array(
+            "applicationName" => strtoupper( $this->applicationName ),
+        );
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
+
+        $this->info("$date - [ Installing ] >> docker/mssql/usr/src/create-database.sql");
+    }
+
+    protected function makeDockerMssqlRunInitialization() {
+        $this->setStub('/install/docker/mssql-run-initialization');
+        $date = now();
+
+        $path = $this->getDockerPath("mssql/usr/src/run-initialization.sh");
+
+        $choices = array(
+            "databaseUserName" => $this->databaseUserName,
+            "databaseUserPassword" => $this->databaseUserPassword,
+        );
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
+
+        $this->info("$date - [ Installing ] >> docker/mssql/usr/src/run-initialization.sh");
+    }
+
     protected function makeDotEnvExample() {
         $this->setStub('install/.env-example');
         $fileName = ".env.example";
@@ -233,6 +389,7 @@ class LaravueInstallCommand extends LaravueCommand
         $path = $this->makePath( $fileName, $outsideApp);
 
         $choices = array(
+            "applicationName" => $this->applicationName,
             "databaseName" => $this->databaseName,
             "databaseUserName" => $this->databaseUserName,
             "databaseUserPassword" => $this->databaseUserPassword,
@@ -259,6 +416,7 @@ class LaravueInstallCommand extends LaravueCommand
         $path = $this->makePath( $fileName, $outsideApp);
 
         $choices = array(
+            "applicationName" => $this->applicationName,
             "databaseName" => $this->databaseName,
             "databaseUserName" => $this->databaseUserName,
             "databaseUserPassword" => $this->databaseUserPassword,
@@ -275,7 +433,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->files->put( $path, $stub );
 
         $date = now();
-        $this->info("$date - [ Installing ] >> $fileName"); dd();
+        $this->info("$date - [ Installing ] >> $fileName");
     }
 
     protected function makeDotGitIgnoreStorageApp() {

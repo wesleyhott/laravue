@@ -203,6 +203,41 @@ class LaravueCommand extends Command
     }
 
     /**
+     * Get the Docker destination path.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function getDockerPath($file)
+    {
+        $folders = "";
+        $parsedFile = str_replace( '\\', '/', $file );
+
+        if( strpos( $parsedFile, "/" ) !== false ) {
+            $folders = explode("/", $parsedFile);
+            $parsedFile = array_pop( $folders );
+            
+            $folders = '/'. implode( "/", $folders );
+        }
+        
+        $currentDirectory =  getcwd();
+        $paths = explode( "/", str_replace( '\\', '/', $currentDirectory ) );
+
+        if ( end( $paths ) == "laravue" ) { // Laravue Tests
+            $dockerDirectory = $this->fileBuildPath( $currentDirectory, 'Docker'.$folders );
+        } else {
+            $buildPath = $this->fileBuildPath( 'Docker'.$folders );
+            $dockerDirectory = Str::replaceFirst( end( $paths ), $buildPath, $currentDirectory);
+        }
+
+        if( !is_dir($dockerDirectory) ) {
+            mkdir( $dockerDirectory, 0777, true);
+        }
+
+        return "$dockerDirectory/$parsedFile";
+    }
+
+    /**
      * Get the destination class path.
      *
      * @param  string  $name
