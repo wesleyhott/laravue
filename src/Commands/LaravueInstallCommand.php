@@ -68,6 +68,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeDockerPhpIni();
         $this->makeDockerCompose();
         $this->makeDockerNginxConf();
+        $this->makeDockerMssqlCreateDB();
 
         // .env
         $this->makeDotEnvExample();
@@ -318,6 +319,22 @@ class LaravueInstallCommand extends LaravueCommand
         $this->files->put( $path, $stub );
 
         $this->info("$date - [ Installing ] >> docker/php/local.ini");
+    }
+
+    protected function makeDockerMssqlCreateDB() {
+        $this->setStub('/install/docker/mssql-create-database');
+        $date = now();
+
+        $path = $this->getDockerPath("mssql/usr/src/create-database.sql");
+
+        $choices = array(
+            "applicationName" => strtoupper( $this->applicationName ),
+        );
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
+
+        $this->info("$date - [ Installing ] >> docker/mssql/usr/src/create-database.sql");
     }
 
     protected function makeDockerNginxConf() {
