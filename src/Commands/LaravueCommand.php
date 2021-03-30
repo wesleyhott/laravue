@@ -226,7 +226,7 @@ class LaravueCommand extends Command
         if ( end( $paths ) == "laravue" ) { // Laravue Tests
             $dockerDirectory = $this->fileBuildPath( $currentDirectory, 'Docker'.$folders );
         } else {
-            $buildPath = $this->fileBuildPath( 'Docker'.$folders );
+            $buildPath = $this->fileBuildPath( 'docker'.$folders );
             $dockerDirectory = Str::replaceFirst( end( $paths ), $buildPath, $currentDirectory);
         }
 

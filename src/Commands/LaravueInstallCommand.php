@@ -172,7 +172,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->newLine();
 
         $this->applicationName = $this->ask('Qual o nome da aplicação? [Laravue]');
-        if( !isset($this->$applicationName) ) {
+        if( !isset($this->applicationName) ) {
             $this->applicationName = "Laravue";
         }
 
@@ -180,11 +180,11 @@ class LaravueInstallCommand extends LaravueCommand
         if( !isset($this->databaseName) ) {
             $this->databaseName = "dbsLaravue";
         }
-        $this->databaseUserName = $this->ask('Qual o nome do usuário banco de dados? [sa]');
+        $this->databaseUserName = $this->ask('Qual o nome do usuário do banco de dados? [sa]');
         if( !isset($this->databaseUserName) ) {
             $this->databaseUserName = "sa";
         }
-        $this->databaseUserPassword = $this->ask('Qual a senha do usuário banco de dados? [Abcd12345]');
+        $this->databaseUserPassword = $this->ask('Qual a senha do usuário do banco de dados? [Abcd12345]');
         if( !isset($this->databaseUserPassword) ) {
             $this->databaseUserPassword = "Abcd12345";
         }
