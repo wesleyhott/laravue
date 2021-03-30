@@ -65,6 +65,7 @@ class LaravueInstallCommand extends LaravueCommand
 
         // Docker
         $this->makeDockerFile();
+        $this->makeDockerPhpIni();
 
         // .env
         $this->makeDotEnvExample();
@@ -233,6 +234,35 @@ class LaravueInstallCommand extends LaravueCommand
         }
     }
 
+    protected function promptChoicesTest() {
+        $this->applicationName = "Laravue";
+        $this->databaseName = "dbsLaravue";
+        $this->databaseUserName = "sa";
+        $this->databaseUserPassword = "Abcd12345";        
+        $this->accessManagement = 'CAS'; //['Keycloak', 'CAS']
+
+        if( $this->accessManagement == 'CAS' ) {
+            $this->casHostName = 'casHostName';
+            $this->casLogoutUrl = 'casLogoutUrl';
+            $this->casLogoutRedirect = 'casLogoutRedirect';
+            $this->casService = 'casService';
+        }
+
+        $this->permissionManagement = 'LDAP'; //['Microsoft Azure', 'LDAP']
+
+        if( $this->permissionManagement == 'LDAP' ) {
+            $this->ldapHosts = 'ldapHosts';
+            $this->ldapBaseDn = 'ldapBaseDn';
+        }
+
+        $this->serverUriIndex = "3";
+
+        $this->seederUserName = "Administrador";
+        $this->seederUserEmail = "administrador@mpmg.mp.br";
+        $this->seederUserPassword = "05121652Administrador@mpmg.mp.br";
+        $this->dockerProxy = "proxy@proxy.br";
+    }
+
     protected function replaceChoices( $choices ) {
         $stub = $this->files->get( $this->getStub() );
 
@@ -257,6 +287,18 @@ class LaravueInstallCommand extends LaravueCommand
         $this->files->put( $path, $stub );
 
         $this->info("$date - [ Installing ] >> docker/Dockerfile");
+    }
+
+    protected function makeDockerPhpIni() {
+        $this->setStub('/install/docker/php-ini');
+        $date = now();
+
+        $path = $this->getDockerPath("php/local.ini");
+        $stub = $this->files->get( $this->getStub() );
+
+        $this->files->put( $path, $stub );
+
+        $this->info("$date - [ Installing ] >> docker/php/local.ini");
     }
 
     protected function makeDotEnvExample() {
