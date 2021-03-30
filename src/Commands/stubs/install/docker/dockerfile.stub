@@ -3,8 +3,17 @@ FROM php:7.3.23-fpm
 
 # Variaveis do ambiante
 
+## Configura proxy
+ENV http_proxy="{{ dockerProxy }}"
+ENV https_proxy="{{ dockerProxy }}"
+ENV no_proxy="127.0.0.1, *.mpmg.mp.br"
+
 ## Configura MSSQL
 ENV ACCEPT_EULA=Y
+
+# Configura apt-get para usar proxy
+RUN echo 'Acquire::http::Proxy "{{ dockerProxy }}";' >  /etc/apt/apt.conf.d/99HttpProxy
+RUN echo 'Acquire::https::Proxy "{{ dockerProxy }}";' >>  /etc/apt/apt.conf.d/99HttpProxy
 
 # Configura diretorio de trabalho
 WORKDIR /var/www/html
@@ -40,6 +49,11 @@ RUN docker-php-ext-install pdo pdo_mysql mysqli mbstring zip exif pcntl bcmath
 RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
 RUN docker-php-ext-install gd
 
+# Configura proxy Pecl e Pear
+RUN pear config-set http_proxy {{ dockerProxy }}
+## || exit 0 foi usado pois o pecl config-set possui um bug que retorna codigo de erro quando utilizado
+RUN pecl config-set http_proxy {{ dockerProxy }} || exit 0
+
 # Instala SQLSRV e XDEBUG
 RUN pecl install sqlsrv pdo_sqlsrv xdebug 
 RUN docker-php-ext-enable pdo_sqlsrv sqlsrv xdebug
@@ -65,6 +79,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt-get update 
 RUN apt-get -y install nodejs
+
+# Configura npm para usar proxy
+RUN npm config set proxy {{ dockerProxy }}
+RUN npm config set https-proxy {{ dockerProxy }}
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*

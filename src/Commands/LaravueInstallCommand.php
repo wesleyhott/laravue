@@ -30,7 +30,8 @@ class LaravueInstallCommand extends LaravueCommand
      *
      * @var string
      */
-    //.env
+    // .env
+    protected $applicationName;
     protected $databaseName;
     protected $databaseUserName;
     protected $databaseUserPassword;
@@ -44,10 +45,13 @@ class LaravueInstallCommand extends LaravueCommand
     protected $ldapBaseDn;
 
     protected $serverUriIndex;
-    //seeder user
+    // seeder user
     protected $seederUserName;
     protected $seederUserEmail;
     protected $seederUserPassword;
+    // docker
+    protected $dockerProxy;
+
 
     /**
      * Execute the console command.
@@ -161,6 +165,11 @@ class LaravueInstallCommand extends LaravueCommand
         $this->line('-------------------');
         $this->newLine();
 
+        $this->applicationName = $this->ask('Qual o nome da aplicação? [Laravue]');
+        if( !isset($this->$applicationName) ) {
+            $this->applicationName = "Laravue";
+        }
+
         $this->databaseName = $this->ask('Qual o nome do banco de dados? [dbsLaravue]');
         if( !isset($this->databaseName) ) {
             $this->databaseName = "dbsLaravue";
@@ -208,14 +217,19 @@ class LaravueInstallCommand extends LaravueCommand
             $this->seederUserName = "Administrador";
         }
 
-        $this->seederUserEmail = $this->ask('Qual o email do Usuário Administrador? [administrador@mpmg.mp.br]');
+        $this->seederUserEmail = $this->ask('Qual o email do Usuário Administrador do sistema? [administrador@mpmg.mp.br]');
         if( !isset($this->seederUserEmail) ) {
             $this->seederUserEmail = "administrador@mpmg.mp.br";
         }
 
-        $this->seederUserPassword = $this->ask('Qual é a senha Usuário Administrador? [05121652Administrador@mpmg.mp.br]');
+        $this->seederUserPassword = $this->ask('Qual é a senha Usuário Administrador do sistema? [05121652Administrador@mpmg.mp.br]');
         if( !isset($this->seederUserPassword) ) {
             $this->seederUserPassword = "05121652Administrador@mpmg.mp.br";
+        }
+
+        $this->dockerProxy = $this->ask('Qual é o proxy da rede? [proxy@proxy.br]');
+        if( !isset($this->dockerProxy) ) {
+            $this->dockerProxy = "proxy@proxy.br";
         }
     }
 
@@ -234,7 +248,11 @@ class LaravueInstallCommand extends LaravueCommand
         $date = now();
 
         $path = $this->getDockerPath("Dockerfile");
-        $stub = $this->files->get( $this->getStub() );
+
+        $choices = array(
+            "dockerProxy" => $this->dockerProxy,
+        );
+        $stub = $this->replaceChoices( $choices );
 
         $this->files->put( $path, $stub );
 
