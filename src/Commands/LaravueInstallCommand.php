@@ -69,6 +69,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeDockerCompose();
         $this->makeDockerNginxConf();
         $this->makeDockerMssqlCreateDB();
+        $this->makeDockerMssqlEntryPoint();
 
         // .env
         $this->makeDotEnvExample();
@@ -352,6 +353,15 @@ class LaravueInstallCommand extends LaravueCommand
         $this->files->put( $path, $stub );
 
         $this->info("$date - [ Installing ] >> docker/docker-compose.yml");
+    }
+
+    protected function makeDockerMssqlEntryPoint() {
+        $this->setStub('/install/docker/mssql-entrypoint');
+        $date = now();
+        $path = $this->getDockerPath("mssql/usr/src/entrypoint.sh");
+        $stub = $this->files->get( $this->getStub() );
+        $this->files->put( $path, $stub );
+        $this->info("$date - [ Installing ] >> docker/mssql/usr/src/entrypoint.sql");
     }
 
     protected function makeDotEnvExample() {
