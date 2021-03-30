@@ -389,6 +389,7 @@ class LaravueInstallCommand extends LaravueCommand
         $path = $this->makePath( $fileName, $outsideApp);
 
         $choices = array(
+            "applicationName" => $this->applicationName,
             "databaseName" => $this->databaseName,
             "databaseUserName" => $this->databaseUserName,
             "databaseUserPassword" => $this->databaseUserPassword,
@@ -415,6 +416,7 @@ class LaravueInstallCommand extends LaravueCommand
         $path = $this->makePath( $fileName, $outsideApp);
 
         $choices = array(
+            "applicationName" => $this->applicationName,
             "databaseName" => $this->databaseName,
             "databaseUserName" => $this->databaseUserName,
             "databaseUserPassword" => $this->databaseUserPassword,
