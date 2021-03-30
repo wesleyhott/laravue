@@ -66,6 +66,7 @@ class LaravueInstallCommand extends LaravueCommand
         // Docker
         $this->makeDockerFile();
         $this->makeDockerPhpIni();
+        $this->makeDockerCompose();
 
         // .env
         $this->makeDotEnvExample();
@@ -287,6 +288,23 @@ class LaravueInstallCommand extends LaravueCommand
         $this->files->put( $path, $stub );
 
         $this->info("$date - [ Installing ] >> docker/Dockerfile");
+    }
+
+    protected function makeDockerCompose() {
+        $this->setStub('/install/docker/docker-compose');
+        $date = now();
+
+        $path = $this->getDockerPath("docker-compose.yml");
+
+        $choices = array(
+            "applicationName" => strtolower( $this->applicationName ),
+            "databaseUserPassword" => $this->databaseUserPassword,
+        );
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
+
+        $this->info("$date - [ Installing ] >> docker/docker-compose.yml");
     }
 
     protected function makeDockerPhpIni() {
