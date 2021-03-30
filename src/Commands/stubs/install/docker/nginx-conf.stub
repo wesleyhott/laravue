@@ -1,0 +1,38 @@
+server {
+    listen 80;
+
+    index index.php index.html server.php;
+    error_log  /var/log/nginx/error.log;
+    access_log /var/log/nginx/access.log;
+    rewrite_log on;
+
+    root /var/www/html;
+
+    location @ws {
+        rewrite /{{ applicationName }}/ws/(.*)$ /{{ applicationName }}/ws/index.php?/$1 last;
+    }
+
+    location ^~ /{{ applicationName }}/ws{
+        alias /var/www/html/{{ applicationName }}/ws/public;
+        try_files $uri $uri/ @ws; 
+        location ~ \.php$ {
+            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass {{ applicationName }}:9000;
+            fastcgi_index index.php;
+            include fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME /var/www/html/{{ applicationName }}/ws/public/index.php;
+            fastcgi_param PATH_INFO $fastcgi_path_info;
+            fastcgi_read_timeout 1200;
+            proxy_read_timeout 1200;
+        }
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+        gzip_static on;
+    }
+
+    location ~* \.(jpg|jpeg|gif|css|png|js|ico|html)$ {
+        access_log off;
+    }
+}

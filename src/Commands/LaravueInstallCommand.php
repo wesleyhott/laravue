@@ -67,6 +67,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeDockerFile();
         $this->makeDockerPhpIni();
         $this->makeDockerCompose();
+        $this->makeDockerNginxConf();
 
         // .env
         $this->makeDotEnvExample();
@@ -317,6 +318,23 @@ class LaravueInstallCommand extends LaravueCommand
         $this->files->put( $path, $stub );
 
         $this->info("$date - [ Installing ] >> docker/php/local.ini");
+    }
+
+    protected function makeDockerNginxConf() {
+        $this->setStub('/install/docker/nginx-conf');
+        $date = now();
+
+        $appName = strtolower( $this->applicationName );
+        $path = $this->getDockerPath("nginx/conf.d/$appName.conf");
+
+        $choices = array(
+            "applicationName" => $appName,
+        );
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
+
+        $this->info("$date - [ Installing ] >> docker/docker-compose.yml");
     }
 
     protected function makeDotEnvExample() {
