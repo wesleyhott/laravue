@@ -88,7 +88,7 @@ class LaravueSeeder extends Seeder
         $roleAdmin->givePermissionTo(Permission::all());
 
         // create users
-		$user = \App\Models\User::where('email', 'wesley@mpmg.mp.br')->first();
+		$user = \App\Models\User::where('email', '{{ seederUserEmail }}')->first();
 
         if( isset($user) ) {
             $user->assignRole($roleAdmin);

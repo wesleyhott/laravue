@@ -605,7 +605,12 @@ class LaravueInstallCommand extends LaravueCommand
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp);
 
-        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+        $choices = array(
+            "seederUserEmail" => $this->seederUserEmail,
+        );
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
 
         $date = now();
         $this->info("$date - [ Installing ] >> $fileName");
