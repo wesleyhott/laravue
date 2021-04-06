@@ -14,23 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', funcftion (Request $request) {
-    return $request->user();
-});
-
 /**
  * >>> LARAVUE
  */
 
-// Overwriting oauth/token for CAS usage Ref: https://gist.github.com/messi89/489473c053e3ea8d9e034b0032effb1d
-// Route::group(['namespace' => 'Laravue', 'prefix' => 'Laravue', ], function () {
-//     Route::post('oauth/token', 'AccessTokenController@issueToken');
-// });
-
-// Modificando o oauth/token para usar o CAS
-// https://gist.github.com/messi89/489473c053e3ea8d9e034b0032effb1d
-//Route::post('oauth/token', 'App\Http\Controllers\Laravue\AccessTokenController@issueToken');
-//Route::post('users', UserController::class, ['except' => ['create', 'edit']]);
 // Modificando o oauth/token para usar o CAS
 // https://gist.github.com/messi89/489473c053e3ea8d9e034b0032effb1d
 Route::post('oauth/token', 'App\Http\Controllers\Laravue\AccessTokenController@issueToken');
@@ -77,6 +64,10 @@ Route::group(['namespace' => 'App\Http\Controllers\Reports', 'prefix' => 'report
 Route::get('/logout', function(){ 
     Auth::logout();
     cas()->logout(); 
+});
+
+Route::get('/isup', function(){
+    echo 'Laravel is up!';
 });
 
 /**
