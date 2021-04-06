@@ -50,9 +50,9 @@ RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --wi
 RUN docker-php-ext-install gd
 
 # Configura proxy Pecl e Pear
-RUN pear config-set http_proxy {{ dockerProxy }}
+RUN pear config-set http_proxy {{ dockerProxyDropHttp }}
 ## || exit 0 foi usado pois o pecl config-set possui um bug que retorna codigo de erro quando utilizado
-RUN pecl config-set http_proxy {{ dockerProxy }} || exit 0
+RUN pecl config-set http_proxy {{ dockerProxyDropHttp }} || exit 0
 
 # Instala SQLSRV e XDEBUG
 RUN pecl install sqlsrv pdo_sqlsrv xdebug 

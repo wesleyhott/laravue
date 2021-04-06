@@ -233,9 +233,9 @@ class LaravueInstallCommand extends LaravueCommand
             $this->seederUserPassword = "05121652Administrador@mpmg.mp.br";
         }
 
-        $this->dockerProxy = $this->ask('Qual é o proxy da rede? [proxy@proxy.br]');
+        $this->dockerProxy = $this->ask('Qual é o proxy da rede? [https://proxyname.proxy.br]');
         if( !isset($this->dockerProxy) ) {
-            $this->dockerProxy = "proxy@proxy.br";
+            $this->dockerProxy = "https://proxyname.proxy.br";
         }
     }
 
@@ -265,7 +265,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->seederUserName = "Administrador";
         $this->seederUserEmail = "administrador@mpmg.mp.br";
         $this->seederUserPassword = "05121652Administrador@mpmg.mp.br";
-        $this->dockerProxy = "proxy@proxy.br";
+        $this->dockerProxy = "https://proxyname.proxy.br";
     }
 
     protected function replaceChoices( $choices ) {
@@ -283,9 +283,10 @@ class LaravueInstallCommand extends LaravueCommand
         $date = now();
 
         $path = $this->getDockerPath("Dockerfile");
-
+        $dockerProxyDropHttp = str_replace( ['https://', 'http://'], '', $this->dockerProxy);
         $choices = array(
             "dockerProxy" => $this->dockerProxy,
+            "dockerProxyDropHttp" => $dockerProxyDropHttp,
         );
         $stub = $this->replaceChoices( $choices );
 
