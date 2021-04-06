@@ -18,7 +18,7 @@ services:
     working_dir: /var/www/html
     volumes:
       - ../frontend:/var/www/html/{{ applicationName }}/
-      - ../api:/var/www/html/{{ applicationName }}/ws/
+      - ../ws:/var/www/html/{{ applicationName }}/ws/
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - mynet
@@ -36,7 +36,7 @@ services:
       - "443:443"
     volumes:
       - ../frontend/:/var/www/html/{{ applicationName }}/
-      - ../api/:/var/www/html/{{ applicationName }}/ws/
+      - ../ws/:/var/www/html/{{ applicationName }}/ws/
       - ./nginx/conf.d/:/etc/nginx/conf.d/
       - ./log/nginx/:/var/log/nginx/
     networks:
