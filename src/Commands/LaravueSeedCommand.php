@@ -40,8 +40,8 @@ class LaravueSeedCommand extends LaravueCommand
             $this->setStub('/seed'); 
         }
 
-        $model = $this->option('mxn') ? $this->argument('model')[0].$this->argument('model')[1] : trim( $this->argument('model') );
-        $parsedModel = is_array( $model ) ? trim( $model[0] ) : trim( $model ); 
+        $model = $this->option('mxn') ? $this->argument('model')[0].$this->argument('model')[1] : $this->argument('model');
+        $parsedModel = is_array( $model ) ? $model : trim( $model ); 
 
         $date = now();
 
