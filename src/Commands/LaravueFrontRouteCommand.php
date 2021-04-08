@@ -42,9 +42,9 @@ class LaravueFrontRouteCommand extends LaravueCommand
         $paths = explode( "/", str_replace( '\\', '/', $currentDirectory) );
 
         if ( end( $paths ) == "laravue") { // Laravue Tests
-            $routeDirectory = $this->fileBuildPath($currentDirectory, 'Frontend', 'src', 'routes');
+            $routeDirectory = $this->fileBuildPath($currentDirectory, 'Web', 'src', 'routes');
         } else if ( $this->option('outdocker') ) {
-            $routeDirectory = Str::replaceFirst( end( $paths ), $this->fileBuildPath( 'frontend', 'src', 'routes' ), $currentDirectory);
+            $routeDirectory = Str::replaceFirst( end( $paths ), $this->fileBuildPath( 'web', 'src', 'routes' ), $currentDirectory);
         } else { 
             $routeDirectory = Str::replaceFirst( end( $paths ), $this->fileBuildPath('src', 'routes' ), $currentDirectory);
         }

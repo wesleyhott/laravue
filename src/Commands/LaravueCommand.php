@@ -153,9 +153,9 @@ class LaravueCommand extends Command
 
                 $buildPath = $this->fileBuildPath( 'src', 'components', $this->projectName, 'Views', 'Pages', $model, 'forms' );
                 if ( end( $paths ) == "laravue") { // Laravue Tests
-                    $frontPath = $this->fileBuildPath( $currentDirectory, 'Frontend', $buildPath);
+                    $frontPath = $this->fileBuildPath( $currentDirectory, 'Web', $buildPath);
                 } else if ( $this->option('outdocker') ) {
-                    $frontPath = Str::replaceFirst( end( $paths ), $this->fileBuildPath( 'frontend', $buildPath ), $currentDirectory);
+                    $frontPath = Str::replaceFirst( end( $paths ), $this->fileBuildPath( 'web', $buildPath ), $currentDirectory);
                 } else { 
                     $frontPath = Str::replaceFirst( end( $paths ), $buildPath, $currentDirectory);
                 }
@@ -184,9 +184,9 @@ class LaravueCommand extends Command
         $paths = explode( "/", str_replace( '\\', '/', $currentDirectory ) );
 
         if ( end( $paths ) == "laravue" ) { // Laravue Tests
-            $frontDirectory = $this->fileBuildPath( $currentDirectory, 'Frontend', 'LaravueTest', 'Views', 'Pages', $name );
+            $frontDirectory = $this->fileBuildPath( $currentDirectory, 'Web', 'LaravueTest', 'Views', 'Pages', $name );
         } else if ( $this->option('outdocker') ) {
-            $buildPath = $this->fileBuildPath( 'frontend', 'src', 'components', $this->projectName, 'Views', 'Pages', $name );
+            $buildPath = $this->fileBuildPath( 'web', 'src', 'components', $this->projectName, 'Views', 'Pages', $name );
             $frontDirectory = Str::replaceFirst( end( $paths ), $buildPath, $currentDirectory);
         } else {
             $buildPath = $this->fileBuildPath( 'src', 'components', $this->projectName, 'Views', 'Pages', $name );
@@ -249,9 +249,9 @@ class LaravueCommand extends Command
         $paths = explode( "/", str_replace( '\\', '/', $currentDirectory ) );
 
         if( end( $paths ) == "laravue") { // Laravue Tests
-            $frontDirectory = $this->fileBuildPath( $currentDirectory, 'Frontend', 'LaravueTest', 'Views', 'Pages', $name, 'forms' );
+            $frontDirectory = $this->fileBuildPath( $currentDirectory, 'Web', 'LaravueTest', 'Views', 'Pages', $name, 'forms' );
         } else if ( $this->option('outdocker') ) {
-            $buildPath = $this->fileBuildPath( 'frontend', 'src', 'components', $this->projectName, 'Views', 'Pages', $name, 'forms' );
+            $buildPath = $this->fileBuildPath( 'web', 'src', 'components', $this->projectName, 'Views', 'Pages', $name, 'forms' );
             $frontDirectory = Str::replaceFirst( end( $paths ), $buildPath, $currentDirectory);
         } else { 
             $buildPath = $this->fileBuildPath( 'src', 'components', $this->projectName, 'Views', 'Pages', $name, 'forms' );
