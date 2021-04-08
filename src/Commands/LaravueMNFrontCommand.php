@@ -54,6 +54,18 @@ class LaravueMNFrontCommand extends LaravueCommand
         $this->createModal();
     }
 
+    protected function makeFrontMnPath( $model, $projectName ) {
+        $currentDirectory =  getcwd();
+        $paths = explode( "/", str_replace( '\\', '/', $currentDirectory) );
+        $buildPath = $this->fileBuildPath( 'src', 'components', $projectName, 'Views', 'Pages', $model, 'forms' );
+        if ( end( $paths ) == "laravue") { // Laravue Tests
+            $frontPath = $this->fileBuildPath( $currentDirectory, 'Frontend', $buildPath);
+        } else {
+            $frontPath = Str::replaceFirst( end( $paths ), $this->fileBuildPath( 'frontend', $buildPath ), $currentDirectory);
+        }
+        return $frontPath;
+    }
+
     /**
      * Create a model file for the model.
      *
@@ -74,10 +86,10 @@ class LaravueMNFrontCommand extends LaravueCommand
             $projectName_n = "ProjetoBase";
         }
 
-        $path_m = $this->fileBuildPath( 'frontend', 'src', 'components', $projectName_m, 'Views', 'Pages', $model_m, 'forms', 'Model.vue' );
-        $path_n = $this->fileBuildPath( 'frontend', 'src', 'components', $projectName_n, 'Views', 'Pages', $model_n, 'forms', 'Model.vue' );
-        
-        $stub_m = $this->files->get( $path_m );
+        $path_m = $this->makeFrontMnPath( $model_m, $projectName_m ) . '/Model.vue';
+        $path_n = $this->makeFrontMnPath( $model_n, $projectName_n ) . '/Model.vue';
+
+        $stub_m = $this->files->get( $path_m ); 
         $this->files->put( $path_m, $this->buildMnModel( $model_n, $stub_m ) );
         $this->info("$date - [ $model_m ] >> forms/Model.vue");
         
@@ -223,9 +235,9 @@ class LaravueMNFrontCommand extends LaravueCommand
             $projectName_n = "ProjetoBase";
         }
 
-        $path_m = $this->fileBuildPath( 'frontend', 'src', 'components', $projectName_m, 'Views', 'Pages', $model_m, 'forms', 'Modal.vue' );
-        $path_n = $this->fileBuildPath( 'frontend', 'src', 'components', $projectName_n, 'Views', 'Pages', $model_n, 'forms', 'Modal.vue' );
-        
+        $path_m = $this->makeFrontMnPath( $model_m, $projectName_m ) . '/Modal.vue';
+        $path_n = $this->makeFrontMnPath( $model_n, $projectName_n ) . '/Modal.vue';
+
         $stub_m = $this->files->get( $path_m );
         $this->files->put( $path_m, $this->buildMnModal( $model_n, $stub_m ) );
         $this->info("$date - [ $model_m ] >> forms/Modal.vue");
