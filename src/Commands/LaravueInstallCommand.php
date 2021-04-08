@@ -213,9 +213,9 @@ class LaravueInstallCommand extends LaravueCommand
             $this->ldapBaseDn = $this->ask('Qual o LDAP base Dn?');
         }
 
-        $this->serverUriIndex = $this->ask('Qual o Server URI index? [3]');
+        $this->serverUriIndex = $this->ask('Qual o Server URI index? [4]');
         if( !isset($this->serverUriIndex) ) {
-            $this->serverUriIndex = "3";
+            $this->serverUriIndex = "4";
         }
 
         $this->seederUserName = $this->ask('Qual o nome do Usuário Administrador? [Administrador]');
@@ -260,7 +260,7 @@ class LaravueInstallCommand extends LaravueCommand
             $this->ldapBaseDn = 'ldapBaseDn';
         }
 
-        $this->serverUriIndex = "3";
+        $this->serverUriIndex = "4";
 
         $this->seederUserName = "Administrador";
         $this->seederUserEmail = "administrador@mpmg.mp.br";
