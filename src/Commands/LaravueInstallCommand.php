@@ -64,8 +64,6 @@ class LaravueInstallCommand extends LaravueCommand
         $this->promptChoices();
 
         // Docker
-        $this->makeDockerFile();
-        $this->makeDockerPhpIni();
         $this->makeDockerCompose();
         $this->makeDockerNginxConf();
         $this->makeDockerMssqlCreateDB();
@@ -278,50 +276,21 @@ class LaravueInstallCommand extends LaravueCommand
         return $stub;
     }
 
-    protected function makeDockerFile() {
-        $this->setStub('/install/docker/dockerfile');
-        $date = now();
-
-        $path = $this->getDockerPath("Dockerfile");
-        $dockerProxyDropHttp = str_replace( ['https://', 'http://'], '', $this->dockerProxy);
-        $choices = array(
-            "dockerProxy" => $this->dockerProxy,
-            "dockerProxyDropHttp" => $dockerProxyDropHttp,
-        );
-        $stub = $this->replaceChoices( $choices );
-
-        $this->files->put( $path, $stub );
-
-        $this->info("$date - [ Installing ] >> docker/Dockerfile");
-    }
-
     protected function makeDockerCompose() {
-        $this->setStub('/install/docker/docker-compose');
-        $date = now();
-
         $path = $this->getDockerPath("docker-compose.yml");
-
-        $choices = array(
-            "applicationName" => strtolower( $this->applicationName ),
-            "databaseUserPassword" => $this->databaseUserPassword,
-        );
-        $stub = $this->replaceChoices( $choices );
-
-        $this->files->put( $path, $stub );
-
-        $this->info("$date - [ Installing ] >> docker/docker-compose.yml");
-    }
-
-    protected function makeDockerPhpIni() {
-        $this->setStub('/install/docker/php-ini');
         $date = now();
 
-        $path = $this->getDockerPath("php/local.ini");
-        $stub = $this->files->get( $this->getStub() );
+        $lowerAppName = strtolower($this->applicationName); 
+        $volumes = "- ../$lowerAppName/web:/var/www/html/$lowerAppName/" . PHP_EOL;
+        $volumes .= $this->tabs(3) . "- ../$lowerAppName/ws:/var/www/html/$lowerAppName/ws/" . PHP_EOL;
+        $volumes .= $this->tabs(3) . "# {{ laravue-insert:volumes }}";
+
+        $dockerCompose = $this->files->get( $path );
+        $stub = str_replace('# {{ laravue-insert:volumes }}', $volumes, $dockerCompose);
 
         $this->files->put( $path, $stub );
 
-        $this->info("$date - [ Installing ] >> docker/php/local.ini");
+        $this->info("$date - [ Installing ] >> laravueworkspace/docker/docker-compose.yml");
     }
 
     protected function makeDockerNginxConf() {
