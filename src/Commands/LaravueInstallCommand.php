@@ -67,8 +67,6 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeDockerCompose();
         $this->makeDockerNginxConf();
         $this->makeDockerMssqlCreateDB();
-        $this->makeDockerMssqlEntryPoint();
-        $this->makeDockerMssqlRunInitialization();
 
         // .env
         $this->makeDotEnvExample();
@@ -310,46 +308,24 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> docker/docker-compose.yml");
     }
 
-    protected function makeDockerMssqlEntryPoint() {
-        $this->setStub('/install/docker/mssql-entrypoint');
-        $date = now();
-        $path = $this->getDockerPath("mssql/usr/src/entrypoint.sh");
-        $stub = $this->files->get( $this->getStub() );
-        $this->files->put( $path, $stub );
-        $this->info("$date - [ Installing ] >> docker/mssql/usr/src/entrypoint.sql");
-    }
-
     protected function makeDockerMssqlCreateDB() {
-        $this->setStub('/install/docker/mssql-create-database');
-        $date = now();
-
         $path = $this->getDockerPath("mssql/usr/src/create-database.sql");
-
-        $choices = array(
-            "applicationName" => strtoupper( $this->applicationName ),
-        );
-        $stub = $this->replaceChoices( $choices );
-
-        $this->files->put( $path, $stub );
-
-        $this->info("$date - [ Installing ] >> docker/mssql/usr/src/create-database.sql");
-    }
-
-    protected function makeDockerMssqlRunInitialization() {
-        $this->setStub('/install/docker/mssql-run-initialization');
         $date = now();
 
-        $path = $this->getDockerPath("mssql/usr/src/run-initialization.sh");
+        $appName = $this->getTitle( $this->applicationName );
+        $db = $this->databaseName;
+        $database = "-- Cria a base de dados do projeto $appName ($db) se não existir." . PHP_EOL;
+        $database .= "IF DB_ID('$db') IS NULL" . PHP_EOL;
+        $database .= $this->tabs(1) . "CREATE DATABASE $db" . PHP_EOL;
+        $database .= "GO" . PHP_EOL;
+        $database .= "-- {{ laravue-insert:database }}";
 
-        $choices = array(
-            "databaseUserName" => $this->databaseUserName,
-            "databaseUserPassword" => $this->databaseUserPassword,
-        );
-        $stub = $this->replaceChoices( $choices );
+        $createDatabase = $this->files->get( $path );
+        $stub = str_replace('-- {{ laravue-insert:database }}', $database, $createDatabase);
 
         $this->files->put( $path, $stub );
 
-        $this->info("$date - [ Installing ] >> docker/mssql/usr/src/run-initialization.sh");
+        $this->info("$date - [ Installing ] >> laravueworkspace/docker/mssql/usr/src/mssql-create-database.sql");
     }
 
     protected function makeDotEnvExample() {
