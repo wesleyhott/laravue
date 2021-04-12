@@ -49,9 +49,6 @@ class LaravueInstallCommand extends LaravueCommand
     protected $seederUserName;
     protected $seederUserEmail;
     protected $seederUserPassword;
-    // docker
-    protected $dockerProxy;
-
 
     /**
      * Execute the console command.
@@ -228,11 +225,6 @@ class LaravueInstallCommand extends LaravueCommand
         if( !isset($this->seederUserPassword) ) {
             $this->seederUserPassword = "05121652Administrador@mpmg.mp.br";
         }
-
-        $this->dockerProxy = $this->ask('Qual é o proxy da rede? [https://proxyname.proxy.br]');
-        if( !isset($this->dockerProxy) ) {
-            $this->dockerProxy = "https://proxyname.proxy.br";
-        }
     }
 
     protected function promptChoicesTest() {
@@ -261,7 +253,6 @@ class LaravueInstallCommand extends LaravueCommand
         $this->seederUserName = "Administrador";
         $this->seederUserEmail = "administrador@mpmg.mp.br";
         $this->seederUserPassword = "05121652Administrador@mpmg.mp.br";
-        $this->dockerProxy = "https://proxyname.proxy.br";
     }
 
     protected function replaceChoices( $choices ) {
@@ -292,20 +283,38 @@ class LaravueInstallCommand extends LaravueCommand
     }
 
     protected function makeDockerNginxConf() {
-        $this->setStub('/install/docker/nginx-conf');
+        $path = $this->getDockerPath("nginx/conf.d/nginx.conf");
         $date = now();
 
         $appName = strtolower( $this->applicationName );
-        $path = $this->getDockerPath("nginx/conf.d/$appName.conf");
+        $nginxRewrite = "rewrite /$appName/ws/(.*)$ /$appName/ws/index.php?/$1 last;" . PHP_EOL;
+        $nginxRewrite .= $this->tabs(2) . "# {{ laravue-insert:location-rewrite }}";
 
-        $choices = array(
-            "applicationName" => $appName,
-        );
-        $stub = $this->replaceChoices( $choices );
+        $localtion = "location ^~ /$appName/ws{" . PHP_EOL;
+        $localtion .= $this->tabs(2) . "alias /var/www/html/$appName/ws/public;" . PHP_EOL;
+        $localtion .= $this->tabs(2) . 'try_files $uri $uri/ @ws;' . PHP_EOL;
+        $localtion .= $this->tabs(2) . 'location ~ \.php$ {' . PHP_EOL;
+        $localtion .= $this->tabs(3) . 'fastcgi_split_path_info ^(.+\.php)(/.+)$;' . PHP_EOL;
+        $localtion .= $this->tabs(3) . 'fastcgi_pass laravue:9000;' . PHP_EOL;
+        $localtion .= $this->tabs(3) . 'fastcgi_index index.php;' . PHP_EOL;
+        $localtion .= $this->tabs(3) . 'include fastcgi_params;' . PHP_EOL;
+        $localtion .= $this->tabs(3) . "fastcgi_param SCRIPT_FILENAME /var/www/html/$appName/ws/public/index.php;" . PHP_EOL;
+        $localtion .= $this->tabs(3) . 'fastcgi_param PATH_INFO $fastcgi_path_info;' . PHP_EOL;
+        $localtion .= $this->tabs(3) . 'fastcgi_read_timeout 1200;' . PHP_EOL;
+        $localtion .= $this->tabs(3) . 'proxy_read_timeout 1200;' . PHP_EOL;
+        $localtion .= $this->tabs(2) . '}' . PHP_EOL;
+        $localtion .= $this->tabs(1) . '}' . PHP_EOL;
+        $localtion .= PHP_EOL;
+        $localtion .= $this->tabs(1) . "# {{ laravue-insert:location }}";
+
+        $conf = $this->files->get( $path );
+
+        $rewriteParsed = str_replace('# {{ laravue-insert:location-rewrite }}', $nginxRewrite, $conf);
+        $stub = str_replace('# {{ laravue-insert:location }}', $localtion, $rewriteParsed);
 
         $this->files->put( $path, $stub );
 
-        $this->info("$date - [ Installing ] >> docker/docker-compose.yml");
+        $this->info("$date - [ Installing ] >> laravueworkspace/docker/nginx/conf.d/nginx.conf");
     }
 
     protected function makeDockerMssqlCreateDB() {
