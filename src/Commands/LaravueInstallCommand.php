@@ -49,9 +49,6 @@ class LaravueInstallCommand extends LaravueCommand
     protected $seederUserName;
     protected $seederUserEmail;
     protected $seederUserPassword;
-    // docker
-    protected $dockerProxy;
-
 
     /**
      * Execute the console command.
@@ -64,13 +61,9 @@ class LaravueInstallCommand extends LaravueCommand
         $this->promptChoices();
 
         // Docker
-        $this->makeDockerFile();
-        $this->makeDockerPhpIni();
         $this->makeDockerCompose();
         $this->makeDockerNginxConf();
         $this->makeDockerMssqlCreateDB();
-        $this->makeDockerMssqlEntryPoint();
-        $this->makeDockerMssqlRunInitialization();
 
         // .env
         $this->makeDotEnvExample();
@@ -213,9 +206,9 @@ class LaravueInstallCommand extends LaravueCommand
             $this->ldapBaseDn = $this->ask('Qual o LDAP base Dn?');
         }
 
-        $this->serverUriIndex = $this->ask('Qual o Server URI index? [3]');
+        $this->serverUriIndex = $this->ask('Qual o Server URI index? [4]');
         if( !isset($this->serverUriIndex) ) {
-            $this->serverUriIndex = "3";
+            $this->serverUriIndex = "4";
         }
 
         $this->seederUserName = $this->ask('Qual o nome do Usuário Administrador? [Administrador]');
@@ -231,11 +224,6 @@ class LaravueInstallCommand extends LaravueCommand
         $this->seederUserPassword = $this->ask('Qual é a senha Usuário Administrador do sistema? [05121652Administrador@mpmg.mp.br]');
         if( !isset($this->seederUserPassword) ) {
             $this->seederUserPassword = "05121652Administrador@mpmg.mp.br";
-        }
-
-        $this->dockerProxy = $this->ask('Qual é o proxy da rede? [https://proxyname.proxy.br]');
-        if( !isset($this->dockerProxy) ) {
-            $this->dockerProxy = "https://proxyname.proxy.br";
         }
     }
 
@@ -260,12 +248,11 @@ class LaravueInstallCommand extends LaravueCommand
             $this->ldapBaseDn = 'ldapBaseDn';
         }
 
-        $this->serverUriIndex = "3";
+        $this->serverUriIndex = "4";
 
         $this->seederUserName = "Administrador";
         $this->seederUserEmail = "administrador@mpmg.mp.br";
         $this->seederUserPassword = "05121652Administrador@mpmg.mp.br";
-        $this->dockerProxy = "https://proxyname.proxy.br";
     }
 
     protected function replaceChoices( $choices ) {
@@ -278,109 +265,76 @@ class LaravueInstallCommand extends LaravueCommand
         return $stub;
     }
 
-    protected function makeDockerFile() {
-        $this->setStub('/install/docker/dockerfile');
-        $date = now();
-
-        $path = $this->getDockerPath("Dockerfile");
-        $dockerProxyDropHttp = str_replace( ['https://', 'http://'], '', $this->dockerProxy);
-        $choices = array(
-            "dockerProxy" => $this->dockerProxy,
-            "dockerProxyDropHttp" => $dockerProxyDropHttp,
-        );
-        $stub = $this->replaceChoices( $choices );
-
-        $this->files->put( $path, $stub );
-
-        $this->info("$date - [ Installing ] >> docker/Dockerfile");
-    }
-
     protected function makeDockerCompose() {
-        $this->setStub('/install/docker/docker-compose');
-        $date = now();
-
         $path = $this->getDockerPath("docker-compose.yml");
-
-        $choices = array(
-            "applicationName" => strtolower( $this->applicationName ),
-            "databaseUserPassword" => $this->databaseUserPassword,
-        );
-        $stub = $this->replaceChoices( $choices );
-
-        $this->files->put( $path, $stub );
-
-        $this->info("$date - [ Installing ] >> docker/docker-compose.yml");
-    }
-
-    protected function makeDockerPhpIni() {
-        $this->setStub('/install/docker/php-ini');
         $date = now();
 
-        $path = $this->getDockerPath("php/local.ini");
-        $stub = $this->files->get( $this->getStub() );
+        $lowerAppName = strtolower($this->applicationName); 
+        $volumes = "- ../$lowerAppName/web:/var/www/html/$lowerAppName/" . PHP_EOL;
+        $volumes .= $this->tabs(3) . "- ../$lowerAppName/ws:/var/www/html/$lowerAppName/ws/" . PHP_EOL;
+        $volumes .= $this->tabs(3) . "# {{ laravue-insert:volumes }}";
+
+        $dockerCompose = $this->files->get( $path );
+        $stub = str_replace('# {{ laravue-insert:volumes }}', $volumes, $dockerCompose);
 
         $this->files->put( $path, $stub );
 
-        $this->info("$date - [ Installing ] >> docker/php/local.ini");
+        $this->info("$date - [ Installing ] >> laravueworkspace/docker/docker-compose.yml");
     }
 
     protected function makeDockerNginxConf() {
-        $this->setStub('/install/docker/nginx-conf');
+        $path = $this->getDockerPath("nginx/conf.d/nginx.conf");
         $date = now();
 
         $appName = strtolower( $this->applicationName );
-        $path = $this->getDockerPath("nginx/conf.d/$appName.conf");
+        $nginxRewrite = "rewrite /$appName/ws/(.*)$ /$appName/ws/index.php?/$1 last;" . PHP_EOL;
+        $nginxRewrite .= $this->tabs(2) . "# {{ laravue-insert:location-rewrite }}";
 
-        $choices = array(
-            "applicationName" => $appName,
-        );
-        $stub = $this->replaceChoices( $choices );
+        $localtion = "location ^~ /$appName/ws{" . PHP_EOL;
+        $localtion .= $this->tabs(2) . "alias /var/www/html/$appName/ws/public;" . PHP_EOL;
+        $localtion .= $this->tabs(2) . 'try_files $uri $uri/ @ws;' . PHP_EOL;
+        $localtion .= $this->tabs(2) . 'location ~ \.php$ {' . PHP_EOL;
+        $localtion .= $this->tabs(3) . 'fastcgi_split_path_info ^(.+\.php)(/.+)$;' . PHP_EOL;
+        $localtion .= $this->tabs(3) . 'fastcgi_pass laravue:9000;' . PHP_EOL;
+        $localtion .= $this->tabs(3) . 'fastcgi_index index.php;' . PHP_EOL;
+        $localtion .= $this->tabs(3) . 'include fastcgi_params;' . PHP_EOL;
+        $localtion .= $this->tabs(3) . "fastcgi_param SCRIPT_FILENAME /var/www/html/$appName/ws/public/index.php;" . PHP_EOL;
+        $localtion .= $this->tabs(3) . 'fastcgi_param PATH_INFO $fastcgi_path_info;' . PHP_EOL;
+        $localtion .= $this->tabs(3) . 'fastcgi_read_timeout 1200;' . PHP_EOL;
+        $localtion .= $this->tabs(3) . 'proxy_read_timeout 1200;' . PHP_EOL;
+        $localtion .= $this->tabs(2) . '}' . PHP_EOL;
+        $localtion .= $this->tabs(1) . '}' . PHP_EOL;
+        $localtion .= PHP_EOL;
+        $localtion .= $this->tabs(1) . "# {{ laravue-insert:location }}";
+
+        $conf = $this->files->get( $path );
+
+        $rewriteParsed = str_replace('# {{ laravue-insert:location-rewrite }}', $nginxRewrite, $conf);
+        $stub = str_replace('# {{ laravue-insert:location }}', $localtion, $rewriteParsed);
 
         $this->files->put( $path, $stub );
 
-        $this->info("$date - [ Installing ] >> docker/docker-compose.yml");
-    }
-
-    protected function makeDockerMssqlEntryPoint() {
-        $this->setStub('/install/docker/mssql-entrypoint');
-        $date = now();
-        $path = $this->getDockerPath("mssql/usr/src/entrypoint.sh");
-        $stub = $this->files->get( $this->getStub() );
-        $this->files->put( $path, $stub );
-        $this->info("$date - [ Installing ] >> docker/mssql/usr/src/entrypoint.sql");
+        $this->info("$date - [ Installing ] >> laravueworkspace/docker/nginx/conf.d/nginx.conf");
     }
 
     protected function makeDockerMssqlCreateDB() {
-        $this->setStub('/install/docker/mssql-create-database');
-        $date = now();
-
         $path = $this->getDockerPath("mssql/usr/src/create-database.sql");
-
-        $choices = array(
-            "applicationName" => strtoupper( $this->applicationName ),
-        );
-        $stub = $this->replaceChoices( $choices );
-
-        $this->files->put( $path, $stub );
-
-        $this->info("$date - [ Installing ] >> docker/mssql/usr/src/create-database.sql");
-    }
-
-    protected function makeDockerMssqlRunInitialization() {
-        $this->setStub('/install/docker/mssql-run-initialization');
         $date = now();
 
-        $path = $this->getDockerPath("mssql/usr/src/run-initialization.sh");
+        $appName = $this->getTitle( $this->applicationName );
+        $db = $this->databaseName;
+        $database = "-- Cria a base de dados do projeto $appName ($db) se não existir." . PHP_EOL;
+        $database .= "IF DB_ID('$db') IS NULL" . PHP_EOL;
+        $database .= $this->tabs(1) . "CREATE DATABASE $db" . PHP_EOL;
+        $database .= "GO" . PHP_EOL;
+        $database .= "-- {{ laravue-insert:database }}";
 
-        $choices = array(
-            "databaseUserName" => $this->databaseUserName,
-            "databaseUserPassword" => $this->databaseUserPassword,
-        );
-        $stub = $this->replaceChoices( $choices );
+        $createDatabase = $this->files->get( $path );
+        $stub = str_replace('-- {{ laravue-insert:database }}', $database, $createDatabase);
 
         $this->files->put( $path, $stub );
 
-        $this->info("$date - [ Installing ] >> docker/mssql/usr/src/run-initialization.sh");
+        $this->info("$date - [ Installing ] >> laravueworkspace/docker/mssql/usr/src/mssql-create-database.sql");
     }
 
     protected function makeDotEnvExample() {

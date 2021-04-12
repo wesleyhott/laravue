@@ -15,7 +15,7 @@ class ProjectModuleSeeder extends Seeder
     public function run()
     {
         DB::table('project_modules')->insert(['name' => 'full', 'usuario_ult_alteracao' => 'inserir usuário logado']);
-        DB::table('project_modules')->insert(['name' => 'frontend', 'usuario_ult_alteracao' => 'inserir usuário logado']);
+        DB::table('project_modules')->insert(['name' => 'web', 'usuario_ult_alteracao' => 'inserir usuário logado']);
         DB::table('project_modules')->insert(['name' => 'backend', 'usuario_ult_alteracao' => 'inserir usuário logado']);
     }
 }

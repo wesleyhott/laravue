@@ -2,12 +2,13 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.20.127 - 08/abr/2021
+## 8.21.127 - 08/abr/2021
 ### Adicionado
 - Plural de palavras terminadas em 'r'.
 - Relacionamento MxN.
 - Suporte para Label nos selects.
 - Geração ambiente Docker na instalação
+- Suporte ao novo ambiente unificado
 ### Alterado
 - Suporte ao input array command.
 - Correções menores.

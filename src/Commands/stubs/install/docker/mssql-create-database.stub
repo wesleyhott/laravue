@@ -1,4 +1,0 @@
--- Cria a base de dados do {{ applicationName }} se não existir
-IF DB_ID('dbs{{ applicationName }}') IS NULL
-	CREATE DATABASE dbs{{ applicationName }}
-GO
