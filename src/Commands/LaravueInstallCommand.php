@@ -270,8 +270,8 @@ class LaravueInstallCommand extends LaravueCommand
         $date = now();
 
         $lowerAppName = strtolower($this->applicationName); 
-        $volumes = "- ../$lowerAppName/web:/var/www/html/$lowerAppName/" . PHP_EOL;
-        $volumes .= $this->tabs(3) . "- ../$lowerAppName/ws:/var/www/html/$lowerAppName/ws/" . PHP_EOL;
+        $volumes = "- ../../$lowerAppName/web:/var/www/html/$lowerAppName/" . PHP_EOL;
+        $volumes .= $this->tabs(3) . "- ../../$lowerAppName/ws:/var/www/html/$lowerAppName/ws/" . PHP_EOL;
         $volumes .= $this->tabs(3) . "# {{ laravue-insert:volumes }}";
 
         $dockerCompose = $this->files->get( $path );
