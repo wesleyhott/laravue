@@ -229,7 +229,7 @@ class LaravueInstallCommand extends LaravueCommand
 
     protected function promptChoicesTest() {
         $this->applicationName = "Laravue";
-        $this->databaseName = "dbsLaravue";
+        $this->databaseName = "dbsLARAVUE";
         $this->databaseUserName = "sa";
         $this->databaseUserPassword = "Abcd12345";        
         $this->accessManagement = 'CAS'; //['Keycloak', 'CAS']

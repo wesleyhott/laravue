@@ -224,11 +224,15 @@ class LaravueCommand extends Command
         $paths = explode( "/", str_replace( '\\', '/', $currentDirectory ) );
 
         $buildPath = $this->fileBuildPath('laravueworkspace', 'docker'.$folders );
-        $dockerDirectory = Str::replaceFirst( end( $paths ), $buildPath, $currentDirectory);
-
-        if( !is_dir($dockerDirectory) ) {
-            mkdir( $dockerDirectory, 0777, true);
+        
+        $projectFolder = array_pop( $paths ); 
+        if( $projectFolder == "laravue") { // Is not Laravue Tests
+            $developmentFolder = implode( "/", $paths );
+        } else {
+            $arrayDevelopmentFolder = array_pop( $paths ); 
+            $developmentFolder = implode( "/", $paths );
         }
+        $dockerDirectory = $this->fileBuildPath( $developmentFolder, $buildPath );
 
         return "$dockerDirectory/$parsedFile";
     }
