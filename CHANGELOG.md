@@ -2,7 +2,7 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.21.127 - 08/abr/2021
+## 8.21.128 - 08/abr/2021
 ### Adicionado
 - Plural de palavras terminadas em 'r'.
 - Relacionamento MxN.
