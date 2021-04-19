@@ -53,7 +53,8 @@ class LaravueSeedCommand extends LaravueCommand
             $model2 = $model[1];
             $this->info("$date - [ ${model1}${model2} ] >> ${model1}${model2}"."Seeder.php");
         } else {
-            $this->info("$date - [ $parsedModel ] >> ${parsedModel}Seeder.php");
+            $stringModel = is_array( $parsedModel ) ? trim( $parsedModel[0] ) : trim( $parsedModel ); 
+            $this->info("$date - [ $stringModel ] >> ${stringModel}Seeder.php");
         }
         
     }
