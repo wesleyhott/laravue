@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
 
 /**
  * >>> LARAVUE
@@ -57,6 +58,7 @@ Route::get('/logout', function(){
 
 Route::get('/isup', function(){
     echo 'Laravel is up!';
+    Log::info('Laravel is up!');
 });
 
 /**
