@@ -68,6 +68,9 @@ class LaravueInstallCommand extends LaravueCommand
         // .env
         $this->makeDotEnvExample();
         $this->makeDotEnv();
+        $this->makeDotEnvDes();
+        $this->makeDotEnvHomo();
+        $this->makeDotEnvProd();
         // .gitignore
         $this->makeDotGitIgnoreStorageApp();
         $this->makeDotGitIgnoreStorageAppReports();
@@ -340,6 +343,87 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeDotEnvExample() {
         $this->setStub('install/.env-example');
         $fileName = ".env.example";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp);
+
+        $choices = array(
+            "applicationName" => $this->applicationName,
+            "databaseName" => $this->databaseName,
+            "databaseUserName" => $this->databaseUserName,
+            "databaseUserPassword" => $this->databaseUserPassword,
+            "casHostName" => $this->casHostName,
+            "casLogoutUrl" => $this->casLogoutUrl,
+            "casLogoutRedirect" => $this->casLogoutRedirect,
+            "casService" => $this->casService,
+            "ldapHosts" => $this->ldapHosts,
+            "ldapBaseDn" => $this->ldapBaseDn,
+            "serverUriIndex" => $this->serverUriIndex,
+        );
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeDotEnvDes() {
+        $this->setStub('install/.env-des');
+        $fileName = ".env.des";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp);
+
+        $choices = array(
+            "applicationName" => $this->applicationName,
+            "databaseName" => $this->databaseName,
+            "databaseUserName" => $this->databaseUserName,
+            "databaseUserPassword" => $this->databaseUserPassword,
+            "casHostName" => $this->casHostName,
+            "casLogoutUrl" => $this->casLogoutUrl,
+            "casLogoutRedirect" => $this->casLogoutRedirect,
+            "casService" => $this->casService,
+            "ldapHosts" => $this->ldapHosts,
+            "ldapBaseDn" => $this->ldapBaseDn,
+            "serverUriIndex" => $this->serverUriIndex,
+        );
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeDotEnvHomo() {
+        $this->setStub('install/.env-homo');
+        $fileName = ".env.homo";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp);
+
+        $choices = array(
+            "applicationName" => $this->applicationName,
+            "databaseName" => $this->databaseName,
+            "databaseUserName" => $this->databaseUserName,
+            "databaseUserPassword" => $this->databaseUserPassword,
+            "casHostName" => $this->casHostName,
+            "casLogoutUrl" => $this->casLogoutUrl,
+            "casLogoutRedirect" => $this->casLogoutRedirect,
+            "casService" => $this->casService,
+            "ldapHosts" => $this->ldapHosts,
+            "ldapBaseDn" => $this->ldapBaseDn,
+            "serverUriIndex" => $this->serverUriIndex,
+        );
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeDotEnvProd() {
+        $this->setStub('install/.env-prod');
+        $fileName = ".env.prod";
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp);
 
