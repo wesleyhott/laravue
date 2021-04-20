@@ -879,9 +879,15 @@ class LaravueInstallCommand extends LaravueCommand
         $this->setStub('install/resource-view-pdf-report');
         $fileName = "resources/views/reports/default_pdf_report.blade.php";
         $outsideApp = true;
-        $path = $this->makePath( $fileName, $outsideApp );
+        $path = $this->makePath( $fileName, $outsideApp);
 
-        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+        $lowerAppName = strtolower($this->applicationName);
+        $choices = array(
+            "applicationName" => $lowerAppName
+        );
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
 
         $date = now();
         $this->info("$date - [ Installing ] >> $fileName");
