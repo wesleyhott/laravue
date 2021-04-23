@@ -22,7 +22,7 @@
         "laravel/passport": "^10.0",
         "spatie/laravel-permission": "^3.17",
         "adldap2/adldap2-laravel": "^6.1",
-        "subfission/cas":"^4.0",
+        "subfission/cas":"dev-master",
         "barryvdh/laravel-dompdf": "^0.8.7",
         "phpoffice/phpspreadsheet": "^1.15",
         "arcanedev/log-viewer": "8.0",

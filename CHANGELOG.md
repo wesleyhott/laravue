@@ -2,6 +2,9 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
+## 8.22.134 - 23/abr/2021
+### Alterado
+- Subfission/cas, dependência alterada de ˆ4.0 para dev-master.
 ## 8.22.133 - 20/abr/2021
 ### Adicionado
 - Plural de palavras terminadas em 'r'.
