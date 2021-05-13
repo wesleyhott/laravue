@@ -923,6 +923,8 @@ class LaravueCommand extends Command
             case 'Ausencias': return 'Ausências';
             case 'Codigo': return 'Código';
             case 'Codigos': return 'Códigos';
+            case 'Funcionario': return 'Funcionário';
+            case 'Funcionarios': return 'Funcionários';
             case 'Horaria': return 'Horária';
             case 'Horarias': return 'Horárias';
             case 'Inicio': return 'Início';
@@ -930,6 +932,8 @@ class LaravueCommand extends Command
             case 'Matricula': return 'Matrícula';
             case 'Matriculas': return 'Matrículas';
             case 'Mes': return 'Mês';
+            case 'Numero': return 'Número';
+            case 'Numeros': return 'Números';
             case 'Obrigatoria': return 'Obrigatória';
             case 'Obrigatorias': return 'Obrigatórias';
             case 'Ocorrencia': return 'Ocorrência';

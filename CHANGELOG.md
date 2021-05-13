@@ -2,13 +2,16 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.22.135 - 13/mai/2021
+## 8.23.135 - 13/mai/2021
+### Adicionado
+- Acentuação nas palavras Número(s) e Funcionário(s).
 ### Alterado
 - Correção de erro no monitoramento.
 
 ## 8.22.134 - 23/abr/2021
 ### Alterado
 - Subfission/cas, dependência alterada de ˆ4.0 para dev-master.
+
 ## 8.22.133 - 20/abr/2021
 ### Adicionado
 - Plural de palavras terminadas em 'r'.
