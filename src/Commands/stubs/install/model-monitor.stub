@@ -94,8 +94,8 @@ class Monitor extends LaravueModel
         isset($method) ?: $method = __FUNCTION__;
         isset($file) ?: $file = __FILE__;
         isset($class) ?: $class = __CLASS__;
-        isset($type) ?: $type = self::ERRO;
-        isset($result) ?: $result = self::RESULT_FALHA;
+        isset($type) ?: $type = self::ERROR;
+        isset($result) ?: $result = self::RESULT_FAILURE;
         DB::table('monitors')->insert(
             [
                 'type' => $type,

@@ -15,13 +15,18 @@ class CreateLaravueTables extends Migration
     {
         Schema::create('monitors', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('local');
             $table->string('file');
             $table->string('class');
             $table->string('method');
             $table->string('type');
-            $table->string('message');
-            $table->string('user');
+            $table->string('result')->default('SUCCESS'); // 'success', 'neutral', 'failure'
+            $table->string('origin', 200)->nullable();
+            $table->ipAddress('ip')->default('127.0.0.1');
+            $table->string('user_agent', 200)->nullable();
+            $table->string('session', 100)->nullable();
+            $table->integer('user_id')->nullable();
+            $table->integer('line')->nullable();
+            $table->text('message');
             $table->timestamps();
             $table->string('usuario_ult_alteracao', 40);
         });
