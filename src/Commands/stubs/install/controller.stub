@@ -31,11 +31,13 @@ abstract class LaravueController extends Controller
     abstract protected function getModelValidation($data);
 
     /**
-     * Especif logic insertion point
+     * Specific logic insertion point
      */
+    public function afterFilter($data) { return $data; }
     public function beforeIndex($data) { return $data; }
-    public function beforeShow($data) { return $data; }
+    public function beforeShow($model) { return $model; }
     public function beforeSave($model) { return $model; }
+    public function save($model) { return $model->save(); }
     public function afterSave($model) { return $model; }
     public function beforeDestroy($model) { return $model; }
 
@@ -86,6 +88,8 @@ abstract class LaravueController extends Controller
 
         // Filter/sort data by queryStrings
         $data = $this->filter($filtros);
+        // Post filter treatment like uft8 decode on binary types
+        $data = $this->afterFilter($data);
 
         // Transform data before show
         $data = $this->beforeIndex($data);
@@ -185,7 +189,7 @@ abstract class LaravueController extends Controller
                     'message' => "Registro editado com sucesso. EDIÇÃO Backup data:" . $modelBackup->toJson()
                 ]))->dispatch();
             }
-            if ($model->save()) {
+            if ( $this->save($model) ) {
                 // Store monitor
                 if(!$request->id){ // If insertion
                     (new Monitor([

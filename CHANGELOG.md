@@ -2,9 +2,10 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.23.136 - 13/mai/2021
+## 8.24.136 - 17/mai/2021
 ### Adicionado
 - Acentuação nas palavras Número(s) e Funcionário(s).
+- Hooks no controller: afterFilter e save.
 ### Alterado
 - Correção de erro no monitoramento.
 - Nova foto padrão de perfil de usuário.
