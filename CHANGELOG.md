@@ -2,11 +2,12 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.23.135 - 13/mai/2021
+## 8.23.136 - 13/mai/2021
 ### Adicionado
 - Acentuação nas palavras Número(s) e Funcionário(s).
 ### Alterado
 - Correção de erro no monitoramento.
+- Nova foto padrão de perfil de usuário.
 
 ## 8.22.134 - 23/abr/2021
 ### Alterado
