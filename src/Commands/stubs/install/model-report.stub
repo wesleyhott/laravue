@@ -28,6 +28,7 @@ class Report extends LaravueModel
     public const DEFAULT_PATH = 'app/reports/';
     public const DEFAULT_SOURCE = 'reports.default_pdf_report';
     public const DEFAULT_FILE_NAME = 'relatorio';
+    public const REPORT_FOLDER = 'reports';
 
     // {{ laravue-insert:relationship }}
 }

@@ -2,6 +2,10 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
+## 8.24.137 - 10/ago/2021
+### Alterado
+- Correção da criação do diretório dos relatórios.
+  
 ## 8.24.136 - 17/mai/2021
 ### Adicionado
 - Acentuação nas palavras Número(s) e Funcionário(s).
