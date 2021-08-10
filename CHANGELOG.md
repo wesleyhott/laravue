@@ -2,9 +2,10 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.24.137 - 10/ago/2021
+## 8.24.138 - 10/ago/2021
 ### Alterado
 - Correção da criação do diretório dos relatórios.
+- Acentuação em Programática e Sócio
   
 ## 8.24.136 - 17/mai/2021
 ### Adicionado
