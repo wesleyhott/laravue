@@ -2,12 +2,13 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.25.138 - 10/ago/2021
+## 8.25.139 - 10/ago/2021
 ### Adicionado
 - Suporte a máscara nos campos.
 ### Alterado
 - Correção da criação do diretório dos relatórios.
 - Acentuação em Programática e Sócio
+- Correções menores.
   
 ## 8.24.136 - 17/mai/2021
 ### Adicionado
