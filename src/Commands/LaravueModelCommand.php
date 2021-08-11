@@ -86,7 +86,7 @@ class LaravueModelCommand extends LaravueCommand
      * @return string $stub
      */
     protected function replaceRelation($modelFile, $model, $fields)
-    {
+    { 
         $newRelations = $modelFile;
 
         foreach ($fields as $key => $value) {
@@ -106,11 +106,13 @@ class LaravueModelCommand extends LaravueCommand
 
                 $newRelations = str_replace( '// {{ laravue-insert:relationship }}', $newRelation, $newRelations );
 
+                $parsedWith = $this->makeWith($newRelations, $relationName);
+
                 $this->reverseRelation($fieldRelationModel, $model);
             }
         }
 
-        return $newRelations;
+        return $parsedWith;
     }
 
     protected function reverseRelation($reverseModel, $model) {
@@ -130,7 +132,11 @@ class LaravueModelCommand extends LaravueCommand
         $newRelation .= PHP_EOL;
         $newRelation .= $this->tabs(1) ."// {{ laravue-insert:relationship }}";
 
-        $this->files->put($path, str_replace( '// {{ laravue-insert:relationship }}', $newRelation, $modelFile ) );
+        $parsedRelation = str_replace( '// {{ laravue-insert:relationship }}', $newRelation, $modelFile );
+
+        $parsedWith = $this->makeWith($parsedRelation, $relationName);
+
+        $this->files->put($path, $parsedWith);
     }
 
     protected function mxnRelation($modelM, $modelN) {
@@ -158,7 +164,7 @@ class LaravueModelCommand extends LaravueCommand
         $parsedNewRelation = str_replace( '// {{ laravue-insert:relationship }}', $newRelation, $modelFile );
 
         $parsedWith = $this->makeWith($parsedNewRelation, $relationName);
-
+        
         $this->files->put( $path, $parsedWith );
     }
 

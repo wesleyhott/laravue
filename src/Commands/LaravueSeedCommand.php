@@ -33,7 +33,7 @@ class LaravueSeedCommand extends LaravueCommand
      * @return mixed
      */
     public function handle()
-    {
+    { 
         if( $this->option('mxn') ) {
             $this->setStub('/seed-mxn');
         } else {
@@ -49,9 +49,7 @@ class LaravueSeedCommand extends LaravueCommand
         $this->files->put( $path, $this->buildSeed( $parsedModel ) );
     
         if ( $this->option('mxn') ) {
-            $model1 = $model[0];
-            $model2 = $model[1];
-            $this->info("$date - [ ${model1}${model2} ] >> ${model1}${model2}"."Seeder.php");
+            $this->info("$date - [ ${model} ] >> ${model}"."Seeder.php");
         } else {
             $stringModel = is_array( $parsedModel ) ? trim( $parsedModel[0] ) : trim( $parsedModel ); 
             $this->info("$date - [ $stringModel ] >> ${stringModel}Seeder.php");
