@@ -46,6 +46,7 @@ export default {
   },
   data() {
     return {
+      backRoute: '',
       loadingMessage: "",
       loading: false,
       selects: { {{ fields:data-selects }}
@@ -58,7 +59,7 @@ export default {
     }
   },
   mounted() {
-    this.rotaVoltar = this.$route.query.page ? `${this.rotaVoltar}?page=${this.$route.query.page}` : this.rotaVoltar
+    this.backRoute = this.$route.query.page ? `${this.rotaVoltar}?page=${this.$route.query.page}` : this.rotaVoltar
   },
   created() {
     this.loadSelects()
@@ -68,7 +69,7 @@ export default {
       return this.edicao ? `Alterar` : `Cadastrar`
     },
     goBack() {
-      return `/paginas/${this.rotaVoltar}`
+      return `/paginas/${this.backRoute}`
     },
     url() {
       return this.edicao
