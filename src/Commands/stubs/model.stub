@@ -8,13 +8,13 @@ class {{ class }} extends LaravueModel
     // {{ laravue-insert:with }}
 
     /**
-     * Implementação do método da classe abstrata em BaseModel
-     *
-     * @return array ('nome da coluna do banco', 'nome mapeado')
+     * Casting
+     * 
+     * Informa o tipo de dados que é serializado nos objetos JSON.
      */
-    public function mapColumns() {
-        return {{ fields }};
-    }
+	protected $casts = [
+		{{ fields }}
+	];
 
     // {{ laravue-insert:relationship }}
 }

@@ -52,28 +52,26 @@ class LaravueModelCommand extends LaravueCommand
         $this->info("$date - [ $model ] >> $model.php");
     }
 
+    /**
+     * ReplaceField is setting the $casts attirbute for fields for model.
+     */
     protected function replaceField($stub, $model)
     {
         if(!$this->option('fields')){
-            return str_replace( '{{ fields }}', "[]" , $stub );
+            return str_replace( '{{ fields }}', "" , $stub );
         }
 
         $fields = $this->getFieldsArray( $this->option('fields') );
-
-        $returnFields = '[' . PHP_EOL . $this->tabs(3);
+        $returnFields = '';
         $first = true;
         foreach ($fields as $key => $value) {
-            $title = $this->getTitle( str_replace( "_id", "", $key ) );
             if( $first ) {
                 $first = false;
-                $returnFields .=  "'$key' => '".$title."',". PHP_EOL;
-                $returnFields .=  $this->tabs(3);
+                $returnFields .=  "'$key' => '". $this->getType($value) ."',";
             } else {
-                $returnFields .=   "'$key' => '".$title."',";
-                $returnFields .=  $this->hasNext( $fields ) ? PHP_EOL . $this->tabs(3) : "";
+                $returnFields .=  PHP_EOL . $this->tabs(2) ."'$key' => '". $this->getType($value) ."',";
             }  
         }
-        $returnFields .= "]";
 
         return str_replace( '{{ fields }}', $returnFields , $stub );
     }
@@ -163,7 +161,7 @@ class LaravueModelCommand extends LaravueCommand
 
         $parsedNewRelation = str_replace( '// {{ laravue-insert:relationship }}', $newRelation, $modelFile );
 
-        $parsedWith = $this->makeWith($parsedNewRelation, $relationName);
+        $parsedWith = $this->makeWith( $parsedNewRelation, $relationName );
         
         $this->files->put( $path, $parsedWith );
     }

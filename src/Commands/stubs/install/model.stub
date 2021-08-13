@@ -13,8 +13,10 @@ abstract class LaravueModel extends Model
 {
     /**
      * Maps model fields for report
+     *
+     * deprecated
      */
-    abstract protected function mapColumns();
+    protected function mapColumns() { return []; }
 
     /**
      * Maps column names for report
