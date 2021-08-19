@@ -4,12 +4,10 @@ namespace App\Models;
 
 class TaskGroup extends LaravueModel
 {
+    // {{ laravue-insert:with }}
+    
     public const TASK_GROUP_FEATURE = 'feat';
     public const TASK_GROUP_VERSION = 'version';
-
-    public function mapColumns() {
-        return [];
-    }
 
     public function tasks()
     {

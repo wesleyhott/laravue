@@ -6,37 +6,44 @@ class Task extends LaravueModel
 {
     public const TASK_FINISHED = 'concluída';
 
-    public function mapColumns() {
-        return array(
-            'name' => 'Tarefa',
-            'started_at' => 'Início',
-            'ended_at' => 'Fim',
-            'task_status_id' => 'Status',
-            'task_group_id' => 'Tipo',
-            'is_milestone' => 'Marco Histórico',
-            'is_roadmap' => 'Roteiro',
-            'user_id' => 'Responsável',
-        );
-    }
+    protected $with = ['taskGroup', 'taskStatus', 'projectModule', 'version', 'user'];
+    // {{ laravue-insert:with }}
 
-    public function group()
+    /**
+     * Casting
+     * 
+     * Informa o tipo de dados que é serializado nos objetos JSON.
+     */
+	protected $casts = [
+		'task_group_id' => 'integer', 
+		'task_status_id' => 'integer', 
+		'project_module_id' => 'integer', 
+		'user_id' => 'integer', 
+	];
+
+    public function taskGroup()
     {
         return $this->belongsTo(TaskGroup::class);
     }
 
-    public function status()
+    public function taskStatus()
     {
         return $this->belongsTo(TaskStatus::class);
     }
 
-    public function modules()
+    public function projectModule()
     {
         return $this->belongsTo(ProjectModule::class);
     }
 
     public function version()
     {
-        return $this->belongsTo(Version::class);
+        return $this->hasOne(Version::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     // {{ laravue-insert:relationship }}

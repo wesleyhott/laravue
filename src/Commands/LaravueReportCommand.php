@@ -49,51 +49,56 @@ class LaravueReportCommand extends LaravueCommand
     }
 
     protected function replaceBeforeIndex( $stub, $model ) {
-        $beforeIndex = PHP_EOL;
-        $beforeIndex .= $this->tabs(2) . "// os nomes são os definidos em mapColumns() do modelo." . PHP_EOL;
-        $beforeIndex .= $this->tabs(2) . "// Para remover colunas use: unset(\$item[\"CampoDesnecessario\"]);" . PHP_EOL;
-        $beforeIndex .= $this->tabs(2) . "// foreach(\$data as \$item) {" . PHP_EOL;
-        $beforeIndex .= $this->tabs(3) . "// Transformando colunas" . PHP_EOL;
-        $beforeIndex .= $this->tabs(3) . "// \$item[\"pk_id\"] = ( \App\Models\ModelPk::find( \$item[\"pk_id\"] ) )->name;" . PHP_EOL;
-        $beforeIndex .= $this->tabs(3) . "// \$item[\"created_at\"] = date( 'd/m/Y', strtotime( \$item[\"created_at\"] ) );" . PHP_EOL;
-        $beforeIndex .= $this->tabs(3) . "// \$item[\"booleanFiled\"] = \$item[\"booleanFiled\"] == 1 ? \"Sim\" : \"Não\";" . PHP_EOL;
-        $beforeIndex .= $this->tabs(2) . "// }" . PHP_EOL;
-
         if(!$this->option('fields')){
-            return str_replace( '{{ beforeIndex }}', $beforeIndex , $stub );
+            return str_replace( '{{ beforeIndex }}', 'return $data;' , $stub );
         }
 
-        $booleanArray = array();
-        $dateArray = array();
+        $maskaredArray = array();
+        $maskared = '';
+
+        $beforeIndex = '$reportData = new \Illuminate\Support\Collection();  ' . PHP_EOL;
+        $beforeIndex .= PHP_EOL . $this->tabs(2) . 'foreach ( $data as $item ) {' . PHP_EOL;
+        $beforeIndex .= '{{ maskared }}' . PHP_EOL;
+        $beforeIndex .= $this->tabs(3) . '$linha = array(' . PHP_EOL;
+
         $fields = $this->getFieldsArray( $this->option('fields') );
         foreach ($fields as $key => $value) {
-            $type = $this->getType($value);
+            $title = $this->getTitle( $key );
+            $type = $this->getType( $value );
             if( $type === 'boolean' ) {
-                array_push( $booleanArray, $key );
+                $beforeIndex .= $this->tabs(4) . "'$title' => \$item->$key == 1 ? 'Sim' : 'Não'," . PHP_EOL;
+            } else if( $type === 'date' ) {
+                $beforeIndex .= $this->tabs(4) . "'$title' => date( 'd/m/Y', strtotime( \$item->$key ) )," . PHP_EOL;
+            } else if( $type === 'monetario' ) {
+                $beforeIndex .= $this->tabs(4) . "'$title' => number_format( \$item->$key, 2, ',', '.')," . PHP_EOL;
+            } else if( $type === 'cpf' ) {
+                $beforeIndex .= $this->tabs(4) . "'$title' => \$this->mask( \$item->$key, '###.###.###-##' )," . PHP_EOL;
+            } else if( $type === 'cnpj' ) {
+                $beforeIndex .= $this->tabs(4) . "'$title' => \$this->mask( \$item->$key, '##.###.###/####-##' )," . PHP_EOL;
+            } else if( $type === 'cpfcnpj' ) {
+                array_push( $maskaredArray, $key );
+                $beforeIndex .= $this->tabs(4) . "'$title' => \$${key}Maskared," . PHP_EOL;
+            } else if( $this->isFk( $key ) ) {
+                $relation = str_replace( '_id', '', $key );
+                $beforeIndex .= $this->tabs(4) . "'$title' => \$item->${relation}->id," . PHP_EOL;
+            } else {
+                $beforeIndex .= $this->tabs(4) . "'$title' => \$item->$key," . PHP_EOL;
             }
-            if( $type === 'date' ) {
-                array_push( $dateArray, $key );
-            }
         }
 
-        if( count( $booleanArray ) == 0 ){
-            return str_replace( '{{ beforeIndex }}', '' , $stub );
+        $beforeIndex .= $this->tabs(3) . ');' . PHP_EOL;
+        $beforeIndex .= $this->tabs(3) . '$reportData->push( $linha );' . PHP_EOL;
+        $beforeIndex .= $this->tabs(2) . '}' . PHP_EOL;
+        $beforeIndex .= $this->tabs(2) . 'return $reportData;';
+
+        foreach ( $maskaredArray as $field ) {
+            $maskared .= $this->tabs(3) ."\$${field}Maskared = strlen( \$item->$field ) == 11" . PHP_EOL;
+            $maskared .= $this->tabs(4) . "? \$this->mask( \$item->$field, '###.###.###-##' )" . PHP_EOL;
+            $maskared .= $this->tabs(4) . ": \$this->mask( \$item->$field, '##.###.###/####-##' );" . PHP_EOL;
         }
 
-        $beforeIndex = PHP_EOL;
-        $beforeIndex .= $this->tabs(2) . "// os nomes são os definidos em mapColumns() do modelo." . PHP_EOL;
-        $beforeIndex .= $this->tabs(2) . "// Para remover colunas use: unset(\$item[\"CampoDesnecessario\"]);" . PHP_EOL;
-        $beforeIndex .= $this->tabs(2) . "foreach(\$data as \$item) {" . PHP_EOL;
-        foreach ( $booleanArray as $field ) {
-            $title = ucwords( $field );
-            $beforeIndex .= $this->tabs(3) . "\$item[\"$title\"] = \$item[\"$title\"] == 1 ? \"Sim\" : \"Não\";" . PHP_EOL;
-        }
-        foreach ( $dateArray as $field ) {
-            $title = ucwords( $field );
-            $beforeIndex .= $this->tabs(3) . "\$item[\"$title\"] = date( 'd/m/Y', strtotime( \$item[\"$title\"] ) );" . PHP_EOL;
-        }
-        $beforeIndex .= $this->tabs(2) . "}" . PHP_EOL;
+        $parsed = str_replace( '{{ maskared }}', $maskared, $beforeIndex );
 
-        return str_replace( '{{ beforeIndex }}', $beforeIndex, $stub );
+        return str_replace( '{{ beforeIndex }}', $parsed, $stub );
     }
 }

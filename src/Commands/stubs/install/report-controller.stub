@@ -11,9 +11,7 @@ use Carbon\Carbon;
 use PDF;
 use Illuminate\Support\Str;
 use App\Models\Report;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
-
 
 abstract class LaravueReportController extends Controller
 {
@@ -21,7 +19,6 @@ abstract class LaravueReportController extends Controller
     * Variáveis de modelo
     */
    protected $reportType;
-   private $useDefaultHeaders = false;
    private $headers = [];
    private $title;
    private $dataset = [];
@@ -36,28 +33,19 @@ abstract class LaravueReportController extends Controller
    /**
     * Construtor para configurar os valores necessários do tipo de relatório
     */
-    function __construct()
-    {
-        
-   /**
-    * Construtor para configurar os valores necessários do tipo de relatório
-    */
-    function __construct()
-    {
+    function __construct() {
         $this->middleware('auth:api');
         $this->model = $this->getModel();
 
         if( !Storage::exists(Report::REPORT_FOLDER ) ) { // Verifica se existe pasta onde são gerados os arquivos de relatórios temporários
-          Storage::makeDirectory( Report::REPORT_FOLDER ); // Cria o diretório para gerar os relatórios temporários
+         Storage::makeDirectory( Report::REPORT_FOLDER ); // Cria o diretório para gerar os relatórios temporários
         }
     }
 
-    }
-
-    /**
+   /**
     * Sobrescreva este método se deseja modificar o nome do relatório.
     */
-    public function getFileName(){
+   public function getFileName() {
       return Report::DEFAULT_FILE_NAME;
    }
 
@@ -65,7 +53,7 @@ abstract class LaravueReportController extends Controller
     * Sobrescreva este método se deseja modificar a orientação de impressão
     * do relatório.
     */
-   public function getPdfOrientation(){
+   public function getPdfOrientation() {
       return Report::ORIENTATION_PORTRAIT;
    }
 
@@ -73,14 +61,14 @@ abstract class LaravueReportController extends Controller
     * Sobrescreva este método se deseja modificar o tamanho do papel de impressão
     * do papel de relatório.
     */
-   public function getPaperSize(){
+   public function getPaperSize() {
       return Report::PAPER_A4;
    }
 
    /**
     * Sobrescreva este método se deseja modificar o layout do pdf.
     */
-   public function getPdfViewSource(){
+   public function getPdfViewSource() {
       return Report::DEFAULT_SOURCE;
    }
 
@@ -90,7 +78,7 @@ abstract class LaravueReportController extends Controller
     * Sobrescreva este método se deseja modificar os parâmetros enviados
     * para um novo layout criado.
     */
-    public function getPdfViewParameters(){
+    public function getPdfViewParameters() {
       return [
             'title' => $this->title, 
             'headers'=> $this->headers , 
@@ -98,32 +86,11 @@ abstract class LaravueReportController extends Controller
          ];
     }
 
-    /**
-     * Sobrescreva esse método caso necessidade de cabeçalhos personalizados no
-     * realtório.
-     * Instruções:
-     *   Para sobrescrever, crie um método no modelo e coloque-o como retorno.
-     *   Não é necessário fazer atribuição à $useDefaultHeaders, pois o padrão
-     *   é falso e funcionará como esperado apenas ignorando-a.
-     */
-    public function getHeaders(){
-       $this->useDefaultHeaders = true;
-       return ( new $this->model )->getHeaders();
-    }
-
    /**
     * Método para filtrar todos os relatórios.
     */
-   private function filter($filters)
-   {
-      $headers = $this->getHeaders();
-
-      // Se o mapColumns() do modelo não for implementado, $headers terá tamanho zero.
-      if( ( !$this->useDefaultHeaders ) || ( isset($headers) && count($headers) == 0 ) ){
-         return $this->beforeIndex( $this->model::filter($filters)->get() );
-      } else {
-         return $this->beforeIndex( $this->model::filter($filters)->get($headers) );
-      }
+   private function filter($filters) {
+      return $this->beforeIndex( $this->model::filter($filters)->get() );
    }
 
    /**
@@ -143,7 +110,7 @@ abstract class LaravueReportController extends Controller
                'message' => "Relatório não possui dados."
             ],
             Response::HTTP_BAD_REQUEST
-        );
+         );
       }
 
       switch( $reportType ) {
@@ -188,7 +155,7 @@ abstract class LaravueReportController extends Controller
    /**
     * Método para gerar o relatório em XLSX
     */
-   private function generateXlsxReport(){
+   private function generateXlsxReport() {
       $spreadsheet = new Spreadsheet();
       $sheet = $spreadsheet->getActiveSheet();
 
@@ -247,11 +214,11 @@ abstract class LaravueReportController extends Controller
       return response()->download( $file, $fileName, $headers )->deleteFileAfterSend( true );
    }
 
-   private function generateFileName(){
+   private function generateFileName() {
       return $this->getFileName() . ' - ' . Carbon::now()->format('d_m_Y_H_i_s') . '.' . $this->reportType;
    }
 
-   public function filterSheet($spreadsheet){
+   public function filterSheet($spreadsheet) {
       $spreadsheet->getActiveSheet()->setAutoFilter(
          $spreadsheet->getActiveSheet()
             ->calculateWorksheetDimension()
@@ -262,7 +229,7 @@ abstract class LaravueReportController extends Controller
     * Método para colocar máscara nos campos.
     * Exemplo: mask($cnpj, '##.###.###/####-##'), mask($cpf, '###.###.###-##'), mask($cep, '#####-###')
     */
-   protected function mask($val, $mask) {
+    protected function mask($val, $mask) {
       $maskared = '';
       $k = 0;
       for ($i = 0; $i <= strlen($mask) - 1; ++$i) {

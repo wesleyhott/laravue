@@ -41,7 +41,7 @@ class {{ model }}ReportController extends LaravueReportController
      * @return \App\Models\{{ model }}
      */
     public function beforeIndex($data)
-    { {{ beforeIndex }}
-        return $data;
+    { 
+        {{ beforeIndex }}
     }
 }

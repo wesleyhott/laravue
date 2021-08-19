@@ -4,9 +4,7 @@ namespace App\Models;
 
 class ProjectModule extends LaravueModel
 {
-    public function mapColumns() {
-        return [];
-    }
+    // {{ laravue-insert:with }}
     
     public function projects()
     {

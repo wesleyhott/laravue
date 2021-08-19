@@ -8,9 +8,7 @@ class Version extends LaravueModel
         'task_id', 'version_number', 'feature_number', 'issue_number', 'is_milestone'
     ];
 
-    public function mapColumns() {
-        return [];
-    }
+    // {{ laravue-insert:with }}
     
     public function task()
     {

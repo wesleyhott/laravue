@@ -4,15 +4,8 @@ namespace App\Models;
 
 class Report extends LaravueModel
 {
-    /**
-     * Implementação do método da classe abstrata em BaseModel
-     *
-     * @return array ('nome da coluna do banco', 'nome mapeado')
-     */
-    public function mapColumns() {
-        return [];
-    }
-    
+    // {{ laravue-insert:with }}
+       
     // Report type
     public const PDF = 'pdf';
     public const XLSX = 'xlsx';
@@ -22,6 +15,9 @@ class Report extends LaravueModel
     public const ORIENTATION_LANDSCAPE = 'landscape';
 
     // Paper size
+    public const PAPER_A1 = 'A1';
+    public const PAPER_A2 = 'A2';
+    public const PAPER_A3 = 'A3';
     public const PAPER_A4 = 'A4';
 
     // Congiguration

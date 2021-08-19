@@ -37,6 +37,8 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    // {{ laravue-insert:with }}
+    
     /**
      * The attributes that should be cast to native types.
      *
@@ -76,13 +78,6 @@ class User extends Authenticatable
 
     public function scopeFilter($builder, $request) {
         return (new LaravueFilter($request))->filter($builder);
-    }
-
-    public function mapColumns() {
-        return [
-            "name" => "Nome",
-            "email" => "E-mail"
-        ];
     }
 
     public function getHeaders() {

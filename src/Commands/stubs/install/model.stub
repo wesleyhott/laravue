@@ -12,24 +12,6 @@ use Illuminate\Support\Facades\Auth;
 abstract class LaravueModel extends Model
 {
     /**
-     * Maps model fields for report
-     *
-     * deprecated
-     */
-    protected function mapColumns() { return []; }
-
-    /**
-     * Maps column names for report
-     */
-    public function getHeaders() {
-        $headers = array();
-        foreach( $this->mapColumns() as $k => $v) {
-            array_push($headers, "$k as $v");
-        }
-        return $headers;
-    }
-
-    /**
      * Model queries filter
      */
     public function scopeFilter(Builder $builder, $request)

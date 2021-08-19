@@ -2,7 +2,7 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.27.140 - 13/ago/2021
+## 8.27.141 - 16/ago/2021
 ### Adicionado
 - Suporte a máscara nos campos.
 - Suporte a with (model) nos relacionamentos 1xN.
@@ -12,6 +12,7 @@ Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 - Acentuação em Programática e Sócio.
 - Correção do erro de sobrescrita da propriedade rotaVoltar
 - Correções menores.
+- Engine de Relatório
   
 ## 8.24.136 - 17/mai/2021
 ### Adicionado

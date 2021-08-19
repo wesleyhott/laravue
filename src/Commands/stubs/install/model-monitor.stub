@@ -20,6 +20,8 @@ class Monitor extends LaravueModel
     public const RESULT_NEUTRAL = 'NEUTRO';
     public const RESULT_FAILURE = 'FALHA';
 
+    // {{ laravue-insert:with }}
+
     function __construct($options = NULL)
     {
         parent::__construct();
@@ -50,27 +52,6 @@ class Monitor extends LaravueModel
                 $this->resultado = $options['result'];   
             }
         }
-    }
-
-    /**
-     * Implementation of BaseModel abstract class
-     *
-     * @return array ('Database column namenome da coluna do banco', 'Mapped name')
-     */
-    public function mapColumns() {
-        return [
-            'id' => '#',
-            'type' => 'Tipo',
-            'result' => 'Resultado',
-            'message' => 'Mensagem',
-            'class' => 'Classe : método : linha',
-            'method' => 'Método',
-            'line' => 'Linha',
-            'updated_at' => 'Data (atualização)',
-            'usuario_ult_alteracao' => 'Usuário (atualização)',
-            'ip' => 'IP',
-            'user_agent' => 'User Agent',
-        ];
     }
 
     public function dispatch(){

@@ -7,6 +7,8 @@ use App\Filters\LaravueFilter;
 
 class Permission extends SpatiePermission
 {
+    // {{ laravue-insert:with }}
+    
     public function scopeFilter($builder, $request)
     {
         return (new LaravueFilter($request))->filter($builder);

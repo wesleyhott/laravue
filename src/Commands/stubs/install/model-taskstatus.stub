@@ -4,9 +4,7 @@ namespace App\Models;
 
 class TaskStatus extends LaravueModel
 {
-    public function mapColumns() {
-        return [];
-    }
+    // {{ laravue-insert:with }}
     
     public function tasks()
     {
