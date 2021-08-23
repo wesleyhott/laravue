@@ -760,17 +760,24 @@ class LaravueCommand extends Command
             case 'bi': return 'bigInteger';
             case 'by': return 'binary';
             case 'c': return 'char';
+            case 'cnpj': return 'cnpj';
+            case 'cpf': return 'cpf';
+            case 'cpfcnpj': return 'cpfcnpj';
             case 'd': return 'date';
             case 'db': return 'double';
             case 'de': return 'decimal';
             case 'dt': return 'dateTime';
             case 'e': return 'enum';
             case 'f': return 'float';
+            case 'fj': return 'cpfcnpj';
             case 'i': return 'integer';
             case 'lt': return 'longText';
             case 'm': return 'morph';
             case 'mi': return 'mediumInteger';
+            case 'money': return 'monetario';
             case 'mt': return 'mediumText';
+            case 'pf': return 'cpf';
+            case 'pj': return 'cnpj';
             case 'pk': return 'increments';
             case 'rt': return 'rememberToken';
             case 's': return 'string';
@@ -779,24 +786,26 @@ class LaravueCommand extends Command
             case 'ti': return 'tinyInteger';
             case 'ts': return 'timestamp';
             case 'tt': return 'timestamps';
+            case 'vm': return 'monetario';
             default: return 'string';
         }
     }
 
     /**
-     * Cria o título a partir do nome do modelo
+     * Cria o título a partir do nome do campo
      *
-     * @param  string  $value
+     * @param string  $field 
+     * @param boolean $plural
      * @return string
      */
-    protected function getTitle( $model, $plural = false ) {
-        $title = $model;
+    protected function getTitle( $field, $plural = false ) {
+        $title = str_replace( '_id', '', $field );
         if($plural) {
-            $title = $this->pluralize( 2, $model );
+            $title = $this->pluralize( 2, $title );
         }
         $title = ucwords( str_replace( "_", " ", $title ) );
         // Setting space before uppercase letters
-        preg_match_all( '/[A-Z]/', $model, $matches, PREG_OFFSET_CAPTURE );
+        preg_match_all( '/[A-Z]/', $field, $matches, PREG_OFFSET_CAPTURE );
         for($i = 0; $i < count($matches[0]); $i++) {
             $upperLetter = $matches[0][$i][0];
             $title = str_replace( $upperLetter, " $upperLetter", $title );
@@ -938,12 +947,8 @@ class LaravueCommand extends Command
             case 'Obrigatorias': return 'Obrigatórias';
             case 'Ocorrencia': return 'Ocorrência';
             case 'Ocorrencias': return 'Ocorrências';
-            case 'Programatica': return 'Programática';
-            case 'Programaticas': return 'Programáticas';
             case 'Responsavel': return 'Responsável';
             case 'Responsaveis': return 'Responsáveis';
-            case 'Socio': return 'Sócio';
-            case 'Socios': return 'Sócios';
             case 'Tacita': return 'Tácita';
             case 'Tacitas': return 'Tácitas';
             case 'Usuario': return 'Usuário';

@@ -101,6 +101,10 @@ php artisan laravue:build Post -f user_id:i,text:s,age:i.n,created_at:dt,approve
 |    .+     | ->unsigned()                                  | Unsigned integer                                                                   |
 |    .u     | ->unique()                                    | Unique field                                                                       |
 |    .u*    | $table->unique['un1','unN'];                  | Fields that are unique together                                                    |
+|    pf     | $table->string(11);                           | VARCHAR size 11 equivalent column                                                  |
+|    pj     | $table->string(14);                           | VARCHAR size 14 equivalent column                                                  |
+|    fj     | $table->string(14);                           | VARCHAR size 14 equivalent column                                                  |
+|    vm     | $table->decimal('money', 16,2);               | DECIMAL equivalent with a precision 2 and scale 16                                 |
 
 ### Changelog
 

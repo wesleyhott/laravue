@@ -107,6 +107,22 @@ class LaravueMigrationCommand extends LaravueCommand
             if( $type == 'integer' && $isUnsigned) {
                 $unsigned = '->unsigned()';
             }
+            // CPF
+            if( $type == 'cpf' ) {
+                $type = 'string';
+                $size = ", 11";
+            }
+            // CNPJ ou CPF/CNPJ
+            if( $type == 'cnpj' || $type == 'cpfcnpj' ) {
+                $type = 'string';
+                $size = ", 14";
+            }
+            // Valor monetário
+            if( $type == 'monetario' ) {
+                $type = 'decimal';
+                $size = ", 16, 2";
+            }
+
             
             if( $first ) {
                 $first = false;
@@ -118,7 +134,7 @@ class LaravueMigrationCommand extends LaravueCommand
             if( $this->isFk( $key ) ) {
                 $referenced_table = $this->pluralize( 2, str_replace( "_id", "", $key ) );
 
-                $returnFields .= "$"."table->$type('$key')" . PHP_EOL;
+                $returnFields .= "\$table->$type('$key')" . PHP_EOL;
                 if( $isNullable ) {
                     $returnFields .= $this->tabs(4) . $nullable . PHP_EOL;
                 } else if ( $isUnique ) {
@@ -131,21 +147,21 @@ class LaravueMigrationCommand extends LaravueCommand
                 $returnFields .= $this->tabs(4) . "->onDelete('$onDelete');";
             } else {
                 if( $isNullable && $isUnique ) {
-                    $returnFields .= "$"."table->$type('$key'$size)" . PHP_EOL;
+                    $returnFields .= "\$table->$type('$key'$size)" . PHP_EOL;
                     $returnFields .= $this->tabs(4) . "${nullable}" . PHP_EOL;
                     if( $isUnsigned ) {
                         $returnFields .= $this->tabs(4) . "${unsigned}" . PHP_EOL;
                     }
                     $returnFields .= $this->tabs(4) . "${unique};";
                 } else if( $default !== false && $isUnique ) {
-                    $returnFields .= "$"."table->$type('$key'$size)" . PHP_EOL;
+                    $returnFields .= "\$table->$type('$key'$size)" . PHP_EOL;
                     $returnFields .= $this->tabs(4) . "${unique}" . PHP_EOL;
                     if( $isUnsigned ) {
                         $returnFields .= $this->tabs(4) . "${unsigned}" . PHP_EOL;
                     }
                     $returnFields .= $this->tabs(4) . "${default};";
                 } else {
-                    $returnFields .= "$"."table->$type('$key'$size)${nullable}${unique}${default}${unsigned};";
+                    $returnFields .= "\$table->$type('$key'$size)${nullable}${unique}${default}${unsigned};";
                 } 
             }
         }

@@ -115,7 +115,7 @@ export default {
             // {{ laravue-insert:submit }}
           }
         })
-          .then(response => {
+          .then( () => {
             if (!this.edicao) {
               this.model = {
                 {{ fields:model2 }}

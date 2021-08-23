@@ -2,11 +2,12 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.27.141 - 16/ago/2021
+## 8.28.141 - 19/ago/2021
 ### Adicionado
 - Suporte a máscara nos campos.
 - Suporte a with (model) nos relacionamentos 1xN.
 - Geração automática dos casts (model).
+- Inclusão dos tipos CPF, CNPJ e Valor Monetário.
 ### Alterado
 - Correção da criação do diretório dos relatórios.
 - Acentuação em Programática e Sócio.

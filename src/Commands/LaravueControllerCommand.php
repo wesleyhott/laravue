@@ -122,7 +122,15 @@ class LaravueControllerCommand extends LaravueCommand
                 $returnFields .= PHP_EOL;
                 $returnFields .= $this->tabs(2);
             } 
-            $returnFields .= "$"."model->$key = $"."request->input('$key');"; 
+            switch( $this->getType( $value ) ) {
+                case 'cpf':
+                case 'cnpj':
+                case 'cpfcnpj':
+                    $returnFields .= "\$model->$key = \$this->unmask( \$request->input('$key') );"; 
+                break;
+                default:
+                    $returnFields .= "\$model->$key = \$request->input('$key');"; 
+            }
         }
         $returnFields .= $this->tabs(2);
         $parsedfFields = str_replace( '{{ fields }}', $returnFields , $stub );
@@ -151,6 +159,10 @@ class LaravueControllerCommand extends LaravueCommand
                 if( $isUnsigned !== false ) {
                     $unsigned = "|min:0";
                 }
+            }
+            // Valor monetário
+            if( $type == 'monetario' ) {
+                $type = 'decimal:2';
             }
             // Unique 
             $isUnique = $this->isUnique($value);
@@ -192,9 +204,21 @@ class LaravueControllerCommand extends LaravueCommand
             if( $isUniqueArray  && $skipEndingApostrophe ) {
                 $ending = "";
             }
-
-            $returnRules .= "'$key' => '${type}${required}${maxSize}${unique}${uniqueArray}${unsigned}"; 
-            $returnRules .= "${ending}"; 
+       
+            if( $type == 'cpf' ) { // CPF
+                $isRequired = $required != '' ? " 'required'," : '';
+                $isUnique = $unique != '' ? " 'unique'," : '';
+                $returnRules .= "'$key' => [ 'string', 'max:11',${isRequired}${isUnique} new \App\Rules\IsCpf() ],";
+            } else if( $type == 'cnpj' ) { // CNPJ
+                $isRequired = $required != '' ? " 'required'," : '';
+                $returnRules .= "'$key' => [ 'string', 'max:14',${isRequired}${isUnique} new \App\Rules\IsCnpj() ],";
+            } else if( $type == 'cpfcnpj' ) { // CPF ou CNPJ
+                $isRequired = $required != '' ? " 'required'," : '';
+                $returnRules .= "'$key' => [ 'string', 'max:14',${isRequired}${isUnique} new \App\Rules\IsCpfOrCnpj() ],";
+            } else {
+                $returnRules .= "'$key' => '${type}${required}${maxSize}${unique}${uniqueArray}${unsigned}"; 
+                $returnRules .= "${ending}"; 
+            }
         }
 
         return str_replace( '{{ rules }}', $returnRules , $parsedfFields );
@@ -204,8 +228,14 @@ class LaravueControllerCommand extends LaravueCommand
         if(!$this->option('fields')){
             return str_replace( '{{ beforeIndex }}', "// public function beforeIndex(\$data) { return \$data; }" , $stub );
         }
+
         $booleanArray = array();
         $dateArray = array();
+        $moneyArray = array();
+        $cpfArray = array();
+        $cpfCnpjArray = array();
+        $cnpjArray = array();
+
         $fields = $this->getFieldsArray( $this->option('fields') );
         foreach ($fields as $key => $value) {
             $type = $this->getType($value);
@@ -214,6 +244,18 @@ class LaravueControllerCommand extends LaravueCommand
             }
             if( $type === 'date' ) {
                 array_push( $dateArray, $key );
+            }
+            if( $type === 'monetario' ) {
+                array_push( $moneyArray, $key );
+            }
+            if( $type === 'cpf' ) {
+                array_push( $cpfArray, $key );
+            }
+            if( $type === 'cpfcnpj' ) {
+                array_push( $cpfCnpjArray, $key );
+            }
+            if( $type === 'cnpj' ) {
+                array_push( $cnpjArray, $key );
             }
         }
 
@@ -228,6 +270,21 @@ class LaravueControllerCommand extends LaravueCommand
         }
         foreach ( $dateArray as $field ) {
             $beforeIndex .= $this->tabs(3) . "\$item->$field = date( 'd/m/Y', strtotime( \$item->$field  ) );" . PHP_EOL;
+        }
+        foreach ( $moneyArray as $field ) {
+            $beforeIndex .= $this->tabs(3) . "\$item->$field = number_format(\$item->$field , 2, ',', '.');" . PHP_EOL;
+        }
+        foreach ( $cpfArray as $field ) {
+            $beforeIndex .= $this->tabs(3) . "\$item->$field = \$this->mask(\$item->$field, '###.###.###-##');" . PHP_EOL;
+        }
+        foreach ( $cpfCnpjArray as $field ) {
+            $item = $this->tabs(3) . "\$${field}Maskared = strlen( \$item->$field ) == 11" . PHP_EOL;
+            $item .= $this->tabs(4) . "? \$this->mask(\$item->$field, '###.###.###-##')" . PHP_EOL;
+            $item .= $this->tabs(4) . ": \$this->mask(\$item->$field, '##.###.###/####-##');" . PHP_EOL;
+            $beforeIndex .= $item;
+        }
+        foreach ( $cnpjArray as $field ) {
+            $beforeIndex .= $this->tabs(3) . "\$item->$field = \$this->mask(\$item->$field, '##.###.###/####-##');" . PHP_EOL;
         }
         $beforeIndex .= $this->tabs(2) . "}" . PHP_EOL;
         $beforeIndex .= $this->tabs(2) . "return \$data; " . PHP_EOL;

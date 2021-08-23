@@ -317,11 +317,11 @@ class LaravueFrontModelCommand extends LaravueCommand
             switch($value) {
                 case 'b':
                     $return .= "$key: this.relatorio ? '' : false,";
-                    $return .= $this->ending2($index, $size);
+                    $return .= $this->ending($index, $size);
                 break;
                 default:
                     $return .= "$key: '',";
-                    $return .= $this->ending2($index, $size);
+                    $return .= $this->ending($index, $size);
             }
         }
 
@@ -330,10 +330,6 @@ class LaravueFrontModelCommand extends LaravueCommand
 
     protected function ending($index, $size){
         return $index == $size ? "" : PHP_EOL . $this->tabs(4);
-    }
-
-    protected function ending2($index, $size){
-        return $index == $size ? "" : PHP_EOL . $this->tabs(9);
     }
 
     protected function replaceFieldComputed($stub, $model)
@@ -447,10 +443,13 @@ class LaravueFrontModelCommand extends LaravueCommand
             switch($value) {
                 case 'i':
                 case 'bi':
-                    $return .= $this->tabs(7) . "$key: parseInt(this.model.$key),";
+                    $return .= $this->tabs(3) . "$key: parseInt( this.model.$key ),";
+                break;
+                case 'vm':
+                    $return .= $this->tabs(3) . "$key: this.\$formatNumberToDatabase( this.model.$key ),";
                 break;
                 default:
-                    $return .= $this->tabs(7) . "$key: this.model.$key,";
+                    $return .= $this->tabs(3) . "$key: this.model.$key,";
             }
         }
 

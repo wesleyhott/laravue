@@ -65,11 +65,23 @@ class LaravueModelCommand extends LaravueCommand
         $returnFields = '';
         $first = true;
         foreach ($fields as $key => $value) {
+            switch ( $this->getType($value) ) {
+                case 'boolean': 
+                case 'cpf': 
+                case 'cpfcnpj': 
+                case 'cnpj': 
+                    $type = 'string'; 
+                break;
+                case 'monetario': 
+                    $type = 'decimal:2'; 
+                break;
+                default: $type = $this->getType($value);
+            }
             if( $first ) {
                 $first = false;
-                $returnFields .=  "'$key' => '". $this->getType($value) ."',";
+                $returnFields .=  "'$key' => '". $type ."',";
             } else {
-                $returnFields .=  PHP_EOL . $this->tabs(2) ."'$key' => '". $this->getType($value) ."',";
+                $returnFields .=  PHP_EOL . $this->tabs(2) ."'$key' => '". $type ."',";
             }  
         }
 
