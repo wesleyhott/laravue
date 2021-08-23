@@ -155,11 +155,12 @@ class LaravueMigrationCommand extends LaravueCommand
                     $returnFields .= $this->tabs(4) . "${unique};";
                 } else if( $default !== false && $isUnique ) {
                     $returnFields .= "\$table->$type('$key'$size)" . PHP_EOL;
-                    $returnFields .= $this->tabs(4) . "${unique}" . PHP_EOL;
+                    $returnFields .= $this->tabs(4) . "${unique}";
                     if( $isUnsigned ) {
-                        $returnFields .= $this->tabs(4) . "${unsigned}" . PHP_EOL;
+                        $returnFields .=  PHP_EOL . $this->tabs(4) . "${unsigned}";
                     }
-                    $returnFields .= $this->tabs(4) . "${default};";
+                    $tabulation = $default == '' ? '' : PHP_EOL . $this->tabs(4);
+                    $returnFields .=  $tabulation . "${default};";
                 } else {
                     $returnFields .= "\$table->$type('$key'$size)${nullable}${unique}${default}${unsigned};";
                 } 
