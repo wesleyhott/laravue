@@ -44,33 +44,39 @@ class LaravueFrontIndexCommand extends LaravueCommand
         $default = "{" . PHP_EOL;
         $default .=  $this->tabs(3) . "prop: \"id\"," . PHP_EOL;
         $default .=  $this->tabs(3) . "label: \"ID\"," . PHP_EOL;
-        $default .=  $this->tabs(3) . "minWidth: {{ fieldSize }}" . PHP_EOL;
+        $default .=  $this->tabs(3) . "minWidth: $fieldSize" . PHP_EOL;
         $default .=  $this->tabs(2) . "},";
 
         if(!$this->option('fields')){
-            $default = str_replace( '{{ fieldSize }}', "330" , $default );
             return str_replace( '{{ fields }}', $default , $stub );
         }
 
         $fields = $this->getFieldsArray( $this->option('fields') );
         if( count($fields) > 0 ) {
-            $rest = $fieldSize % ( count($fields) + 1);
-            $fieldSize = floor( $fieldSize / ( count($fields) + 1 ) );
-            $default = str_replace( '{{ fieldSize }}', $fieldSize + $rest , $default );
+            $rest = $fieldSize % ( count($fields) );
+            $fieldSize = floor( $fieldSize / ( count($fields) ) );
+            $default = '';
         } 
 
-        $returnFields = $default;
+        $returnFields = '';
+        $first = true;
         foreach ($fields as $key => $value) {
             $label = $this->isFk($key) ? $this->getTitle( str_replace( "_id", "", $key ) ) : $this->getTitle( $key );
-            $returnFields .= PHP_EOL;
-            $returnFields .= $this->tabs(2) . "{" . PHP_EOL;
-            $returnFields .= $this->tabs(3) . "prop: \"$key\"," . PHP_EOL;
-            $returnFields .= $this->tabs(3) . "label: \"$label\"," . PHP_EOL;
-            $returnFields .= $this->tabs(3) . "minWidth: $fieldSize," . PHP_EOL;
-            if( $this->isBoolean( $value ) ) {
-                $returnFields .= $this->tabs(3) . "type: \"bit\"," . PHP_EOL;
+            $minWidth = $fieldSize + $rest;
+            if( $first ) {
+                $first = false;
+            } else {
+                $returnFields .= PHP_EOL . $this->tabs(4);
             }
-            $returnFields .= $this->tabs(2) . "},";
+            $returnFields .= "{" . PHP_EOL;
+            $returnFields .= $this->tabs(5) . "prop: \"$key\"," . PHP_EOL;
+            $returnFields .= $this->tabs(5) . "label: \"$label\"," . PHP_EOL;
+            $returnFields .= $this->tabs(5) . "minWidth: $minWidth," . PHP_EOL;
+            if( $this->isBoolean( $value ) ) {
+                $returnFields .= $this->tabs(5) . "type: \"bit\"," . PHP_EOL;
+            }
+            $returnFields .= $this->tabs(4) . "},";
+            $rest = 0;
         }
 
         return str_replace( '{{ fields }}', $returnFields , $stub );
