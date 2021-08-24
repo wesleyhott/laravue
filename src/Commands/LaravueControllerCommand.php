@@ -164,6 +164,26 @@ class LaravueControllerCommand extends LaravueCommand
             if( $type == 'monetario' ) {
                 $type = 'decimal:2';
             }
+            // Small integer
+            if( $type == 'smallInteger' ) {
+                $type = 'integer';
+            }
+            // Char
+            if( $type == 'char' ) {
+                $type = 'string';
+            } 
+            // Datetime
+            if( $type == 'dateTime' ) {
+                $type = 'date';
+            } 
+            // Decimal
+            if( $type == 'decimal' ) {
+                $type = 'digits_between:0,2';
+            } 
+            // Binary
+            if( $type == 'binary' ) {
+                $type = 'string';
+            }
             // Unique 
             $isUnique = $this->isUnique($value);
             $table = $this->pluralize( 2, Str::snake( $model ) );
