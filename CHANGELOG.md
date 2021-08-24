@@ -2,7 +2,7 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.28.144 - 24/ago/2021
+## 8.28.145 - 24/ago/2021
 ### Adicionado
 - Suporte a máscara nos campos.
 - Suporte a with (model) nos relacionamentos 1xN.
@@ -15,6 +15,7 @@ Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 - Correções menores.
 - Engine de Relatório
 - Index.vue gerado sem o campo ID
+- width em 100% nos selects
   
 ## 8.24.136 - 17/mai/2021
 ### Adicionado

@@ -243,6 +243,7 @@ class LaravueFrontModelCommand extends LaravueCommand
         $input .= $this->tabs(7) .  "<el-select" . PHP_EOL;
         $input .= $this->tabs(8) .  "filterable" . PHP_EOL;
         $input .= $this->tabs(8) .  "class=\"baseSelect\"" . PHP_EOL;
+        $input .= $this->tabs(8) .  "style=\"width: 100%;\"" . PHP_EOL;
         $input .= $this->tabs(8) .  "size=\"large\"" . PHP_EOL;
         $input .= $this->tabs(8) .  ":placeholder=\"relatorio ? 'Não filtrar' : '$label'\"" . PHP_EOL;
         $input .= $this->tabs(8) .  "v-model=\"model.$key\" >" . PHP_EOL;
