@@ -89,7 +89,7 @@ class LaravueControllerCommand extends LaravueCommand
         }
         $uniqueArrayTitle = [];
         foreach ( $uniqueArray as $unique ) {
-            array_push( $uniqueArrayTitle, $this->getTitle( str_replace( "_id", "", $unique ) ) );
+            array_push( $uniqueArrayTitle, $this->getTitle( $unique ) );
         }
 
         $messageFields .= implode(", ",$uniqueArrayTitle) . " fornecidos.'" . PHP_EOL;

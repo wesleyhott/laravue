@@ -411,7 +411,7 @@ class LaravueFrontModelCommand extends LaravueCommand
         $i = 0;
         foreach ($fks as $key => $value) {
             $methodName = "load" . Str::studly( $this->pluralize( 2, str_replace("_id", "", $key ) ) );
-            $title = $this->getTitle( str_replace( "_id", "",  $key ) );
+            $title = $this->getTitle( $key );
             $route = $this->pluralize( 2, str_replace( "_", "",  str_replace( "_id", "",  $key ) ) );
             $selectField = lcfirst( Str::studly( $this->pluralize( 2, str_replace( "_id", "",  $key ) ) ) );
             $nextMethod = $this->getNext( $fks, $i++, $size );

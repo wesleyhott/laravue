@@ -61,7 +61,7 @@ class LaravueFrontModalCommand extends LaravueCommand
 
         $returnFields = "";
         foreach ($fields as $key => $value) {
-            $label = $this->isFk($key) ? $this->getTitle( str_replace( "_id", "", $key ) ) : $this->getTitle( $key );
+            $label = $this->getTitle( $key );
             $parse =  "<p>" . PHP_EOL;
             $parse .= $this->tabs(4) . "<b>$label</b>" . PHP_EOL;
             $parse .= $this->tabs(4) . "<br/>" . PHP_EOL;

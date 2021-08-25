@@ -61,7 +61,7 @@ class LaravueFrontIndexCommand extends LaravueCommand
         $returnFields = '';
         $first = true;
         foreach ($fields as $key => $value) {
-            $label = $this->isFk($key) ? $this->getTitle( str_replace( "_id", "", $key ) ) : $this->getTitle( $key );
+            $label = $this->getTitle( $key );
             $minWidth = $fieldSize + $rest;
             if( $first ) {
                 $first = false;
