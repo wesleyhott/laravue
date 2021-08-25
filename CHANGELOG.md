@@ -2,7 +2,7 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.28.146 - 25/ago/2021
+## 8.28.147 - 25/ago/2021
 ### Adicionado
 - Suporte a máscara nos campos.
 - Suporte a with (model) nos relacionamentos 1xN.

@@ -17,12 +17,15 @@ class MakeLaravueInstallCommandTest extends TestCase
         // .gitignore
         $dotGitIgnoreStorageApp = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "storage/app/.gitignore" );
         $dotGitIgnoreStorageAppReports = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "storage/app/reports/.gitignore" );
-        $dotGitIgnorePublicImgAvatar = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "public/img/avatar/.gitignore" );
         // Config
         $ConfigAuthClass = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "config/auth.php" );
         // Provider
         $ProviderAppClass = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Providers/AppServiceProvider.php" );
         $ProviderAuthClass = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Providers/AuthServiceProvider.php" );
+        // Rule
+        $ruleIsCpf = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Rules/IsCpf.php" );
+        $ruleIsCnpj = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Rules/IsCnpj.php" );
+        $ruleIsCpfOrCnpj = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Rules/IsCpfOrCnpj.php" );
         // Seeder
         $FuncionarioMpSeeder = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "database/seeders/FuncionarioMpSeeder.php" );
         // Filter
@@ -41,12 +44,15 @@ class MakeLaravueInstallCommandTest extends TestCase
         // .gitignore
         $this->makeTest($dotGitIgnoreStorageApp, $deleteAfterCreation);
         $this->makeTest($dotGitIgnoreStorageAppReports, $deleteAfterCreation);
-        $this->makeTest($dotGitIgnorePublicImgAvatar, $deleteAfterCreation);
         // Config
         $this->makeTest($ConfigAuthClass, $deleteAfterCreation);
         // Provider
         $this->makeTest($ProviderAppClass, $deleteAfterCreation);
         $this->makeTest($ProviderAuthClass, $deleteAfterCreation);
+        // Rule
+        $this->makeTest($ruleIsCpf, $deleteAfterCreation);
+        $this->makeTest($ruleIsCnpj, $deleteAfterCreation);
+        $this->makeTest($ruleIsCpfOrCnpj, $deleteAfterCreation);
         // Seeders
         $this->makeTest($FuncionarioMpSeeder, $deleteAfterCreation);
         // Filter

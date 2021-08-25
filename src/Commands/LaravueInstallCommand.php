@@ -120,6 +120,10 @@ class LaravueInstallCommand extends LaravueCommand
         // Provider
         $this->makeLaravueProviderApp();
         $this->makeLaravueProviderAuth();
+        // Rule
+        $this->makeIsCpfRule();
+        $this->makeIsCnpjRule();
+        $this->makeIsCpfOrCnpjRule();
         // Controller
         $this->makeLaravueController();
         $this->makeControllerTaskGroup();
@@ -930,6 +934,39 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeLaravueProviderAuth() {
         $this->setStub('install/provider-auth');
         $fileName = "Providers/AuthServiceProvider.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeIsCpfRule() {
+        $this->setStub('install/rule-iscpf');
+        $fileName = "Rules/IsCpf.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeIsCnpjRule() {
+        $this->setStub('install/rule-iscnpj');
+        $fileName = "Rules/IsCnpj.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeIsCpfOrCnpjRule() {
+        $this->setStub('install/rule-iscpforcnpj');
+        $fileName = "Rules/IsCpfOrCnpj.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
