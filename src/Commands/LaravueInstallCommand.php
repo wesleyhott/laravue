@@ -111,6 +111,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeModelTask();
         $this->makeModelVersion();
         $this->makeModelReport();
+        $this->makeModelFileGenerator();
         // Resource
         $this->makeViewPdfBlade();
         // Config
@@ -858,6 +859,17 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeModelReport() {
         $this->setStub('install/model-report');
         $fileName = "Models/Report.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeModelFileGenerator() {
+        $this->setStub('install/model-filegenerator');
+        $fileName = "Models/FileGenerator.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );

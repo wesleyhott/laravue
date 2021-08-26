@@ -1,0 +1,167 @@
+<?php
+
+namespace App\Models;
+
+use Log;
+use Carbon\Carbon;
+
+class FileGenerator extends LaravueModel
+{
+    private $filename;
+
+    /**
+     * File Generator constructor
+     * 
+     * @param $filename The desired name of a generated file
+     * @return void
+     */
+    public function __construct( $filename )
+    {
+        try {
+            $this->filename = Carbon::now()->format('d_m_Y_H_i_s') . '-' . $filename;
+            $this->file = fopen( storage_path('app') . '/' . $this->filename, "w");
+        } catch ( Exception $e ) {
+            $code = random_int(100, 10000);
+            Log::error( "Código: $code - " . $e->getMessage() );
+            return response()->json( ['error' => "Não foi possível gerar o arquivo. Informar o código do erro ($code) ao administrador do sistema."], 501 );
+        }   
+    }
+
+    /**
+     * Writes a line into .txt file with corret end of line operation system
+     * 
+     * @param $line string with line content
+     * @return void
+     */
+    public function writeLine( $line ) {
+        fwrite($this->file, $line . PHP_EOL);
+    }
+
+    /**
+     * Closes the opened file that was written.
+     * 
+     * @return void
+     */
+    public function close() {
+        fclose( $this->file );
+    }
+
+    /**
+     * Write alfa numeric fields with blank spaces on the right.
+     * 
+     * @param string $input input content to be formatted
+     * @param int $size the field size to be spaced filled.
+     * @return string formated
+     */
+    public function alfaNum($input, $size) {
+        return str_pad($input, $size);
+    }
+
+    /**
+     * Write number fields with zero on the left
+     * 
+     * @param string $input input content to be formatted
+     * @param int $size the field size to be spaced filled.
+     * @param boolean $money default is false, determines a decimal money formatted
+     * @return string formated
+     */
+    public function number($input, $size, $money = false) {
+        if( $money ) {
+            return $this->money($input, $size);
+        }
+        if ( $this->isDate( $input ) ) {
+            return $this->date( $input, $size );
+        }
+        return str_pad( str_replace( '-', '', $input ), $size, "0", STR_PAD_LEFT );
+    }
+
+    /**
+     * Ajust the decimal values for number format
+     * 
+     * @param string $input input content to be formatted
+     * @param int $size the field size to be spaced filled.
+     * @return 2200 if 22 or 22.0 or 22.00 input  
+     */
+    public function money($input, $size) {
+        $decimals = '00'; // integer value
+        if( $this->hasDot($input) ) {
+            $splittedNumber = explode(".", $input);
+            $decimals = strlen( $splittedNumber[1] ) == 1 ? '0' : '';
+        }
+        return str_pad( str_replace( '.', '', $input . $decimals ), $size, "0", STR_PAD_LEFT );
+    }
+
+    /**
+     * Format dates retrieving the dashes.
+     * 
+     * @param string $input input content to be formatted
+     * @param int $size the field size to be spaced filled.
+     * @param string $format default is dmY, determines the format of returned date
+     * @return string date formated
+     */
+    public function date( $input, $size, $format = 'dmY' ) {
+        return date( $format, strtotime( $input  ) );
+    }
+
+    /**
+     * Gets the file name
+     * 
+     * @return string file name
+     */
+    public function getFileName() {
+        return $this->filename;
+    }
+
+    /**
+     * Get entire path of the file.
+     * 
+     * @return string file path
+     */
+    public function getFile() {
+        return storage_path('app') . '/' . $this->filename;
+    }
+
+    /**
+     * Get the proper download headers
+     * 
+     * @return string download headers
+     */
+    public function getHeaders() {
+        return [
+            'Access-Control-Expose-Headers'=> 'Content-Type, X-Auth-Token, Origin, Content-Disposition',
+            'Content-Type' => 'text/plain',
+            'Content-Disposition' => 'inline; filename="' . $this->filename . '"',
+        ];
+    }
+
+    /**
+     * Downloads the desired file deleting it after download.
+     * 
+     * @return file .txt file
+     */
+    public function download() {
+        return response()->download( $this->getFile(), $this->getFileName(), $this->getHeaders() )
+                         ->deleteFileAfterSend( true );
+    }
+
+    /**
+     * Verifies if input value has dot (decimals values)
+     *
+     * @param  string  $value
+     * @return boolean true if has dot, else false
+     */
+    protected function hasDot( $value ) {
+        return strpos( $value, ".") !== false;
+    }
+
+    /**
+     * Verifies if $input value is a date value
+     *
+     * @param  string  $value
+     * @return boolean true if has dash, else false
+     */
+    protected function isDate( $value ) {
+        return strpos( $value, "-") !== false;
+    }
+
+}

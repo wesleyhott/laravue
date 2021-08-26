@@ -19,6 +19,8 @@ class MakeLaravueInstallCommandTest extends TestCase
         $dotGitIgnoreStorageAppReports = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "storage/app/reports/.gitignore" );
         // Config
         $ConfigAuthClass = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "config/auth.php" );
+        // Model
+        $modelFileGenerator = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Models/FileGenerator.php" );
         // Provider
         $ProviderAppClass = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Providers/AppServiceProvider.php" );
         $ProviderAuthClass = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Providers/AuthServiceProvider.php" );
@@ -46,6 +48,8 @@ class MakeLaravueInstallCommandTest extends TestCase
         $this->makeTest($dotGitIgnoreStorageAppReports, $deleteAfterCreation);
         // Config
         $this->makeTest($ConfigAuthClass, $deleteAfterCreation);
+        // Model
+        $this->makeTest($modelFileGenerator, $deleteAfterCreation);
         // Provider
         $this->makeTest($ProviderAppClass, $deleteAfterCreation);
         $this->makeTest($ProviderAuthClass, $deleteAfterCreation);
