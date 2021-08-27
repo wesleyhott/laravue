@@ -59,18 +59,29 @@ class LaravueFrontModalCommand extends LaravueCommand
 
         $fields = $this->getFieldsArray( $this->option('fields') );
 
-        $returnFields = "";
+        $parse = "";
+        $lastKey = array_key_last($fields);
+        $firstKey = array_key_first($fields);
         foreach ($fields as $key => $value) {
-            $label = $this->getTitle( $key );
-            $parse =  "<p>" . PHP_EOL;
+            $label = $this->isFk($key) ? $this->getTitle( str_replace( "_id", "", $key ) ) : $this->getTitle( $key );
+
+            if( strcmp($firstKey, $key) != 0 ) {
+                $parse .= $this->tabs(1);
+            }
+            $parse .= "<div class=\"row\">" . PHP_EOL;
+            $parse .= $this->tabs(2) .  "<div class=\"col-sm-12\">" . PHP_EOL;
+            $parse .= $this->tabs(3) . "<p>" . PHP_EOL;
             $parse .= $this->tabs(4) . "<b>$label</b>" . PHP_EOL;
             $parse .= $this->tabs(4) . "<br/>" . PHP_EOL;
             $parse .= $this->tabs(4) . "{{ model.$key }}" . PHP_EOL;
-            $parse .= $this->tabs(3) . "</p>";
-            $returnFields .= str_replace( '{{ fields }}', $parse , $default );
-
+            $parse .= $this->tabs(3) . "</p>" . PHP_EOL;
+            $parse .= $this->tabs(2) .  "</div>" . PHP_EOL;
+            $parse .= $this->tabs(1) .  "</div>";
+            if( strcmp($lastKey, $key) != 0 ) {
+                $parse .= PHP_EOL;
+            }
         }
 
-        return str_replace( '{{ fields }}', $returnFields , $stub );
+        return str_replace( '{{ fields }}', $parse , $stub );
     }
 }
