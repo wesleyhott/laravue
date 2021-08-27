@@ -76,8 +76,8 @@ php artisan laravue:build Post -f user_id:i,text:s,age:i.n,created_at:dt,approve
 |    c.4    | $table->char('name', 4);                      | CHAR equivalent with a length                                                      |
 |     d     | $table->date('created_at');                   | DATE equivalent to the table                                                       |
 |    dt     | $table->dateTime('created_at');               | DATETIME equivalent to the table                                                   |
-|  de.5;2   | $table->decimal('amount', 5, 2);              | DECIMAL equivalent with a precision and scale                                      |
-|  db.15;8  | $table->double('column', 15, 8);              | DOUBLE equivalent with precision, 15 digits in total and 8 after the decimal point |
+|  de.5-2   | $table->decimal('amount', 5, 2);              | DECIMAL equivalent with a precision and scale                                      |
+|  db.15-8  | $table->double('column', 15, 8);              | DOUBLE equivalent with precision, 15 digits in total and 8 after the decimal point |
 | e.foo;bar | $table->enum('choices', array('foo', 'bar')); | ENUM equivalent to the table                                                       |
 |     f     | $table->float('amount');                      | FLOAT equivalent to the table                                                      |
 |    pk     | $table->increments('id');                     | Incrementing ID to the table (primary key).                                        |

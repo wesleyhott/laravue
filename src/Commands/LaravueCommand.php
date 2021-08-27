@@ -730,6 +730,23 @@ class LaravueCommand extends Command
     }
 
     /**
+     * Retorna falso se não contém número ou retorna os números de precisão
+     *
+     * @param  string  $field
+     * @return boolean false or
+     * @return integer number
+     */
+    protected function getPrecisionNumbers($field) {
+        $options = $this->getOptionsArray($field);
+        $numbers = false;
+        if( isset( $options[1] ) ) {
+            $numbers = explode( '-', $options[1] );
+        }
+
+        return $numbers;
+    }
+
+    /**
      * Retorna verdade se o field contém a letra b (boolean); falso caso contrário.
      *
      * @param  string  $field

@@ -82,12 +82,21 @@ class LaravueMigrationCommand extends LaravueCommand
             $isNullable = $this->hasNullable($value);
             $nullable = $isNullable ? '->nullable()' : '';
             $onDelete = $isNullable ? 'set null' : 'cascade';
-            // String Size
+            // String, char Size
             $size = '';
-            if( $type == 'string' ) {
+            if( $type == 'string' || $type == 'char' ) {
                 $isNumbers = $this->hasNumber($value);
                 if( $isNumbers !== false ) {
                     $size = ", " . $isNumbers[0];
+                }
+            }
+            // Decimal, double precision
+            if( $type == 'decimal' || $type == 'double' ) {
+                $numbers = $this->getPrecisionNumbers($value);
+                if( $numbers !== false ) {
+                    $size = ", " . $numbers[0] . ", " . $numbers[1];
+                } else {
+                    $size = ', 10, 2';
                 }
             }
             // Unique 
