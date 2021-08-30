@@ -65,7 +65,7 @@ class LaravueFrontModelCommand extends LaravueCommand
 
         $returnFields = "";
         $first = true;
-        foreach ($fields as $key => $value) {
+        foreach ($fields as $key => $value) { 
             $type = $this->getType($value);
             $rules = '';
             // Nullable
@@ -94,20 +94,17 @@ class LaravueFrontModelCommand extends LaravueCommand
                 continue;
             }
 
-            switch($value) {
-                case 'b':
+            switch($type) {
+                case 'boolean':
                     $returnFields .= $this->getCheckBox( $key, $rules );
                 break;
-                case 'd':
-                case 'dt':
+                case 'date':
+                case 'dateTime':
                     $returnFields .= $this->getDate( $key, $rules );
                 break;
-                case 'i':
+                case 'integer':
                     $rules .= $rules == '' ? "integer" : "|integer";
-                case 's': 
-                    $returnFields .= $this->getInput( $key, $rules );
-                break;
-                case 't': 
+                case 'time': 
                     $returnFields .= $this->getTime( $key, $rules );
                 break;
                 default:
@@ -292,9 +289,12 @@ class LaravueFrontModelCommand extends LaravueCommand
         $size = count($fields);
         foreach ($fields as $key => $value) {
             $index++;
-            switch($value) {
-                case 'b':
-                    $return .= "$key: this.relatorio ? '' : false,";
+            $type = $this->getType($value);
+            switch($type) {
+                case 'boolean':
+                    $default = $this->hasDefault( $value );
+                    $checked = ($default == 1) || ($default == '1') || ($default == true) ? 'true' : 'false';
+                    $return .= "$key: this.relatorio ? '' : $checked,";
                     $return .= $this->ending($index, $size);
                 break;
                 default:
@@ -315,8 +315,9 @@ class LaravueFrontModelCommand extends LaravueCommand
         $size = count($fields);
         foreach ($fields as $key => $value) {
             $index++;
-            switch($value) {
-                case 'b':
+            $type = $this->getType($value);
+            switch($type) {
+                case 'boolean':
                     $return .= "$key: this.relatorio ? '' : false,";
                     $return .= $this->ending($index, $size);
                 break;
@@ -339,8 +340,9 @@ class LaravueFrontModelCommand extends LaravueCommand
 
         $return = PHP_EOL;
         foreach ($fields as $key => $value) {
-            switch($value) {
-                case 'b':
+            $type = $this->getType($value);
+            switch($type) {
+                case 'boolean':
                     $return .= $this->tabs(2) . "$key: {" . PHP_EOL;
                     $return .= $this->tabs(3) . "get: function() {" . PHP_EOL;
                     $return .= $this->tabs(4) . "return this.model.$key >= 1 ? true : false;" . PHP_EOL;
