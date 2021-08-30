@@ -15,7 +15,7 @@ abstract class LaravueController extends Controller
      * Models Variables
      */
     private $model;
-    private $default_per_page = 15; // Standard lines number for LaravueDataTable.
+    protected $default_per_page = 15; // Standard lines number for LaravueDataTable.
 
     /**
      * General Messages
