@@ -100,7 +100,7 @@ class AccessTokenController extends ATC
                 $data = json_decode($content, true);
 
                 if(isset($data["error"])) {
-                    $this->throwErrorMonitoramento('As credenciais de acesso estão incorretas.', __LINE__, __FUNCTION__);
+                    $this->throwErrorMonitor('As credenciais de acesso estão incorretas.', __LINE__, __FUNCTION__);
                     throw new OAuthServerException($this->msgTraceError, 6, 'invalid_credentials', Response::HTTP_UNAUTHORIZED);
                 }
 
@@ -113,26 +113,26 @@ class AccessTokenController extends ATC
                     return response()->json($user);
                 }
                 else {
-                    $this->throwErrorMonitoramento('Credenciais inválidas.', __LINE__, __FUNCTION__);
+                    $this->throwErrorMonitor('Credenciais inválidas.', __LINE__, __FUNCTION__);
                     return response(["message" => $this->msgTraceError], Response::HTTP_UNAUTHORIZED);
                 }
 
             }
             else {
-                $this->throwErrorMonitoramento('Não conseguiu encontrar o usuário.', __LINE__, __FUNCTION__);  
+                $this->throwErrorMonitor('Não conseguiu encontrar o usuário.', __LINE__, __FUNCTION__);  
                 return response(["message" => $this->msgTraceError], Response::HTTP_UNAUTHORIZED);
             }
         }
         catch (ModelNotFoundException $e) {
-            $this->throwErrorMonitoramento($e->getMessage(), __LINE__, __FUNCTION__);
+            $this->throwErrorMonitor($e->getMessage(), __LINE__, __FUNCTION__);
             throw new ModelNotFoundException($this->msgTraceError);
         }
         catch (OAuthServerException $e) {
-            $this->throwErrorMonitoramento('As credenciais de acesso estão incorretas. ' . $e->getMessage(), __LINE__, __FUNCTION__);
+            $this->throwErrorMonitor('As credenciais de acesso estão incorretas. ' . $e->getMessage(), __LINE__, __FUNCTION__);
             throw new OAuthServerException($this->msgTraceError, 6, 'invalid_credentials', Response::HTTP_UNAUTHORIZED);
         }
         catch (Exception $e) {
-            $this->throwErrorMonitoramento($e->getMessage(), __LINE__, __FUNCTION__);
+            $this->throwErrorMonitor($e->getMessage(), __LINE__, __FUNCTION__);
             throw new Exception($this->msgTraceError);
         }
     }
@@ -172,7 +172,7 @@ class AccessTokenController extends ATC
             }
         }
         catch (Exception $e) {
-            $this->throwErrorMonitoramento($e->getMessage(), __LINE__, __FUNCTION__);
+            $this->throwErrorMonitor($e->getMessage(), __LINE__, __FUNCTION__);
             throw new Exception($this->msgTraceError);
         }
     }
@@ -216,7 +216,7 @@ class AccessTokenController extends ATC
             return $this->checkTicket($urlService, $casTicket);
         }
         catch (Exception $e) {
-            $this->throwErrorMonitoramento($e->getMessage(), __LINE__, __FUNCTION__);
+            $this->throwErrorMonitor($e->getMessage(), __LINE__, __FUNCTION__);
             throw new Exception($this->msgTraceError);
         }
     }
@@ -253,7 +253,7 @@ class AccessTokenController extends ATC
             }
         }
         catch (Exception $e) {
-            $this->throwErrorMonitoramento($e->getMessage(), __LINE__, __FUNCTION__);
+            $this->throwErrorMonitor($e->getMessage(), __LINE__, __FUNCTION__);
             throw new Exception($this->msgTraceError);
         }
     }
@@ -271,14 +271,14 @@ class AccessTokenController extends ATC
     }
 
     /**
-     * Grava o erro ao tentar gerar o token em Monitoramento e no arquivo de log
+     * Grava o erro ao tentar gerar o token em Monitor e no arquivo de log
      *
      * @param string $msgTraceError
      * @param int $line
      * @param string $function
      * @return void
      */
-    public function throwErrorMonitoramento($msgTraceError, $line = null, $function = null) { 
+    public function throwErrorMonitor($msgTraceError, $line = null, $function = null) { 
         $this->setMsgTraceError($msgTraceError, $line);
         Log::error($this->msgTraceError);
          Monitor::setLogNoUserAuth($this->msgTraceError, $line, $function, __FILE__, __CLASS__);
@@ -301,16 +301,16 @@ class AccessTokenController extends ATC
                         $img->save(public_path("img/users/avatar/$mamp.jpeg"));
                         return "img/users/avatar/$mamp.jpeg";
                     } catch (NotReadableException $e) {
-                        Monitoramento::setLogNoUserAuth("Conteúdo inválido do binário da foto de perfil.", __LINE__, __FUNCTION__, __FILE__, __CLASS__);
+                        Monitor::setLogNoUserAuth("Conteúdo inválido do binário da foto de perfil.", __LINE__, __FUNCTION__, __FILE__, __CLASS__);
                     }
                 } else {
-                    Monitoramento::setLogNoUserAuth($im, __LINE__, __FUNCTION__, __FILE__, __CLASS__);
+                    Monitor::setLogNoUserAuth($im, __LINE__, __FUNCTION__, __FILE__, __CLASS__);
                 }
             } else {
-                Monitoramento::setLogNoUserAuth("Sem acesso a foto->foto", __LINE__, __FUNCTION__, __FILE__, __CLASS__);
+                Monitor::setLogNoUserAuth("Sem acesso a foto->foto", __LINE__, __FUNCTION__, __FILE__, __CLASS__);
             }
         }catch(Exception $e){
-            Monitoramento::setLogNoUserAuth("Sem acesso a VW_FUNCIONARIO_MPS.", __LINE__, __FUNCTION__, __FILE__, __CLASS__);
+            Monitor::setLogNoUserAuth("Sem acesso a VW_FUNCIONARIO_MPS.", __LINE__, __FUNCTION__, __FILE__, __CLASS__);
         }
         return 'img/users/avatar/profile.jpg';
     }
