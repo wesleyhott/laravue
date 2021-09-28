@@ -223,7 +223,7 @@ class LaravueCommand extends Command
         $currentDirectory =  getcwd();
         $paths = explode( "/", str_replace( '\\', '/', $currentDirectory ) );
 
-        $buildPath = $this->fileBuildPath('laravueworkspace', 'docker'.$folders );
+        $buildPath = $this->fileBuildPath('workspace', 'docker'.$folders );
         
         $projectFolder = array_pop( $paths ); 
         if( $projectFolder == "laravue") { // Is not Laravue Tests

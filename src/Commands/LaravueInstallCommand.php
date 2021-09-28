@@ -286,7 +286,7 @@ class LaravueInstallCommand extends LaravueCommand
 
         $this->files->put( $path, $stub );
 
-        $this->info("$date - [ Installing ] >> laravueworkspace/docker/docker-compose.yml");
+        $this->info("$date - [ Installing ] >> workspace/docker/docker-compose.yml");
     }
 
     protected function makeDockerNginxConf() {
@@ -321,7 +321,7 @@ class LaravueInstallCommand extends LaravueCommand
 
         $this->files->put( $path, $stub );
 
-        $this->info("$date - [ Installing ] >> laravueworkspace/docker/nginx/conf.d/nginx.conf");
+        $this->info("$date - [ Installing ] >> workspace/docker/nginx/conf.d/nginx.conf");
     }
 
     protected function makeDockerMssqlCreateDB() {
@@ -341,7 +341,7 @@ class LaravueInstallCommand extends LaravueCommand
 
         $this->files->put( $path, $stub );
 
-        $this->info("$date - [ Installing ] >> laravueworkspace/docker/mssql/usr/src/mssql-create-database.sql");
+        $this->info("$date - [ Installing ] >> workspace/docker/mssql/usr/src/mssql-create-database.sql");
     }
 
     protected function makeDotEnvExample() {

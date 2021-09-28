@@ -2,6 +2,10 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
+## 8.31.151 - 28/set/2021
+### Alterado
+- Alteração do nome do ambiente para workspace.
+
 ## 8.31.150 - 31/ago/2021
 ### Adicionado
 - Suporte a máscara nos campos.
