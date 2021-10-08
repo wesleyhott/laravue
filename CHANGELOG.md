@@ -2,6 +2,9 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
+## 8.31.152 - 08/out/2021
+### Alterado
+- PT-BR configuration
 ## 8.31.151 - 28/set/2021
 ### Alterado
 - Alteração do nome do ambiente para workspace.
