@@ -97,7 +97,7 @@ class LaravueModelCommand extends LaravueCommand
      */
     protected function replaceRelation($modelFile, $model, $fields)
     { 
-        $newRelations = $modelFile;
+        $parsedWith = $modelFile;
 
         foreach ($fields as $key => $value) {
             if( $this->isFk( $key ) ) {
