@@ -2,12 +2,15 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.31.155 - 08/out/2021
+## 8.31.156 - 08/out/2021
 ### Alterado
 - PT-BR configuration.
 - Os controllers são gerados sem os hooks comentados.
 - Alteração das mensagens de alerta nos campos únicos.
 - Correções menores.
+### Adicionado
+- Acenutação para a palavra Repositório(s)
+
 ## 8.31.151 - 28/set/2021
 ### Alterado
 - Alteração do nome do ambiente para workspace.

@@ -964,6 +964,8 @@ class LaravueCommand extends Command
             case 'Obrigatorias': return 'Obrigatórias';
             case 'Ocorrencia': return 'Ocorrência';
             case 'Ocorrencias': return 'Ocorrências';
+            case 'Repositorio': return 'Repositório';
+            case 'Repositorios': return 'Repositórios';
             case 'Responsavel': return 'Responsável';
             case 'Responsaveis': return 'Responsáveis';
             case 'Tacita': return 'Tácita';
