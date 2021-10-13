@@ -2,6 +2,9 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
+## 8.31.157 - 13/out/2021
+### Alterado
+- Correções menores.
 ## 8.31.156 - 08/out/2021
 ### Alterado
 - PT-BR configuration.

@@ -295,11 +295,11 @@ class LaravueFrontModelCommand extends LaravueCommand
                     $default = $this->hasDefault( $value );
                     $checked = ($default == 1) || ($default == '1') || ($default == true) ? 'true' : 'false';
                     $return .= "$key: this.relatorio ? '' : $checked,";
-                    $return .= $this->ending($index, $size);
+                    $return .= $this->ending($index, $size, 4);
                 break;
                 default:
                     $return .= "$key: '',";
-                    $return .= $this->ending($index, $size);
+                    $return .= $this->ending($index, $size, 4);
             }
         }
 
@@ -319,19 +319,19 @@ class LaravueFrontModelCommand extends LaravueCommand
             switch($type) {
                 case 'boolean':
                     $return .= "$key: this.relatorio ? '' : false,";
-                    $return .= $this->ending($index, $size);
+                    $return .= $this->ending($index, $size, 8);
                 break;
                 default:
                     $return .= "$key: '',";
-                    $return .= $this->ending($index, $size);
+                    $return .= $this->ending($index, $size, 8);
             }
         }
 
         return str_replace( '{{ fields:model2 }}', $return , $stub );
     }
 
-    protected function ending($index, $size){
-        return $index == $size ? "" : PHP_EOL . $this->tabs(4);
+    protected function ending($index, $size, $tabs){
+        return $index == $size ? "" : PHP_EOL . $this->tabs($tabs);
     }
 
     protected function replaceFieldComputed($stub, $model)
@@ -446,13 +446,13 @@ class LaravueFrontModelCommand extends LaravueCommand
             switch($value) {
                 case 'i':
                 case 'bi':
-                    $return .= $this->tabs(3) . "$key: parseInt( this.model.$key ),";
+                    $return .= $this->tabs(6) . "$key: parseInt( this.model.$key ),";
                 break;
                 case 'vm':
-                    $return .= $this->tabs(3) . "$key: this.\$formatNumberToDatabase( this.model.$key ),";
+                    $return .= $this->tabs(6) . "$key: this.\$formatNumberToDatabase( this.model.$key ),";
                 break;
                 default:
-                    $return .= $this->tabs(3) . "$key: this.model.$key,";
+                    $return .= $this->tabs(6) . "$key: this.model.$key,";
             }
         }
 

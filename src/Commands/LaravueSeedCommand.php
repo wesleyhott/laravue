@@ -75,7 +75,7 @@ class LaravueSeedCommand extends LaravueCommand
                 $returnFields .= PHP_EOL;
                 $returnFields .= $this->tabs(2);
             }
-            $returnFields .= "// ". $this->tabs(2) . "\"$key\" => '',";
+            $returnFields .= "// ". $this->tabs(1) . "\"$key\" => '',";
         }
 
         return str_replace( '{{ fields }}', $returnFields , $stub );

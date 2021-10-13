@@ -16,7 +16,7 @@ class {{ class }}Seeder extends Seeder
     {
         // DB::table("{{ table }}")->insert([
         {{ fields }}
-        //      "usuario_ult_alteracao" => 'seeder_factory_user@mpmg.mp.br'
+        //     "usuario_ult_alteracao" => 'seeder_factory_user@mpmg.mp.br'
         // ]);
     }
 }

@@ -78,7 +78,7 @@ class LaravueFrontRouteCommand extends LaravueCommand
         $newImport .= "import $formatedModel" . "Index from 'src/components/$this->projectName/Views/Pages/$formatedModel/Index.vue'" . PHP_EOL;
         $newImport .= "import $formatedModel" . "Report from 'src/components/$this->projectName/Views/Pages/$formatedModel/Report.vue'" . PHP_EOL;
         $newImport .= PHP_EOL;
-        $newImport .= '// {{ laravue-insert:import }}' . PHP_EOL;
+        $newImport .= '// {{ laravue-insert:import }}';
 
         return str_replace( '// {{ laravue-insert:import }}', $newImport, $routeFile );
     }
