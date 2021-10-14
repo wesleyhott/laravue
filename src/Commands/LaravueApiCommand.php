@@ -12,7 +12,7 @@ class LaravueApiCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'laravue:api {model*} {--f|fields=}';
+    protected $signature = 'laravue:api {model*} {--f|fields=} {--i|view : build a model based on view, not table}';
 
     /**
      * The console command description.
@@ -48,6 +48,7 @@ class LaravueApiCommand extends Command
         $this->call('laravue:migration', [
             'model' => $this->argument('model'),
             '--fields' =>  $this->option('fields'),
+            '--view' =>  $this->option('view'),
         ]);
     }
 
@@ -61,6 +62,7 @@ class LaravueApiCommand extends Command
         $this->call('laravue:seed', [
             'model' => $this->argument('model'),
             '--fields' =>  $this->option('fields'),
+            '--view' =>  $this->option('view'),
         ]);
     }
 
@@ -99,6 +101,7 @@ class LaravueApiCommand extends Command
         $this->call('laravue:model', [
             'model' => $this->argument('model')[0],
             '--fields' =>  $this->option('fields'),
+            '--view' =>  $this->option('view'),
         ]);
     }
 
@@ -136,6 +139,7 @@ class LaravueApiCommand extends Command
     {
         $this->call('laravue:permission', [
             'model' => $this->argument('model')[0],
+            '--view' =>  $this->option('view'),
         ]);
     }
 }

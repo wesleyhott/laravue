@@ -11,7 +11,7 @@ class LaravueModelCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:model {model*} {--f|fields=} {--x|mxn}';
+    protected $signature = 'laravue:model {model*} {--f|fields=} {--x|mxn} {--i|view : build a model based on view, not table}';
 
     /**
      * The console command description.
@@ -40,7 +40,12 @@ class LaravueModelCommand extends LaravueCommand
             return;
         }
 
-        $this->setStub('/model');
+        if ( $this->option('view') ) {
+            $this->setStub('/model-view'); 
+        } else {
+            $this->setStub('/model'); 
+        }
+        
         $argumentModel = $this->argument('model');
         $model = is_array( $argumentModel ) ? trim( $argumentModel[0] ) : trim( $argumentModel ); 
         $date = now();

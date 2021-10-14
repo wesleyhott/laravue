@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 
 abstract class LaravueModel extends Model
 {
+    protected $isView = false;
+    
     /**
      * Model queries filter
      */
@@ -25,7 +27,9 @@ abstract class LaravueModel extends Model
 
         self::creating(function($model){
             try {
-                $model->usuario_ult_alteracao = Auth::user()->email;
+                if( !$isView ) {
+                    $model->usuario_ult_alteracao = Auth::user()->email;
+                }
             } catch (Exception $e) {
                 abort(401, 'Usuário não autenticado.');
             }
@@ -33,7 +37,9 @@ abstract class LaravueModel extends Model
 
         self::updating(function($model){
             try {
-                $model->usuario_ult_alteracao = Auth::user()->email;
+                if( !$isView ) {
+                    $model->usuario_ult_alteracao = Auth::user()->email;
+                }
             } catch (Exception $e) {
                 abort(401, 'Usuário não autenticado.');
             }

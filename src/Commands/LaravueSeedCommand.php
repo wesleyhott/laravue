@@ -11,7 +11,7 @@ class LaravueSeedCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:seed {model*} {--f|fields=} {--x|mxn}';
+    protected $signature = 'laravue:seed {model*} {--f|fields=} {--x|mxn} {--i|view : build a model based on view, not table}';
 
     /**
      * The console command description.
@@ -36,6 +36,8 @@ class LaravueSeedCommand extends LaravueCommand
     { 
         if( $this->option('mxn') ) {
             $this->setStub('/seed-mxn');
+        } else if( $this->option('view') ) {
+            $this->setStub('/seed-view'); 
         } else {
             $this->setStub('/seed'); 
         }

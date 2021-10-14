@@ -1,1 +1,1 @@
-{"version":1,"defects":[],"times":{"Mpmg\\Laravue\\Tests\\Feature\\MakeLaravueInstallCommandTest::it_executes_laravue_install_command_file":0.343}}
+{"version":1,"defects":{"Mpmg\\Laravue\\Tests\\Unit\\MakeBuildCommandTest::it_creates_a_build_command_test_file":4},"times":{"Mpmg\\Laravue\\Tests\\Feature\\MakeLaravueInstallCommandTest::it_executes_laravue_install_command_file":0.343,"Mpmg\\Laravue\\Tests\\Unit\\MakeBuildCommandTest::it_creates_a_build_command_test_file":0.27}}

@@ -19,7 +19,8 @@ class LaravueBuildCommand extends LaravueCommand
         {--fw : Indicates to entry new data on database}
         {--o|outdocker : Indicates running outside docker}
         {--k|keys= : custom foreing keys that belongs to relationship}
-        {--p|pivots= : Feilds that belongs to relationship}';
+        {--p|pivots= : Feilds that belongs to relationship}
+        {--i|view : build a model based on view, not table}';
 
     /**
      * The console command description.
@@ -66,6 +67,7 @@ class LaravueBuildCommand extends LaravueCommand
             $this->call('laravue:api', [
                 'model' => $models,
                 '--fields' =>  $this->option('fields'),
+                '--view' =>  $this->option('view'),
             ]);
         } else {
             $this->call('laravue:mxn', [
@@ -73,7 +75,6 @@ class LaravueBuildCommand extends LaravueCommand
                 '--keys' =>  $this->option('keys'),
                 '--pivots' =>  $this->option('pivots'),
             ]);
-
         }
     }
 

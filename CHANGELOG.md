@@ -2,17 +2,19 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.31.157 - 13/out/2021
+## 8.32.157 - 14/out/2021
+### Adicionado
+- Inclusão da opção --view ou -i para criação de modelos a partir de views do banco de dados.
 ### Alterado
 - Correções menores.
 ## 8.31.156 - 08/out/2021
+### Adicionado
+- Acenutação para a palavra Repositório(s)
 ### Alterado
 - PT-BR configuration.
 - Os controllers são gerados sem os hooks comentados.
 - Alteração das mensagens de alerta nos campos únicos.
 - Correções menores.
-### Adicionado
-- Acenutação para a palavra Repositório(s)
 
 ## 8.31.151 - 28/set/2021
 ### Alterado

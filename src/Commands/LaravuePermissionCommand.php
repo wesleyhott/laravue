@@ -9,7 +9,7 @@ class LaravuePermissionCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:permission {model*} {--x|mxn}';
+    protected $signature = 'laravue:permission {model*} {--x|mxn} {--i|view : build a model based on view, not table}';
 
     /**
      * The console command description.
@@ -64,8 +64,10 @@ class LaravuePermissionCommand extends LaravueCommand
 
         $newPermission = "";
         $newPermission .= "$"."ver_$route = Permission::create(['name' => 'ver $route']);" . PHP_EOL;
-        $newPermission .= "\t\t$"."editar_$route = Permission::create(['name' => 'editar $route']);" . PHP_EOL;
-        $newPermission .= "\t\t$"."apagar_$route = Permission::create(['name' => 'apagar $route']);" . PHP_EOL;
+        if( !$this->option('view') ) {
+            $newPermission .= "\t\t$"."editar_$route = Permission::create(['name' => 'editar $route']);" . PHP_EOL;
+            $newPermission .= "\t\t$"."apagar_$route = Permission::create(['name' => 'apagar $route']);" . PHP_EOL;
+        }
         $newPermission .= "\t\t$"."imprimir_$route = Permission::create(['name' => 'imprimir $route']);" . PHP_EOL;
         $newPermission .= PHP_EOL;
         $newPermission .= "\t\t// {{ laravue-insert:permissions }}";

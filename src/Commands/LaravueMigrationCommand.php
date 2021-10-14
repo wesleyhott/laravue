@@ -11,7 +11,7 @@ class LaravueMigrationCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:migration {model*} {--f|fields=} {--x|mxn}';
+    protected $signature = 'laravue:migration {model*} {--f|fields=} {--x|mxn} {--i|view : build a model based on view, not table}';
 
     /**
      * The console command description.
@@ -33,18 +33,36 @@ class LaravueMigrationCommand extends LaravueCommand
      * @return mixed
      */
     public function handle()
-    {
+    { 
         if( $this->option('mxn') ) {
             $this->setStub('/migration-mxn');
+        } else if ( $this->option('view') ) {
+            $this->setStub('/migration-view'); 
         } else {
             $this->setStub('/migration'); 
         }
         
-        $model = $this->argument('model');
+        $model = $this->setViewName( $this->argument('model') );
         $path = $this->getPath( $model );
         $this->files->put( $path, $this->buildMigration( $model ) );
 
         $name = $this->buildName( $model );
+    }
+
+    public function setViewName( $model ) {
+        if( is_array($model) && count( $model ) > 1 && $this->option('view') ) {
+            dd('Erro: relacionamento MxN com view não é suportado.');
+        }
+
+        if( is_array($model) && count( $model ) == 1 && $this->option('view') ) {
+            $model[0] = 'Vw' . $model[0];
+        }
+
+        if( !is_array($model) && $this->option('view') ) {
+            $model = 'Vw' . $model;
+        }
+
+        return $model;
     }
 
     public function buildName( $model ) {

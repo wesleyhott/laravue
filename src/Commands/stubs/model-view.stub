@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Models;
+
+class {{ class }} extends LaravueModel
+{
+    protected $table = 'vw_{{ table }}';
+    protected $isView = true;
+    public $timestamps = false;
+    // {{ laravue-insert:with }}
+
+    /**
+     * Casting
+     * 
+     * Informa o tipo de dados que é serializado nos objetos JSON.
+     */
+	protected $casts = [
+		{{ fields }}
+	];
+
+    // {{ laravue-insert:relationship }}
+}
