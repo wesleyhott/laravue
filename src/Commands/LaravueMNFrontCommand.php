@@ -114,7 +114,7 @@ class LaravueMNFrontCommand extends LaravueCommand
 
     protected function getField( $model, $path ) {
         $title = $this->getTitle($model, true ); // true: plural.
-        $plural = $this->pluralize( 2, $model );
+        $plural = $this->pluralize( $model );
         $lowcasePlural = lcfirst( $plural );
         $lowcase = lcfirst( $model );
 
@@ -149,7 +149,7 @@ class LaravueMNFrontCommand extends LaravueCommand
     }
 
     protected function getDataSelect( $model, $path ) {
-        $item = $this->pluralize(2, lcfirst( $model ) );
+        $item = $this->pluralize( lcfirst( $model ) );
 
         $dataSelect = "${item}: []," . PHP_EOL;
         $dataSelect .= $this->tabs(4) . "// {{ laravue-insert:dataSelects }}";
@@ -176,7 +176,7 @@ class LaravueMNFrontCommand extends LaravueCommand
     }
 
     protected function getLoadModelMethod( $model, $path ) {
-        $item = $this->pluralize( 2, $model );
+        $item = $this->pluralize( $model );
 
         $method = "this.load${item}()" . PHP_EOL;
         $method .= $this->tabs(3) . "// {{ laravue-insert:loadModelMethod }}";
@@ -186,7 +186,7 @@ class LaravueMNFrontCommand extends LaravueCommand
 
     protected function getLoadModelResponse( $model, $path ) {
         $item = lcfirst( $model );
-        $items = $this->pluralize( 2, $item );
+        $items = $this->pluralize( $item );
 
         $response = "this.model.${item}_ids = []" . PHP_EOL;
         $response .= $this->tabs(6) . "this.model.${items}.forEach(element => {" . PHP_EOL;
@@ -198,7 +198,7 @@ class LaravueMNFrontCommand extends LaravueCommand
     }
 
     protected function getMethods( $model, $path ) {
-        $item = $this->pluralize( 2, $model );
+        $item = $this->pluralize( $model );
         $itemLcFrist = lcfirst( $item );
         $itemLc = strtolower( $item );
 
@@ -256,9 +256,9 @@ class LaravueMNFrontCommand extends LaravueCommand
     }
 
     public function getModalField( $model, $path ) {
-        $label = $this->getLabel( $this->fields );
+        $label = $this->getSelectLabel( $this->fields );
         $title = $this->getTitle( $model, true);
-        $plural = $this->pluralize( 2, $model );
+        $plural = $this->pluralize( $model );
         $lowerSingular = lcfirst( $model );
         $lowerPlural = lcfirst( $plural );
 

@@ -86,7 +86,7 @@ class LaravueFrontRouteCommand extends LaravueCommand
     protected function replaceRouteRoutes($routeFile, $model)
     {   
         $formatedModel = ucfirst( $model );
-        $ModelName = ucfirst( $this->pluralize( 2, $model ) );
+        $ModelName = ucfirst( $this->pluralize( $model ) );
         $route = strtolower( $ModelName );
 
         $newRoute = "";

@@ -72,11 +72,11 @@ class LaravueMigrationCommand extends LaravueCommand
             $model1 = Str::snake( $model[0] );
             $model2 = Str::snake( $model[1] );
             $this->info("$date - [ ${model1}_${model2} ] >> ${prefix}_create_${model1}_${model2}_table.php");
-            return Str::snake( $this->pluralize( 2, trim($this->argument('model')[0] ) ) );
+            return Str::snake( $this->pluralize( trim($this->argument('model')[0] ) ) );
         }
 
         $parsedModel = is_array( $model ) ? trim( $model[0] ) : trim( $model ); 
-        $name = Str::snake( $this->pluralize( 2, $parsedModel ) );
+        $name = Str::snake( $this->pluralize( $parsedModel ) );
         $this->info("$date - [ $parsedModel ] >> $prefix"."_create_$name"."_table.php");
 
         return $name;
@@ -159,7 +159,7 @@ class LaravueMigrationCommand extends LaravueCommand
             }
 
             if( $this->isFk( $key ) ) {
-                $referenced_table = $this->pluralize( 2, str_replace( "_id", "", $key ) );
+                $referenced_table = $this->pluralize( str_replace( "_id", "", $key ) );
 
                 $returnFields .= "\$table->$type('$key')" . PHP_EOL;
                 if( $isNullable ) {

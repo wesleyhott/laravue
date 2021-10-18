@@ -117,7 +117,6 @@ class LaravueInstallCommand extends LaravueCommand
         // Config
         $this->makeLaravueConfigApp();
         $this->makeLaravueConfigAuth();
-        $this->makeLaravueConfigServer();
         // Provider
         $this->makeLaravueProviderApp();
         $this->makeLaravueProviderAuth();
@@ -162,6 +161,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->publishLogViewer();
         $this->publishInterventionImage();
         $this->publishInternacionalization();
+        $this->publishLaravueConfig();
         $this->publishLaravue();
     }
 
@@ -920,18 +920,6 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
-    protected function makeLaravueConfigServer() {
-        $this->setStub('install/config');
-        $fileName = "config/laravue.php";
-        $outsideApp = true;
-        $path = $this->makePath( $fileName, $outsideApp );
-
-        $this->files->put( $path, $this->files->get( $this->getStub() ) );
-
-        $date = now();
-        $this->info("$date - [ Installing ] >> $fileName");
-    }
-
     protected function makeLaravueProviderApp() {
         $this->setStub('install/provider-app');
         $fileName = "Providers/AppServiceProvider.php";
@@ -1308,6 +1296,15 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Publishing ] >> ImageServiceProviderLaravelRecent");
         $this->call('vendor:publish',[
             '--tag' =>  'laravel-pt-br-localization',
+        ]);
+    }
+
+    protected function publishLaravueConfig() {
+        $date = now();
+        $this->info("$date - [ Publishing ] >> LaravueServiceProvider/Config");
+        $this->call('vendor:publish',[
+            '--provider' =>  'Mpmg\Laravue\LaravueServiceProvider',
+            '--tag' =>  'config',
         ]);
     }
 

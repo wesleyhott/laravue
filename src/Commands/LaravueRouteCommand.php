@@ -53,7 +53,7 @@ class LaravueRouteCommand extends LaravueCommand
     protected function replaceRoute($routeFile, $model)
     {   
         $formatedModel = ucfirst( $model );
-        $ModelName = ucfirst( $this->pluralize( 2, $model ) );
+        $ModelName = ucfirst( $this->pluralize( $model ) );
         $route = strtolower( $ModelName );
 
         $newRoute = "";
@@ -66,7 +66,7 @@ class LaravueRouteCommand extends LaravueCommand
     protected function replaceReport($routeFile, $model)
     {   
         $formatedModel = ucfirst( $model );
-        $ModelName = ucfirst( $this->pluralize( 2, $model ) );
+        $ModelName = ucfirst( $this->pluralize( $model ) );
         $route = strtolower( $ModelName );
 
         $newRoute = "";

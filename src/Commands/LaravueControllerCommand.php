@@ -186,7 +186,7 @@ class LaravueControllerCommand extends LaravueCommand
             }
             // Unique 
             $isUnique = $this->isUnique($value);
-            $table = $this->pluralize( 2, Str::snake( $model ) );
+            $table = $this->pluralize( Str::snake( $model ) );
             $unique = $isUnique ? "|unique:$table,$key,' . \$data['id']" : '';
             // Unique array 
             $uniqueArray = '';
@@ -323,7 +323,7 @@ class LaravueControllerCommand extends LaravueCommand
             $this->error("Arquivo - $currentDirectory/app/Http/Controllers/${modelM}Controller.php - não encontrado.");
         }
 
-        $pluraLower = $this->pluralize( 2, lcfirst( $modelN ) );
+        $pluraLower = $this->pluralize( lcfirst( $modelN ) );
 
         $property = "protected \$${pluraLower}_ids = null;" . PHP_EOL;
         $property .= $this->tabs(1) ."// {{ laravue-insert:property }}";
@@ -364,7 +364,7 @@ class LaravueControllerCommand extends LaravueCommand
         }
 
         $singularLower = lcfirst( $modelN );
-        $pluraLower = $this->pluralize( 2, lcfirst( $modelN ) );
+        $pluraLower = $this->pluralize( lcfirst( $modelN ) );
 
         $afterSaveMethod = "public function afterSave(\$model) {" . PHP_EOL;
 

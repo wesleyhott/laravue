@@ -21,12 +21,23 @@ class LaravueFrontModelCommand extends LaravueCommand
     protected $description = 'Criação do frontend froms/Model.vue';
 
     /**
+     * The model fields.
+     *
+     * @var string
+     */
+    protected $fields = [];
+
+    /**
      * Execute the console command.
      *
      * @return mixed
      */
     public function handle()
     {
+        if( $this->option('fields') !== null ) {
+            $this->fields = $this->getFieldsArray( $this->option('fields') );
+        }
+
         $this->setStub('/front/forms/model');
         $argumentModel = $this->argument('model');
         $model = is_array( $argumentModel ) ? trim( $argumentModel[0] ) : trim( $argumentModel ); 
@@ -61,11 +72,9 @@ class LaravueFrontModelCommand extends LaravueCommand
             return str_replace( '{{ fields }}', $default , $toComment  );
         }
 
-        $fields = $this->getFieldsArray( $this->option('fields') );
-
         $returnFields = "";
         $first = true;
-        foreach ($fields as $key => $value) { 
+        foreach ( $this->fields as $key => $value) { 
             $type = $this->getType($value);
             $rules = '';
             // Nullable
@@ -227,13 +236,15 @@ class LaravueFrontModelCommand extends LaravueCommand
     }
 
     protected function getSelect($key, $rules) {
+        $keyFields = $this->getModelFieldsFromKey( $key );
+        $modellabel = $this->getSelectLabel( $keyFields );
         $field = Str::snake($key);
-        $pluralField = lcfirst( Str::studly( $this->pluralize( 2, str_replace("_id", "", $field) ) ) );
+        $pluralField = lcfirst( Str::studly( $this->pluralize( str_replace("_id", "", $field) ) ) );
         $label = $this->getTitle( $key );
         $label = str_replace(" Id", "", $label);
 
         $input = "";
-        $input .= "<div class=\"row formSpace\">  <!-- TODO: [build] Change label field -->" . PHP_EOL;
+        $input .= "<div class=\"row formSpace\"> " . PHP_EOL;
         $input .= $this->tabs(5) .  "<div class=\"col-sm-12\">" . PHP_EOL;
         $input .= $this->tabs(6) .  "<ValidationProvider name=\"$label\" rules=\"$rules\" v-slot=\"{ errors }\">" . PHP_EOL;
         $input .= $this->tabs(7) .  "<div style=\"margin-bottom: 5px; color: #9A9A9A; font-size: .8571em;\">$label</div>" . PHP_EOL;
@@ -250,7 +261,7 @@ class LaravueFrontModelCommand extends LaravueCommand
         $input .= $this->tabs(10) .  "class=\"select-danger\"" . PHP_EOL;
         $input .= $this->tabs(10) .  "style=\"width: 100%;\"" . PHP_EOL;
         $input .= $this->tabs(10) .  ":value=\"item.id\"" . PHP_EOL;
-        $input .= $this->tabs(10) .  ":label=\"item.id\"" . PHP_EOL;
+        $input .= $this->tabs(10) .  ":label=\"item.$modellabel\"" . PHP_EOL;
         $input .= $this->tabs(10) .  ":key=\"item.id\" >" . PHP_EOL;
         $input .= $this->tabs(9) .  "</el-option>" . PHP_EOL;
         $input .= $this->tabs(7) .  "</el-select>" . PHP_EOL;
@@ -272,7 +283,7 @@ class LaravueFrontModelCommand extends LaravueCommand
 
         $return = "";
         foreach ($fks as $key => $value) {
-            $selecField = lcfirst( Str::studly( $this->pluralize( 2, str_replace( "_id", "",  $key ) ) ) );
+            $selecField = lcfirst( Str::studly( $this->pluralize( str_replace( "_id", "",  $key ) ) ) );
             $return .= PHP_EOL;
             $return .= $this->tabs(4) . "$selecField: [],";
         }
@@ -282,12 +293,10 @@ class LaravueFrontModelCommand extends LaravueCommand
 
     protected function replaceFieldModel($stub, $model)
     {
-        $fields = $this->getFieldsArray( $this->option('fields') );
-
         $return = "";
         $index = 0;
-        $size = count($fields);
-        foreach ($fields as $key => $value) {
+        $size = count( $this->fields);
+        foreach ( $this->fields as $key => $value ) {
             $index++;
             $type = $this->getType($value);
             switch($type) {
@@ -308,12 +317,10 @@ class LaravueFrontModelCommand extends LaravueCommand
 
     protected function replaceFieldModel2($stub, $model)
     {
-        $fields = $this->getFieldsArray( $this->option('fields') );
-
         $return = "";
         $index = 0;
-        $size = count($fields);
-        foreach ($fields as $key => $value) {
+        $size = count( $this->fields );
+        foreach ( $this->fields as $key => $value ) {
             $index++;
             $type = $this->getType($value);
             switch($type) {
@@ -336,10 +343,8 @@ class LaravueFrontModelCommand extends LaravueCommand
 
     protected function replaceFieldComputed($stub, $model)
     {
-        $fields = $this->getFieldsArray( $this->option('fields') );
-
         $return = PHP_EOL;
-        foreach ($fields as $key => $value) {
+        foreach ( $this->fields as $key => $value ) {
             $type = $this->getType($value);
             switch($type) {
                 case 'boolean':
@@ -360,10 +365,9 @@ class LaravueFrontModelCommand extends LaravueCommand
 
     protected function replaceFieldMethod($stub, $model)
     {
-        $fields = $this->getFieldsArray( $this->option('fields') );
-        $fks = array_filter($fields, function ( $k ) {
+        $fks = array_filter(  $this->fields, function ( $k ) {
             return $this->isFk( $k );
-        }, ARRAY_FILTER_USE_KEY);
+        }, ARRAY_FILTER_USE_KEY );
         
         $return = $this->buildLoadSelects( $fks );
         $return .= $this->buildSelects( $fks );
@@ -376,7 +380,7 @@ class LaravueFrontModelCommand extends LaravueCommand
         if( count( $fks ) == 0 ) {
             $methodName = "loadModel";
         } else {
-            $methodName = "load" . Str::studly( $this->pluralize( 2, str_replace("_id", "", array_key_first( $fks ) ) ) );
+            $methodName = "load" . Str::studly( $this->pluralize( str_replace("_id", "", array_key_first( $fks ) ) ) );
         }
 
         $loadSelect = "loadSelects() {" . PHP_EOL;
@@ -412,13 +416,13 @@ class LaravueFrontModelCommand extends LaravueCommand
         $return = "";
         $i = 0;
         foreach ($fks as $key => $value) {
-            $methodName = "load" . Str::studly( $this->pluralize( 2, str_replace("_id", "", $key ) ) );
+            $methodName = "load" . Str::studly( $this->pluralize( str_replace("_id", "", $key ) ) );
             $title = $this->getTitle( $key );
-            $route = $this->pluralize( 2, str_replace( "_", "",  str_replace( "_id", "",  $key ) ) );
-            $selectField = lcfirst( Str::studly( $this->pluralize( 2, str_replace( "_id", "",  $key ) ) ) );
+            $route = $this->pluralize( str_replace( "_", "",  str_replace( "_id", "",  $key ) ) );
+            $selectField = lcfirst( Str::studly( $this->pluralize( str_replace( "_id", "",  $key ) ) ) );
             $nextMethod = $this->getNext( $fks, $i++, $size );
             if( $nextMethod != 'loadModel') {
-                $nextMethod = 'load' . Str::studly( $this->pluralize( 2, str_replace( "_id", "", $nextMethod ) ) );
+                $nextMethod = 'load' . Str::studly( $this->pluralize( str_replace( "_id", "", $nextMethod ) ) );
             }
             
             $methodname = str_replace( '{{ methodname }}', $methodName , $selects );
@@ -437,11 +441,9 @@ class LaravueFrontModelCommand extends LaravueCommand
 
     protected function replaceFieldSubmit($stub, $model)
     {
-        $fields = $this->getFieldsArray( $this->option('fields') );
-
         $return = "";
-        foreach ($fields as $key => $value) {
-            $selecField = lcfirst( Str::studly( $this->pluralize( 2, str_replace( "_id", "",  $key ) ) ) );
+        foreach ( $this->fields as $key => $value ) {
+            $selecField = lcfirst( Str::studly( $this->pluralize( str_replace( "_id", "",  $key ) ) ) );
             $return .= PHP_EOL;
             switch($value) {
                 case 'i':

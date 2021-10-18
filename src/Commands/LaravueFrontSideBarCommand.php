@@ -69,7 +69,7 @@ class LaravueFrontSideBarCommand extends LaravueCommand
     {   
         $isPlural = true;
         $ModelName = $this->getTitle( $model, $isPlural );
-        $route = $this->pluralize( 2, strtolower( $model ) );
+        $route = $this->pluralize( strtolower( $model ) );
 
         $newRoute = "";
         $newRoute .= "// {{ laravue-insert:routes }}" . PHP_EOL;

@@ -51,7 +51,17 @@ class LaravueServiceProvider extends ServiceProvider
                     __DIR__.'/../publishes/assets/img/logo_mpmg.png' => public_path('img/logo_mpmg.png'),
                     __DIR__.'/../publishes/assets/img/profile.jpg' => public_path('img/users/avatar/profile.jpg'),
                 ], 'public');
+
+                // Export Config
+                $this->publishes([
+                    __DIR__.'/../config/config.php' => config_path('laravue.php'),
+                  ], 'config');
             }
         }
+    }
+
+    public function register()
+    {
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'laravue');
     }
 }

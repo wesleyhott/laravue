@@ -135,7 +135,7 @@ class LaravueModelCommand extends LaravueCommand
         $path = "$currentDirectory/app/Models/$reverseModel.php";
         $modelFile = $this->files->get($path);
         
-        $relationName = lcfirst( $this->pluralize( 2, $model ) );
+        $relationName = lcfirst( $this->pluralize( $model ) );
 
         $newRelation = "/**" . PHP_EOL;
         $newRelation .= $this->tabs(1) . " * Retorna os $relationName de $reverseModel." . PHP_EOL;
@@ -164,7 +164,7 @@ class LaravueModelCommand extends LaravueCommand
             $this->error("Arquivo - $currentDirectory/app/Models/$modelM.php - não encontrado.");
         }
 
-        $relationName = lcfirst( $this->pluralize( 2, $modelN ) );
+        $relationName = lcfirst( $this->pluralize( $modelN ) );
 
         $newRelation = "/**" . PHP_EOL;
         $newRelation .= $this->tabs(1) . " * Retorna os $relationName de $modelM." . PHP_EOL;

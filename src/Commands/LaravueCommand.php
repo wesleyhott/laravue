@@ -307,21 +307,15 @@ class LaravueCommand extends Command
      * @param string $plural Plural form of word; function will attempt to deduce plural form from singular if not provided
      * @return string Pluralized word if quantity is not one, otherwise singular
      */
-    public static function pluralize($quantity, $singular, $plural=null) {
-        if( $quantity == 1 || !strlen($singular) ) return $singular;
-        if( $plural !== null ) return $plural;
+    public static function pluralize( $singular ) {
+        if( !strlen($singular) ) return $singular;
 
         // Exceções
-        switch($singular) {
-            case 'Acordao': return 'Acordaos';
-            case 'Cidadao': return 'Cidadaos';
-            case 'Orgao': return 'Orgaos';
-            case 'Vao': return 'Vaos';
-            case 'Cao': return 'Caes';
-            case 'Mal': return 'Males';
-            case 'Missil': return 'Misseis';
-            case 'Reptil': return 'Repteis';
-            case 'User': return 'Users';
+        $exceptions = config('laravue.plural'); 
+        foreach( $exceptions as $key => $value) {
+            if( strcmp( $key, $singular ) == 0 ) {
+                return $value;
+            }
         }
 
         $ending_letters = substr($singular, -4);
@@ -392,7 +386,7 @@ class LaravueCommand extends Command
      */
     protected function replaceRoute($stub, $model)
     {
-        return str_replace( '{{ route }}', strtolower( $this->pluralize( 2, $model ) ) , $stub );
+        return str_replace( '{{ route }}', strtolower( $this->pluralize( $model ) ) , $stub );
     }
 
     /**
@@ -444,7 +438,7 @@ class LaravueCommand extends Command
      */
     protected function replacePluralClass($stub, $model)
     {
-        return str_replace( '{{ pluralclass }}', ucfirst( $this->pluralize( 2, $model ) ) , $stub );
+        return str_replace( '{{ pluralclass }}', ucfirst( $this->pluralize( $model ) ) , $stub );
     }
 
     /**
@@ -457,7 +451,7 @@ class LaravueCommand extends Command
     protected function replaceTable($stub, $model, $plural = true )
     {
         if( $plural ) {
-            $model = $this->pluralize( 2, $model );
+            $model = $this->pluralize( $model );
         }
         return str_replace( '{{ table }}', Str::snake( $model ) , $stub );
     }
@@ -816,9 +810,9 @@ class LaravueCommand extends Command
      * @return string
      */
     protected function getTitle( $field, $plural = false ) {
-        $title = str_replace( '_id', '', $field );
-        if($plural) {
-            $title = $this->pluralize( 2, $title );
+        $title = str_replace( '_id', '', $field );  
+        if($plural) { 
+            $title = $this->pluralize( $title ); 
         }
         $title = ucwords( str_replace( "_", " ", $title ) );
         // Setting space before uppercase letters
@@ -836,7 +830,7 @@ class LaravueCommand extends Command
 
         $title = implode( ' ', $words );
 
-        return $title;
+        return $title; 
     }
 
     /**
@@ -942,38 +936,14 @@ class LaravueCommand extends Command
     }
 
     protected function accentuation( $word ) {
-        switch( $word ) {
-            case 'Analise': return 'Análise';
-            case 'Analises': return 'Análises';
-            case 'Ausencia': return 'Ausência';
-            case 'Ausencias': return 'Ausências';
-            case 'Codigo': return 'Código';
-            case 'Codigos': return 'Códigos';
-            case 'Funcionario': return 'Funcionário';
-            case 'Funcionarios': return 'Funcionários';
-            case 'Horaria': return 'Horária';
-            case 'Horarias': return 'Horárias';
-            case 'Inicio': return 'Início';
-            case 'Inicios': return 'Inícios';
-            case 'Matricula': return 'Matrícula';
-            case 'Matriculas': return 'Matrículas';
-            case 'Mes': return 'Mês';
-            case 'Numero': return 'Número';
-            case 'Numeros': return 'Números';
-            case 'Obrigatoria': return 'Obrigatória';
-            case 'Obrigatorias': return 'Obrigatórias';
-            case 'Ocorrencia': return 'Ocorrência';
-            case 'Ocorrencias': return 'Ocorrências';
-            case 'Repositorio': return 'Repositório';
-            case 'Repositorios': return 'Repositórios';
-            case 'Responsavel': return 'Responsável';
-            case 'Responsaveis': return 'Responsáveis';
-            case 'Tacita': return 'Tácita';
-            case 'Tacitas': return 'Tácitas';
-            case 'Usuario': return 'Usuário';
-            case 'Usuarios': return 'Usuários';
-            default: return $word;
+        $accentuations = config('laravue.accentuation');
+        foreach( $accentuations as $key => $value) { 
+            if( strcmp( $key, $word ) == 0 ) {
+                return $value;
+            }
         }
+
+        return $word; 
     }
 
     /**
@@ -986,53 +956,55 @@ class LaravueCommand extends Command
     }
 
     /**
-    * Returns a proper field that must be used as label for model.
+    * Returns a proper field that must be used as label for select model.
     *
     * @param $fields an array of model fields
     * @return string label field
     */
-    protected function getLabel( $fields ) {
-        if (array_key_exists("label", $fields)) {
-            return 'label';
-        }
-        if (array_key_exists("name", $fields)) {
-            return 'name';
-        }
-        if (array_key_exists("nome", $fields)) {
-            return 'nome';
-        }
-        if (array_key_exists("title", $fields)) {
-            return 'title';
-        }
-        if (array_key_exists("titulo", $fields)) {
-            return 'titulo';
-        }
-        if (array_key_exists("description", $fields)) {
-            return 'description';
-        }
-        if (array_key_exists("descricao", $fields)) {
-            return 'descricao';
-        }
-        if (array_key_exists("desc", $fields)) {
-            return 'desc';
-        }
-        if (array_key_exists("text", $fields)) {
-            return 'text';
-        }
-        if (array_key_exists("sigla", $fields)) {
-            return 'sigla';
-        }
-        if (array_key_exists("uf", $fields)) {
-            return 'uf';
-        }
-        if (array_key_exists("code", $fields)) {
-            return 'code';
-        }
-        if (array_key_exists("codigo", $fields)) {
-            return 'codigo';
+    protected function getSelectLabel( $fields ) {
+        $labels = config('laravue.select_label');
+        foreach( $labels as $label) {
+            if( in_array( $label, $fields ) ) {
+                return $label;
+            }
         }
 
         return "id";
+    }
+
+    /**
+    * Returns proper fields from a select model by key name.
+    * Ex: user_id, returns fields from model User.
+    *
+    * @param $key an array of model fields
+    * @return array modelFields
+    */
+    protected function getModelFieldsFromKey( $key ) {
+        $modelFields = [];
+        $controllerName = ucfirst( substr( $key, 0, -3 ) ) . "Controller.php";
+        $path = $this->makePath( "Http/Controllers/${controllerName}" );
+
+        $controllerFile = @fopen($path, "r");
+        if ($controllerFile) {
+            $found = false;
+            while ( ( $line = fgets( $controllerFile, 4096 ) ) !== false ) {
+                if( strpos( $line, '$request->input(') !== false ) {
+                    $found = true;
+                    $splited = explode("'", $line);
+                    array_push( $modelFields, $splited[1] ); 
+                }
+                if( $found && strpos( $line, 'return') !== false ) {
+                    break;
+                }
+            }
+            if ( !feof($controllerFile) && !$found ) {
+                echo "Erro: falha ao carregar $path\n";
+            }
+        
+            fclose($controllerFile);
+        }
+
+        return $modelFields;
     }
 
 }

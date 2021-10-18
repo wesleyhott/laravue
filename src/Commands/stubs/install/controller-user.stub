@@ -31,7 +31,6 @@ class UserController extends LaravueController
         $model->email = $request->input('email');
         $model->password = Hash::make($request->input('password'));
         $model->password_confirmation = $request->input('password_confirmation');
-        $model->email = $request->input('email');
 
         return  $model;
     }

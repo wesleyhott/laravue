@@ -59,7 +59,7 @@ class LaravuePermissionCommand extends LaravueCommand
     protected function replacePermission($permissionFile, $model)
     {   
         $formatedModel = ucfirst( $model );
-        $ModelName = ucfirst( $this->pluralize( 2, $model ) );
+        $ModelName = ucfirst( $this->pluralize( $model ) );
         $route = strtolower( $ModelName );
 
         $newPermission = "";
@@ -78,7 +78,7 @@ class LaravuePermissionCommand extends LaravueCommand
     protected function replaceMenu($permissionFile, $model)
     {   
         $formatedModel = ucfirst( $model );
-        $ModelName = ucfirst( $this->pluralize( 2, $model ) );
+        $ModelName = ucfirst( $this->pluralize( $model ) );
         $route = strtolower( $ModelName );
 
         $newPermission = "";

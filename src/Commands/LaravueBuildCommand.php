@@ -125,7 +125,7 @@ class LaravueBuildCommand extends LaravueCommand
 
         $argumentModel = $this->argument('model');
         $model = is_array( $argumentModel ) ? trim( $argumentModel[0] ) : trim( $argumentModel ); 
-        $permissionName = $this->pluralize( 2, strtolower( $model ) );
+        $permissionName = $this->pluralize( strtolower( $model ) );
         $this->info("$date - [ spatie ] >> permission:create-permission");
         
         $this->call('permission:create-permission', [
