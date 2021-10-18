@@ -26,7 +26,7 @@ return [
     | Para tanto, basta inserir a palavra sem aentuação e logo após a palavra
     | acentuada. Precisamos fazer tanto para o singula quanto para o plural.
     | Outra alternativa é usar o comando:
-    |     php artisan laravue:accentuation PalavraSemAcento PalavraAcentuada
+    |     php artisan laravue:learn PalavraSemAcento PalavraAcentuada -a
     */
 
     'accentuation' => [
@@ -61,7 +61,7 @@ return [
         'Tacitas' => 'Tácitas',
         'Usuario' => 'Usuário',
         'Usuarios' => 'Usuários',
-        // {{ laravue-insert:acentuation }}
+		// {{ laravue-insert:accentuation }}
     ],
 
     /*
@@ -71,23 +71,23 @@ return [
     | Por não existir regras sem exceções no Português para pluralização,
     | precisamos fazer manualmente. De tal forma que é necessário ensinar ao  
     | Laravue as exeções para que ele gere as palavras corretamente. 
-    | Para tanto, basta inserir a palavra no singular sem aentuação e logo após
-    | a palavra no plural, também sem acentuação.
+    | Para tanto, basta inserir a palavra no singular *** sem aentuação *** e
+    | logo após a palavra no plural, também sem acentuação.
     | Outra alternativa é usar o comando:
-    |     php artisan laravue:plural PalavraSingularSemAcento PalavraPluralSemAcento
+    |     php artisan laravue:learn PalavraSingularSemAcento PalavraPluralSemAcento -p
     */
 
     'plural' => [
-        'Acordao' =>'Acordaos',
-        'Cidadao' =>'Cidadaos',
-        'Orgao' =>'Orgaos',
-        'Vao' =>'Vaos',
-        'Cao' =>'Caes',
-        'Mal' =>'Males',
-        'Missil' =>'Misseis',
-        'Reptil' =>'Repteis',
-        'User' =>'Users',
-        // {{ laravue-insert:plural }}
+        'Acordao' => 'Acordaos',
+        'Cidadao' => 'Cidadaos',
+        'Orgao' => 'Orgaos',
+        'Vao' => 'Vaos',
+        'Cao' => 'Caes',
+        'Mal' => 'Males',
+        'Missil' => 'Misseis',
+        'Reptil' => 'Repteis',
+        'User' => 'Users',
+		// {{ laravue-insert:plural }}
     ],
 
     /*
@@ -99,7 +99,7 @@ return [
     | representar o modelo. Ele procura na listagem abaixo e retorna a primeira
     | ocorrência encontrada. Pode-se trocar a ordem conforme necessidade.
     | Outra alternativa é usar o comando:
-    |     php artisan laravue:selectlabel Label
+    |     php artisan laravue:learn Label -s
     */
 
     'select_label' => [
@@ -117,6 +117,6 @@ return [
         'uf',
         'code',
         'codigo',
-        // {{ laravue-insert:selectlabel }}
+		// {{ laravue-insert:selectlabel }}
     ],
 ];

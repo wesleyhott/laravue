@@ -21,6 +21,7 @@ class LaravueServiceProvider extends ServiceProvider
                 Commands\LaravueFrontDeleteCommand::class,
                 Commands\LaravueFrontEditCommand::class,
                 Commands\LaravueFrontIndexCommand::class,
+                Commands\LaravueLearnCommand::class,
                 Commands\LaravueFrontModalCommand::class,
                 Commands\LaravueFrontModelCommand::class,
                 Commands\LaravueFrontReportCommand::class,

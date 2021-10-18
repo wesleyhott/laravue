@@ -101,10 +101,11 @@ class LaravueCommand extends Command
     /**
      * Get the destination class path.
      *
-     * @param  string  $model
+     * @param  string  $model model name
+     * @param  string  $ext file extension
      * @return string
      */
-    protected function getPath($model, $ext = 'php')
+    protected function getPath( $model = '', $ext = 'php' )
     { 
         $path = '';
         $currentDirectory =  getcwd();
@@ -164,6 +165,14 @@ class LaravueCommand extends Command
                     mkdir( $frontPath, 0777, true);
                 }
                 $path = $this->fileBuildPath($frontPath, 'Modal.vue' );
+                break;
+            case 'config':
+                $paths = explode( "/", str_replace( '\\', '/', $currentDirectory) );
+                if ( end( $paths ) == "laravue") { // Laravue Tests
+                    $path = $this->makePath( "config/config.php", true );
+                } else {
+                    $path = $this->makePath( "config/laravue.php", true );
+                }
                 break;
             default:
                 $path = $this->makePath( $this->fileBuildPath( 'Models', "$model.$ext" ) );

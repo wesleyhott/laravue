@@ -2,10 +2,11 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.33.158 - 18/out/2021
+## 8.34.158 - 18/out/2021
 ### Adicionado
 - Inclusão da opção --view ou -i para criação de modelos a partir de views do banco de dados.
 - Pluralização e acentuação pelo usuário por meio de configuração.
+- Novo comando de aprendizagem do Laravue laravue:learn words[] -a | -p | -s
 ### Alterado
 - Correções menores.
 - Atualização do PHP Unit test.
