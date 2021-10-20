@@ -119,7 +119,7 @@ class LaravueModelCommand extends LaravueCommand
                 $newRelation .= PHP_EOL;
                 $newRelation .= $this->tabs(1) ."// {{ laravue-insert:relationship }}";
 
-                $newRelations = str_replace( '// {{ laravue-insert:relationship }}', $newRelation, $newRelations );
+                $newRelations = str_replace( '// {{ laravue-insert:relationship }}', $newRelation, $modelFile );
 
                 $parsedWith = $this->makeWith($newRelations, $relationName);
 

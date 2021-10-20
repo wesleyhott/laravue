@@ -18,7 +18,7 @@ class LaravueFrontModelCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $description = 'Criação do frontend froms/Model.vue';
+    protected $description = 'Criação do frontend forms/Model.vue';
 
     /**
      * The model fields.

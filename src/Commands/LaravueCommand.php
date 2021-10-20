@@ -990,7 +990,7 @@ class LaravueCommand extends Command
     */
     protected function getModelFieldsFromKey( $key ) {
         $modelFields = [];
-        $controllerName = ucfirst( substr( $key, 0, -3 ) ) . "Controller.php";
+        $controllerName = Str::studly( substr( $key, 0, -3 ) ) . "Controller.php";
         $path = $this->makePath( "Http/Controllers/${controllerName}" );
 
         $controllerFile = @fopen($path, "r");
