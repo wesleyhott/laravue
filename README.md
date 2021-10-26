@@ -1,9 +1,9 @@
 # Laravue
-Code generation for MPMG projects that use Laravel and VueJs tecnologies.
+Code generation for projects that use Laravel and VueJs tecnologies.
 
 ## Instalation
 ```
-composer require mpmg/laravue
+composer require wesleyhott/laravue
 ```
 
 ```
@@ -11,7 +11,7 @@ php artisan laravue:install
 ```
 
 ```
-php artisan vendor:publish --provider="Mpmg\Laravue\LaravueServiceProvider"
+php artisan vendor:publish --provider="wesleyhott\Laravue\LaravueServiceProvider"
 ```
 
 ```

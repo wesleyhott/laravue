@@ -172,7 +172,7 @@ return [
         App\Providers\PhpSpreadsheetServiceProvider::class,
         Subfission\Cas\CasServiceProvider::class,
         Arcanedev\LogViewer\LogViewerServiceProvider::class,
-        Mpmg\Laravue\LaravueServiceProvider::class,
+        wesleyhott\Laravue\LaravueServiceProvider::class,
 
         /*
          * Application Service Providers...

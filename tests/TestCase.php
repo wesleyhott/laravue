@@ -1,8 +1,8 @@
 <?php
 
-namespace Mpmg\Laravue\Tests;
+namespace wesleyhott\Laravue\Tests;
 
-use Mpmg\Laravue\LaravueServiceProvider;
+use wesleyhott\Laravue\LaravueServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {

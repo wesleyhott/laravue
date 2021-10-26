@@ -1,14 +1,14 @@
 {
-    "name": "mpmg/laravue",
-    "description": "Code generation for MPMG projects that use Laravel and VueJs tecnologies.",
+    "name": "wesleyhott/laravue",
+    "description": "Code generation for projects that use Laravel and VueJs tecnologies.",
     "type": "library",
     "keywords": [
-        "mpmg",
+        "laravue",
         "vue",
         "vuejs",
         "laravel"
     ],
-    "homepage": "https://github.com/mpmg-sti/laravue",
+    "homepage": "https://github.com/wesleyhott/laravue",
     "license": "MIT",
     "authors": [
         {
@@ -21,11 +21,8 @@
         "orchestra/testbench": "^6.3",
         "laravel/passport": "^10.0",
         "spatie/laravel-permission": "^3.17",
-        "adldap2/adldap2-laravel": "^6.1",
-        "subfission/cas":"dev-master",
         "barryvdh/laravel-dompdf": "^0.8.7",
         "phpoffice/phpspreadsheet": "^1.15",
-        "arcanedev/log-viewer": "8.0",
         "intervention/image": "^2.5",
         "lucascudo/laravel-pt-br-localization": "^1.1"
     },
@@ -34,18 +31,18 @@
     },
     "autoload": {
         "psr-4": {
-            "Mpmg\\Laravue\\": "src"
+            "wesleyhott\\Laravue\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Mpmg\\Laravue\\Tests\\": "tests"
+            "wesleyhott\\Laravue\\Tests\\": "tests"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Mpmg\\Laravue\\LaravueServiceProvider"
+                "wesleyhott\\Laravue\\LaravueServiceProvider"
             ]
         }
     },

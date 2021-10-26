@@ -1,10 +1,10 @@
 <?php
 
-namespace Mpmg\Laravue\Tests\Unit;
+namespace wesleyhott\Laravue\Tests\Unit;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
-use Mpmg\Laravue\Tests\TestCase;
+use wesleyhott\Laravue\Tests\TestCase;
 
 class MakeLearnPluralTest extends TestCase
 {

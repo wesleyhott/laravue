@@ -1,10 +1,10 @@
 <?php
 
-namespace Mpmg\Laravue\Tests\Feature;
+namespace wesleyhott\Laravue\Tests\Feature;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
-use Mpmg\Laravue\Tests\TestCase;
+use wesleyhott\Laravue\Tests\TestCase;
 
 class MakeModelReportFileTest extends TestCase
 {

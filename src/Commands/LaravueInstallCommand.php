@@ -1,6 +1,6 @@
 <?php
 
-namespace Mpmg\Laravue\Commands;
+namespace wesleyhott\Laravue\Commands;
 
 class LaravueInstallCommand extends LaravueCommand
 {
@@ -35,14 +35,6 @@ class LaravueInstallCommand extends LaravueCommand
     protected $databaseName;
     protected $databaseUserName;
     protected $databaseUserPassword;
-
-    protected $casHostName;
-    protected $casLogoutUrl;
-    protected $casLogoutRedirect;
-    protected $casService;
-
-    protected $ldapHosts;
-    protected $ldapBaseDn;
 
     protected $serverUriIndex;
     // seeder user
@@ -156,9 +148,6 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeProviderPhpOffice();
         // Dependences
         $this->publishSpatiePermission();
-        $this->publishAdLdap();
-        $this->publishSubFissionCas();
-        $this->publishLogViewer();
         $this->publishInterventionImage();
         $this->publishInternacionalization();
         $this->publishLaravueConfig();
@@ -188,30 +177,6 @@ class LaravueInstallCommand extends LaravueCommand
         if( !isset($this->databaseUserPassword) ) {
             $this->databaseUserPassword = "Abcd12345";
         }
-        
-        $this->accessManagement = $this->choice(
-            'Qual o gerenciador de acesso?',
-            ['Keycloak', 'CAS'],
-            0
-        );
-        
-        if( $this->accessManagement == 'CAS' ) {
-            $this->casHostName = $this->ask('Qual o CAS hostname?');
-            $this->casLogoutUrl = $this->ask('Qual o CAS URL?');
-            $this->casLogoutRedirect = $this->ask('Qual o CAS logout redirect?');
-            $this->casService = $this->ask('Qual o CAS service?');
-        }
-
-        $this->permissionManagement = $this->choice(
-            'Qual o gerenciador de permissões?',
-            ['Microsoft Azure', 'LDAP'],
-            0
-        );
-
-        if( $this->permissionManagement == 'LDAP' ) {
-            $this->ldapHosts = $this->ask('Qual o LDAP hosts?');
-            $this->ldapBaseDn = $this->ask('Qual o LDAP base Dn?');
-        }
 
         $this->serverUriIndex = $this->ask('Qual o Server URI index? [4]');
         if( !isset($this->serverUriIndex) ) {
@@ -223,14 +188,14 @@ class LaravueInstallCommand extends LaravueCommand
             $this->seederUserName = "Administrador";
         }
 
-        $this->seederUserEmail = $this->ask('Qual o email do Usuário Administrador do sistema? [administrador@mpmg.mp.br]');
+        $this->seederUserEmail = $this->ask('Qual o email do Usuário Administrador do sistema? [administrador@mail.br]');
         if( !isset($this->seederUserEmail) ) {
-            $this->seederUserEmail = "administrador@mpmg.mp.br";
+            $this->seederUserEmail = "administrador@mail.br";
         }
 
-        $this->seederUserPassword = $this->ask('Qual é a senha Usuário Administrador do sistema? [05121652Administrador@mpmg.mp.br]');
+        $this->seederUserPassword = $this->ask('Qual é a senha Usuário Administrador do sistema? [05121652Administrador@mail.br]');
         if( !isset($this->seederUserPassword) ) {
-            $this->seederUserPassword = "05121652Administrador@mpmg.mp.br";
+            $this->seederUserPassword = "05121652Administrador@mail.br";
         }
     }
 
@@ -239,27 +204,12 @@ class LaravueInstallCommand extends LaravueCommand
         $this->databaseName = "dbsLARAVUE";
         $this->databaseUserName = "sa";
         $this->databaseUserPassword = "Abcd12345";        
-        $this->accessManagement = 'CAS'; //['Keycloak', 'CAS']
-
-        if( $this->accessManagement == 'CAS' ) {
-            $this->casHostName = 'casHostName';
-            $this->casLogoutUrl = 'casLogoutUrl';
-            $this->casLogoutRedirect = 'casLogoutRedirect';
-            $this->casService = 'casService';
-        }
-
-        $this->permissionManagement = 'LDAP'; //['Microsoft Azure', 'LDAP']
-
-        if( $this->permissionManagement == 'LDAP' ) {
-            $this->ldapHosts = 'ldapHosts';
-            $this->ldapBaseDn = 'ldapBaseDn';
-        }
 
         $this->serverUriIndex = "4";
 
         $this->seederUserName = "Administrador";
-        $this->seederUserEmail = "administrador@mpmg.mp.br";
-        $this->seederUserPassword = "05121652Administrador@mpmg.mp.br";
+        $this->seederUserEmail = "administrador@mail.br";
+        $this->seederUserPassword = "05121652Administrador@mail.br";
     }
 
     protected function replaceChoices( $choices ) {
@@ -1259,30 +1209,6 @@ class LaravueInstallCommand extends LaravueCommand
         ]);
     }
 
-    protected function publishAdLdap() {
-        $date = now();
-        $this->info("$date - [ Publishing ] >> AdldapServiceProvider");
-        $this->call('vendor:publish',[
-            '--provider' =>  'Adldap\Laravel\AdldapServiceProvider',
-        ]);
-    }
-
-    protected function publishSubFissionCas() {
-        $date = now();
-        $this->info("$date - [ Publishing ] >> CasServiceProvider");
-        $this->call('vendor:publish',[
-            '--provider' =>  'Subfission\Cas\CasServiceProvider',
-        ]);
-    }
-
-    protected function publishLogViewer() {
-        $date = now();
-        $this->info("$date - [ Publishing ] >> LogViewerServiceProvider");
-        $this->call('vendor:publish',[
-            '--provider' =>  'Arcanedev\LogViewer\LogViewerServiceProvider',
-        ]);
-    }
-
     protected function publishInterventionImage() {
         $date = now();
         $this->info("$date - [ Publishing ] >> ImageServiceProviderLaravelRecent");
@@ -1303,7 +1229,7 @@ class LaravueInstallCommand extends LaravueCommand
         $date = now();
         $this->info("$date - [ Publishing ] >> LaravueServiceProvider/Config");
         $this->call('vendor:publish',[
-            '--provider' =>  'Mpmg\Laravue\LaravueServiceProvider',
+            '--provider' =>  'wesleyhott\Laravue\LaravueServiceProvider',
             '--tag' =>  'config',
         ]);
     }
@@ -1312,7 +1238,7 @@ class LaravueInstallCommand extends LaravueCommand
         $date = now();
         $this->info("$date - [ Publishing ] >> LaravueServiceProvider");
         $this->call('vendor:publish',[
-            '--provider' =>  'Mpmg\Laravue\LaravueServiceProvider',
+            '--provider' =>  'wesleyhott\Laravue\LaravueServiceProvider',
         ]);
     }
 

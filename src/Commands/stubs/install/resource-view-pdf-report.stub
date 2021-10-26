@@ -75,7 +75,7 @@
         <div>
             <span style="padding-left:8px;"></span>
             <span class="page-number"></span>
-            <span style="padding-left:32px; color:#CCCCCC;">{{ applicationName }}.mpmg.mp.br</span>
+            <span style="padding-left:32px; color:#CCCCCC;">{{ applicationName }}.com.br</span>
             <span style="padding-left:32px; color:#CCCCCC;">Relatório gerado em {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}.</span>
             <span style="padding-right:8px;"></span>
         </div>

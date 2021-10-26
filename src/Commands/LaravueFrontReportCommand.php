@@ -1,6 +1,6 @@
 <?php
 
-namespace Mpmg\Laravue\Commands;
+namespace wesleyhott\Laravue\Commands;
 
 class LaravueFrontReportCommand extends LaravueCommand
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mpmg\Laravue;
+namespace wesleyhott\Laravue;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -49,7 +49,6 @@ class LaravueServiceProvider extends ServiceProvider
                 // Export Images
                 $this->publishes([
                     __DIR__.'/../publishes/assets/img/logo_header.png' => public_path('img/logo_header.png'),
-                    __DIR__.'/../publishes/assets/img/logo_mpmg.png' => public_path('img/logo_mpmg.png'),
                     __DIR__.'/../publishes/assets/img/profile.jpg' => public_path('img/users/avatar/profile.jpg'),
                 ], 'public');
 

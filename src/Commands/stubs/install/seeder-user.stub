@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
     {
         $user = new User();
         $user->name = "Laravue User";
-        $user->email = "laravue_user@mpmg.mp.br";
+        $user->email = "laravue_user@mail.br";
         $user->password = Hash::make("73KjCSpa9GAuTW6iKig8vnKeXwmzc2w1ceapZFPK");
         $user->save();
         Auth::loginUsingId($user->id, true);
