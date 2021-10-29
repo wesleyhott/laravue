@@ -10,8 +10,8 @@ return [
     | Server URI index determina em qual posição está o nome da rota que é o 
     | plural do modelo. Esse nome é usado para determinar as permissões do 
     | usuário no sistema.
-    | Ex: http://localhost/laravue/ws/api/users Para o modelo User, o 
-    | SERVER_URI_INDEX é 3: 0 => "laravue"; 1 => "ws"; 2 => "api"; 3 => "users"
+    | Ex: http://localhost/laravue/api/api/users Para o modelo User, o 
+    | SERVER_URI_INDEX é 3: 0 => "laravue"; 1 => "api"; 2 => "api"; 3 => "users"
     */
 
     'uri_index' => env('SERVER_URI_INDEX', 3),

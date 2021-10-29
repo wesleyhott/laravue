@@ -139,7 +139,6 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeReportControllerTask();
         $this->makeReportControllerUser();
         // Middlewares
-        $this->makeMiddlewareLaravueAuthenticate();
         $this->makeMiddlewareLaravueSetHeaders();
         // Route
         $this->makeLaravueRouteApi();
@@ -228,7 +227,7 @@ class LaravueInstallCommand extends LaravueCommand
 
         $lowerAppName = strtolower($this->applicationName); 
         $volumes = "- ../../$lowerAppName/web:/var/www/html/$lowerAppName/" . PHP_EOL;
-        $volumes .= "      - ../../$lowerAppName/ws:/var/www/html/$lowerAppName/ws/" . PHP_EOL;
+        $volumes .= "      - ../../$lowerAppName/api:/var/www/html/$lowerAppName/api/" . PHP_EOL;
         $volumes .= "      # {{ laravue-insert:volumes }}";
 
         $dockerCompose = $this->files->get( $path );
@@ -244,18 +243,18 @@ class LaravueInstallCommand extends LaravueCommand
         $date = now();
 
         $appName = strtolower( $this->applicationName );
-        $nginxRewrite = "rewrite /$appName/ws/(.*)$ /$appName/ws/index.php?/$1 last;" . PHP_EOL;
+        $nginxRewrite = "rewrite /$appName/api/(.*)$ /$appName/api/index.php?/$1 last;" . PHP_EOL;
         $nginxRewrite .= $this->tabs(2) . "# {{ laravue-insert:location-rewrite }}";
 
-        $localtion = "location ^~ /$appName/ws{" . PHP_EOL;
-        $localtion .= $this->tabs(2) . "alias /var/www/html/$appName/ws/public;" . PHP_EOL;
-        $localtion .= $this->tabs(2) . 'try_files $uri $uri/ @ws;' . PHP_EOL;
+        $localtion = "location ^~ /$appName/api{" . PHP_EOL;
+        $localtion .= $this->tabs(2) . "alias /var/www/html/$appName/api/public;" . PHP_EOL;
+        $localtion .= $this->tabs(2) . 'try_files $uri $uri/ @api;' . PHP_EOL;
         $localtion .= $this->tabs(2) . 'location ~ \.php$ {' . PHP_EOL;
         $localtion .= $this->tabs(3) . 'fastcgi_split_path_info ^(.+\.php)(/.+)$;' . PHP_EOL;
         $localtion .= $this->tabs(3) . 'fastcgi_pass laravue:9000;' . PHP_EOL;
         $localtion .= $this->tabs(3) . 'fastcgi_index index.php;' . PHP_EOL;
         $localtion .= $this->tabs(3) . 'include fastcgi_params;' . PHP_EOL;
-        $localtion .= $this->tabs(3) . "fastcgi_param SCRIPT_FILENAME /var/www/html/$appName/ws/public/index.php;" . PHP_EOL;
+        $localtion .= $this->tabs(3) . "fastcgi_param SCRIPT_FILENAME /var/www/html/$appName/api/public/index.php;" . PHP_EOL;
         $localtion .= $this->tabs(3) . 'fastcgi_param PATH_INFO $fastcgi_path_info;' . PHP_EOL;
         $localtion .= $this->tabs(3) . 'fastcgi_read_timeout 1200;' . PHP_EOL;
         $localtion .= $this->tabs(3) . 'proxy_read_timeout 1200;' . PHP_EOL;
@@ -1137,17 +1136,6 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeReportControllerUser() {
         $this->setStub('install/report-controller-user');
         $fileName = "Http/Controllers/Reports/UserReportController.php";
-        $path = $this->makePath( $fileName );
-
-        $this->files->put( $path, $this->files->get( $this->getStub() ) );
-
-        $date = now();
-        $this->info("$date - [ Installing ] >> $fileName");
-    }
-
-    protected function makeMiddlewareLaravueAuthenticate() {
-        $this->setStub('install/middleware-authenticate');
-        $fileName = "Http/Middleware/LaravueAuthenticate.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
