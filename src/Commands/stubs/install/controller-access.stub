@@ -1,0 +1,135 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Auth;
+use Validator;
+
+class AccessController extends Controller
+{
+    /**
+     * Get the instance of user access
+     */
+    public function show(Request $request)
+    {
+        $data = $request->all();
+        $user = new \App\User();
+
+        $validation = Validator::make($data, [
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string',
+        ]);
+
+        if ($validation->fails()) {
+            return response(
+                [
+                    'message' => $this->getValidationMessages($validation)
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+        if (Auth::attempt(['email' => $data['email'], 'password' => $data['password'] ])) {
+            $user = auth()->user();
+            $user->access_token = $user->createToken($user->email)->accessToken;
+            $user->access_keys = $user->getAllPermissions();
+            if($user->avatar_id) {
+                $file = \App\File::find($user->avatar_id);
+                $user->avatar = config('app.url') . DIRECTORY_SEPARATOR . $file->file;
+            }
+        } else {
+            return response(
+                [
+                    'message' => 'Usuário não cadastrado ou credenciais incorretas.'
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        // unset($user->avatar_id);
+        unset($user->email_verified_at);
+        unset($user->created_at);
+        unset($user->updated_at);
+        return response(
+            [
+                'message' => 'Registro encontrado',
+                'data' => $user
+            ],
+            Response::HTTP_OK
+        );
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->all();
+
+        // Validate fields
+        $validation = Validator::make($data, [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        if ($validation->fails()) {
+            return response(
+                [
+                    'message' => $this->getValidationMessages($validation)
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        // Store in database
+        $user = $request->isMethod('put') ? \App\User::findOrFail($request->id) : new \App\User();
+
+        $user->id = $request->input('id');
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->password = Hash::make($request->input('password'));
+        $user->image = $request->input('image');
+
+        if ($user->save()) {
+            return response(
+                [
+                    'message' => 'Registro criado.',
+                    'data' => $user
+                ],
+                Response::HTTP_OK
+            );
+        }
+
+        // // Send verification mail
+        // if(config('app.env') == 'local'){
+        //   $user->email = "wesley-e8ff7b@inbox.mailtrap.io";  
+        // }
+
+        // Mail::to($user->email)->queue(new UserVerification($user));
+        // $to = "wesley.hott@gmail.com"; // TODO: change to wesley.hott@gmail.com in a config file
+        // if(config('app.env') == 'local'){
+        //     $to = "wesley-e8ff7b@inbox.mailtrap.io";  
+        // }
+        // Mail::to($to)->queue(new UserTrust($user));
+
+        // return ['status' => 200, 'message' => 'ok', 'description' => 'Seja bem vindo! Deus abençoe. Um e-mail de verificação foi enviado.', 'data' => new UserResource($user)];
+    }
+
+    /**
+     * Make a message validation array
+     *
+     * @param \Validator $validation
+     * @return array de mensagens
+     */
+    private function getValidationMessages($validation)
+    {
+        $messages = $validation->messages();
+        $arrayMessages = array();
+        $i = 0;
+        foreach ($messages->all() as $message) {
+            $arrayMessages[$i++] = $message;
+        }
+
+        return $arrayMessages;
+    }
+}

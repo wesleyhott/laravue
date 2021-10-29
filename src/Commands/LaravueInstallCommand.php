@@ -133,6 +133,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeControllerUserPermission();
         $this->makeControllerUserRole();
         $this->makeControllerUser();
+        $this->makeControllerAccess();
         // Report Controller
         $this->makeReportControllerLaravue();
         $this->makeReportControllerMonitor();
@@ -1092,6 +1093,17 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeControllerUser() {
         $this->setStub('install/controller-user');
         $fileName = "Http/Controllers/UserController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeControllerAccess() {
+        $this->setStub('install/controller-access');
+        $fileName = "Http/Controllers/AccessController.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
