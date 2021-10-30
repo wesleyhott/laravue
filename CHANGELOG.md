@@ -2,7 +2,7 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.35.164 - 30/out/2021
+## 8.35.165 - 30/out/2021
 ### Adicionado
 - Access Controller
 - Htacess
@@ -11,6 +11,7 @@ Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 - Troca de ws para api
 - Ajuste do login
 - Retirada dependências CAS e LDAP
+- Retirada Access Token controller
 ## 8.34.159 - 19/out/2021
 ### Adicionado
 - Inclusão da opção --view ou -i para criação de modelos a partir de views do banco de dados.
