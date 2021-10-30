@@ -311,12 +311,6 @@ class LaravueInstallCommand extends LaravueCommand
             "databaseName" => $this->databaseName,
             "databaseUserName" => $this->databaseUserName,
             "databaseUserPassword" => $this->databaseUserPassword,
-            "casHostName" => $this->casHostName,
-            "casLogoutUrl" => $this->casLogoutUrl,
-            "casLogoutRedirect" => $this->casLogoutRedirect,
-            "casService" => $this->casService,
-            "ldapHosts" => $this->ldapHosts,
-            "ldapBaseDn" => $this->ldapBaseDn,
             "serverUriIndex" => $this->serverUriIndex,
         );
         $stub = $this->replaceChoices( $choices );
@@ -338,12 +332,6 @@ class LaravueInstallCommand extends LaravueCommand
             "databaseName" => $this->databaseName,
             "databaseUserName" => $this->databaseUserName,
             "databaseUserPassword" => $this->databaseUserPassword,
-            "casHostName" => $this->casHostName,
-            "casLogoutUrl" => $this->casLogoutUrl,
-            "casLogoutRedirect" => $this->casLogoutRedirect,
-            "casService" => $this->casService,
-            "ldapHosts" => $this->ldapHosts,
-            "ldapBaseDn" => $this->ldapBaseDn,
             "serverUriIndex" => $this->serverUriIndex,
         );
         $stub = $this->replaceChoices( $choices );
@@ -365,12 +353,6 @@ class LaravueInstallCommand extends LaravueCommand
             "databaseName" => $this->databaseName,
             "databaseUserName" => $this->databaseUserName,
             "databaseUserPassword" => $this->databaseUserPassword,
-            "casHostName" => $this->casHostName,
-            "casLogoutUrl" => $this->casLogoutUrl,
-            "casLogoutRedirect" => $this->casLogoutRedirect,
-            "casService" => $this->casService,
-            "ldapHosts" => $this->ldapHosts,
-            "ldapBaseDn" => $this->ldapBaseDn,
             "serverUriIndex" => $this->serverUriIndex,
         );
         $stub = $this->replaceChoices( $choices );
@@ -392,12 +374,6 @@ class LaravueInstallCommand extends LaravueCommand
             "databaseName" => $this->databaseName,
             "databaseUserName" => $this->databaseUserName,
             "databaseUserPassword" => $this->databaseUserPassword,
-            "casHostName" => $this->casHostName,
-            "casLogoutUrl" => $this->casLogoutUrl,
-            "casLogoutRedirect" => $this->casLogoutRedirect,
-            "casService" => $this->casService,
-            "ldapHosts" => $this->ldapHosts,
-            "ldapBaseDn" => $this->ldapBaseDn,
             "serverUriIndex" => $this->serverUriIndex,
         );
         $stub = $this->replaceChoices( $choices );
@@ -419,12 +395,6 @@ class LaravueInstallCommand extends LaravueCommand
             "databaseName" => $this->databaseName,
             "databaseUserName" => $this->databaseUserName,
             "databaseUserPassword" => $this->databaseUserPassword,
-            "casHostName" => $this->casHostName,
-            "casLogoutUrl" => $this->casLogoutUrl,
-            "casLogoutRedirect" => $this->casLogoutRedirect,
-            "casService" => $this->casService,
-            "ldapHosts" => $this->ldapHosts,
-            "ldapBaseDn" => $this->ldapBaseDn,
             "serverUriIndex" => $this->serverUriIndex,
         );
         $stub = $this->replaceChoices( $choices );
