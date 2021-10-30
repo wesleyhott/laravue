@@ -2,9 +2,10 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.35.162 - 30/out/2021
+## 8.35.163 - 30/out/2021
 ### Adicionado
 - Access Controller
+- Htacess
 - ### Alterado
 - Ajustes de ambiente
 - Troca de ws para api

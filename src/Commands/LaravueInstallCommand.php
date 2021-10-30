@@ -66,6 +66,8 @@ class LaravueInstallCommand extends LaravueCommand
         // .gitignore
         $this->makeDotGitIgnoreStorageApp();
         $this->makeDotGitIgnoreStorageAppReports();
+        // .htaccess
+        $this->makeHtaccess();
         // migration
         $this->makeUserMigration();
         // Seeder
@@ -436,6 +438,18 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeDotGitIgnoreStorageApp() {
         $this->setStub('install/.gitignore-storage-app');
         $fileName = "storage/app/.gitignore";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp);
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeHtaccess() {
+        $this->setStub('install/.htaccess');
+        $fileName = ".htaccess";
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp);
 
