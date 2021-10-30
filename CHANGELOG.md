@@ -2,12 +2,13 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.35.161 - 29/out/2021
+## 8.35.162 - 30/out/2021
 ### Adicionado
 - Access Controller
 - ### Alterado
 - Ajustes de ambiente
 - Troca de ws para api
+- Ajuste do login
 ## 8.34.159 - 19/out/2021
 ### Adicionado
 - Inclusão da opção --view ou -i para criação de modelos a partir de views do banco de dados.
