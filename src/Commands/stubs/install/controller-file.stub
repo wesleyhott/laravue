@@ -1,0 +1,163 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
+use App\File;
+
+class  FileController extends LaravueController
+{
+    private $image_ext = ['jpg', 'jpeg', 'png', 'gif'];
+    private $audio_ext = ['mp3', 'ogg', 'mpga', 'm4a','wav'];
+    private $video_ext = ['mp4', 'mpeg', '3gp', 'avi', 'mov', 'wmv', 'rmvb'];
+    private $document_ext = ['doc', 'docx', 'pdf', 'odt', 'txt'];
+    private $uploadedFile;
+
+    /**
+     * Implementação do modelo da classe abstrata em LaravueController
+     *
+     * @return \App\File::class
+     */
+    protected function getModel()
+    {
+        return  \App\File::class;
+    }
+
+    /**
+     * Preenche o modelo com os valores correspondentes ao request
+     *
+     * @return \App\File
+     */
+    public function setModel(Request $request)
+    {
+        // verifica se é edição - PUT - ou inlcusão - POST.
+        $model = $request->isMethod('put') ? \App\File::findOrFail($request->id) : new \App\File;
+
+        $this->uploadedFile = $request->file('file');
+        $ext = $this->uploadedFile->getClientOriginalExtension();
+        $type = $this->getType($ext);
+
+        // Preencher os atributos do modelo
+        $model->name = $request->input('name'); //$_FILES['file']['name'];
+        $model->bytes = $_FILES['file']['size'];
+        $model->type = $type;
+        $model->subtype = $ext;
+        $model->file_group_id = $request->input('file_group_id');
+
+        return  $model;
+    }
+
+    /**
+     * Método que passa as validações para o método que implementa Validator no LaravueController
+     *
+     * @return array de validação dos campos do modelo
+     */
+    public function getModelValidation($data)
+    {
+        // Hostinger max_size
+        $max_size = 128000;
+        $all_ext = implode(',', $this->allExtensions());
+
+        return [
+			'rules' =>  [
+                'name' => 'string | unique:files,name,'
+                . $data['id'] . ',id,'
+                . 'file_group_id,' .  $data['file_group_id'],
+                'type' => 'string ',
+                'subtype' => 'string',
+                'file' => 'required | file | mimes:' . $all_ext . ' | max:' . $max_size,
+            ],
+            'messages' => [
+                'name.unique' => 'Já existe este arquivo neste grupo de arquivos.'
+            ]
+        ];
+    }
+
+    /**
+     * Alterações necessárias antes de mostrar a coleção do modelo
+     *
+     * @return \App\File
+     */
+    public function beforeIndex($data)
+    {
+        foreach( $data as $item ) {
+            $item->file_group_name = ( \App\FileGroup::findOrFail($item->file_group_id) )->name;
+            $item->kbytes = round($item->bytes / 1024, 1);
+        }
+        return $data;
+    }
+
+    /**
+     * Alterações necessárias antes de salvar o modelo
+     *
+     * @return \App\File
+     */
+    public function beforeSave($model)
+    {
+        // Amazon AWS S3
+        $model->path = $this->uploadedFile->store($model->type,'s3');
+
+        return $model;
+    }
+
+    /**
+     * Alterações necessárias depois de salvar o modelo
+     *
+     * @return \App\File
+     */
+    public function beforeDestroy($model)
+    {
+        Storage::disk('s3')->delete($model->path);
+
+        return $model;
+    }
+
+    /**
+     * Retorna o tipo de acordo com a extensão.
+     *
+     * @param  string $ext Extensão específica
+     * @return string Type
+     */
+    private function getType($ext)
+    {
+        if (in_array($ext, $this->image_ext)) {
+            return 'image';
+        }
+
+        if (in_array($ext, $this->audio_ext)) {
+            return 'audio';
+        }
+
+        if (in_array($ext, $this->video_ext)) {
+            return 'video';
+        }
+
+        if (in_array($ext, $this->document_ext)) {
+            return 'document';
+        }
+
+        return 'unknown';
+    }
+
+    /**
+     * Retorna todas as extensões
+     *
+     * @return array Extensões de todos os possíveis tipos.
+     */
+    private function allExtensions()
+    {
+        return array_merge($this->image_ext, $this->audio_ext, $this->video_ext, $this->document_ext);
+    }
+
+    public function download(File $file)
+    {
+        return Storage::download( $file->path, $file->name );
+    }
+
+    public function getUrl(File $file)
+    {
+        return Storage::temporaryUrl( $file->path, now()->addMinutes(5) );
+    }
+}

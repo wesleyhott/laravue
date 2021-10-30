@@ -106,10 +106,24 @@ class CreateLaravueTables extends Migration
             $table->timestamps();
         });
 
-        Schema::create('vw_funcionario_mps', function (Blueprint $table) {
-            $table->integer('pessoa_id');
-            $table->string('mamp', 6);
-            $table->binary('foto');
+        Schema::create('files', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('path');
+            $table->string('name');
+            $table->string('type', 20)->nullable();
+            $table->string('subtype', 20)->nullable();
+            $table->integer('bytes')->default(0);
+            $table->timestamps();
+        });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->bigInteger('avatar_id')
+                ->unsigned()
+                ->nullable();
+            $table->foreign('avatar_id')
+                ->references('id')
+                ->on('files')
+                ->onDelete('set null');
         });
     }
 
@@ -120,7 +134,10 @@ class CreateLaravueTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vw_funcionario_mps');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('avatar_id');
+        });
+        Schema::dropIfExists('files');
         Schema::dropIfExists('versions');
         Schema::dropIfExists('tasks');
         Schema::dropIfExists('project_modules');

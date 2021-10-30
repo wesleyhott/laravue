@@ -1,0 +1,186 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
+use App\File;
+use Validator;
+
+class  FileAvatarController extends LaravueController
+{
+    private $image_ext = ['jpg', 'jpeg', 'png', 'gif'];
+    private $audio_ext = ['mp3', 'ogg', 'mpga', 'm4a','wav'];
+    private $video_ext = ['mp4', 'mpeg'];
+    private $document_ext = ['doc', 'docx', 'pdf', 'odt'];
+    private $uploadedFile;
+
+    /**
+     * Implementação do modelo da classe abstrata em LaravueController
+     *
+     * @return \App\File::class
+     */
+    protected function getModel()
+    {
+        return  \App\File::class;
+    }
+
+    /**
+     * Preenche o modelo com os valores correspondentes ao request
+     *
+     * @return \App\File
+     */
+    public function setModel(Request $request)
+    {
+        // verifica se é edição - PUT - ou inlcusão - POST.
+        $model = $request->isMethod('put') ? \App\File::findOrFail($request->id) : new \App\File;
+
+        $data = $request->all();
+        $ext = substr($data['image'], 11, strpos($data['image'], ';') - 11);
+        $type = $this->getType($ext);
+
+        $file = str_replace('data:image/' . $ext . ';base64,', '', $data['image']);
+        $file = base64_decode($file);
+
+        $this->uploadedFile = $file;
+        
+
+        // Preencher os atributos do modelo
+        $user_id = $request->input('user_id');
+        $user_name = $request->input('user_name');
+        $model->name = "avatar de $user_name (id: $user_id)";
+        $model->bytes = strlen($file);
+        $model->type = $type;
+        $model->subtype = $ext;
+        $model->file_group_id = $request->input('file_group_id');
+        $model->file_id = $request->input('file_id');
+        
+        return  $model;
+    }
+
+    /**
+     * Método que passa as validações para o método que implementa Validator no BaseController
+     *
+     * @return array de validação dos campos do modelo
+     */
+    public function getModelValidation($data)
+    {
+        // create validation Base64 image
+        Validator::extend('base64image', function ($attribute, $value, $parameters, $validator) {
+            $explode = explode(',', $value);
+            $allow = ['png', 'jpg', 'svg', 'jpeg'];
+            $format = str_replace(['data:image/', ';', 'base64', ], ['', '', '', ], $explode[0]);
+            // check file format
+            if (!in_array($format, $allow)) {
+                return false;
+            }
+            // check base64 format
+            if (!preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $explode[1])) {
+                return false;
+            }
+            return true;
+        });
+
+        return [
+			'rules' =>  [
+                'imagem' => 'base64image',
+            ],
+            'messages' => [
+                'base64image' => 'Imagem inválida'
+            ],
+        ];
+    }
+
+    /**
+     * Alterações necessárias antes de salvar o modelo
+     *
+     * @return \App\File
+     */
+    public function beforeSave($model)
+    {
+        $time = time();
+        $rootFolder = 'storage'; // TODO: colocar no .env
+        $fileFolder = $rootFolder . DIRECTORY_SEPARATOR . $model->type;
+        $fileName = $time . '.' . $model->subtype;
+
+        $fileURL = $fileFolder . DIRECTORY_SEPARATOR . $fileName;
+
+        if (!file_exists($fileFolder)) {
+            mkdir($fileFolder, 0755, true);
+        }
+        (new \App\Monitor([
+            'tipo' => \App\Monitor::DEBUG,
+            'resultado' => \App\Monitor::RESULTADO_NEUTRO,
+            'arquivo' => __FILE__,
+            'classe' => __CLASS__,
+            'metodo' => __FUNCTION__,
+            'linha' => __LINE__,
+            'mensagem' => "file_id: $model->file_id"
+        ]))->dispatch();
+
+        if ($model->file_id) { // if is updating file, erase de old one.
+            $fileToDelete = \App\File::find($model->file_id);
+            $oldFile = $fileToDelete->file; //str_replace(config('app.url') . DIRECTORY_SEPARATOR, '', $fileToDelete->file);
+            $fileToDelete->delete();
+            (new \App\Monitor([
+                'tipo' => \App\Monitor::DEBUG,
+                'resultado' => \App\Monitor::RESULTADO_NEUTRO,
+                'arquivo' => __FILE__,
+                'classe' => __CLASS__,
+                'metodo' => __FUNCTION__,
+                'linha' => __LINE__,
+                'mensagem' => "oldFile: $oldFile"
+            ]))->dispatch();
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
+        }
+
+        unset($model->file_id);
+
+        if (file_put_contents($fileURL, $this->uploadedFile)) {
+            $model->path = $fileURL;
+        }
+        return $model;
+    }
+
+
+    /**
+     * Alterações necessárias depois de salvar o modelo
+     *
+     * @return \App\File
+     */
+    public function afterSave($model)
+    {
+        $model->url = config('app.url') . DIRECTORY_SEPARATOR . $model->file;
+        return $model;
+    }
+
+    /**
+     * Retorna o tipo de acordo com a extensão.
+     *
+     * @param  string $ext Extensão específica
+     * @return string Type
+     */
+    private function getType($ext)
+    {
+        if (in_array($ext, $this->image_ext)) {
+            return 'image';
+        }
+
+        if (in_array($ext, $this->audio_ext)) {
+            return 'audio';
+        }
+
+        if (in_array($ext, $this->video_ext)) {
+            return 'video';
+        }
+
+        if (in_array($ext, $this->document_ext)) {
+            return 'document';
+        }
+
+        return 'unknown';
+    }
+}

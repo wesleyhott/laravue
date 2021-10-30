@@ -8,11 +8,6 @@ use Illuminate\Support\Facades\Log;
  * >>> LARAVUE
  */
 
-// Modificando o oauth/token para usar o CAS
-// https://gist.github.com/messi89/489473c053e3ea8d9e034b0032effb1d
-Route::post('oauth/token', 'App\Http\Controllers\Laravue\AccessTokenController@issueToken');
-
-
 Route::apiResources([
     'monitors' => \App\Http\Controllers\MonitorController::class,
     'users' => \App\Http\Controllers\UserController::class,
@@ -23,8 +18,13 @@ Route::apiResources([
     'projectmodules' => \App\Http\Controllers\ProjectModuleController::class,
     'tasks' => \App\Http\Controllers\TaskController::class,
     'versions' => \App\Http\Controllers\VersionController::class,
+    'files' => \App\Http\Controllers\FileController::class,
+    'fileavatars' => \App\Http\Controllers\FileAvatarController::class,
     // {{ laravue-insert:route }}
 ]);
+
+//Access
+Route::post('/login', 'AccessController@show');
 
 Route::group(['namespace' => 'App\Http\Controllers','middleware' => 'auth:api'], function() {
     //Binding roles and permissions
@@ -42,6 +42,11 @@ Route::group(['namespace' => 'App\Http\Controllers','middleware' => 'auth:api'],
     // Version
     Route::get('/currentversions', 'CurrentVersionController@index');
     Route::get('/roadmaps', 'RoadMapController@index');
+    //Files
+    Route::get('/download/{file}', 'FileController@download');
+    Route::get('/geturl/{file}', 'FileController@getUrl');
+    //Avatar
+    Route::put('/avatar/{id}', 'UserAvatarController@update');
 });
 
 Route::group(['namespace' => 'App\Http\Controllers\Reports', 'prefix' => 'reports', ], function () {

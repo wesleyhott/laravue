@@ -103,6 +103,7 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeModelTask();
         $this->makeModelVersion();
         $this->makeModelReport();
+        $this->makeModelFile();
         $this->makeModelFileGenerator();
         // Resource
         $this->makeViewPdfBlade();
@@ -134,6 +135,9 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeControllerUserRole();
         $this->makeControllerUser();
         $this->makeControllerAccess();
+        $this->makeControllerFile();
+        $this->makeControllerFileAvatar();
+        $this->makeControllerUserAvatar();
         // Report Controller
         $this->makeReportControllerLaravue();
         $this->makeReportControllerMonitor();
@@ -817,6 +821,17 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
+    protected function makeModelFile() {
+        $this->setStub('install/model-file');
+        $fileName = "Models/File.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
     protected function makeModelFileGenerator() {
         $this->setStub('install/model-filegenerator');
         $fileName = "Models/FileGenerator.php";
@@ -1104,6 +1119,39 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeControllerAccess() {
         $this->setStub('install/controller-access');
         $fileName = "Http/Controllers/AccessController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeControllerFile() {
+        $this->setStub('install/controller-file');
+        $fileName = "Http/Controllers/FileController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeControllerFileAvatar() {
+        $this->setStub('install/controller-file-avatar');
+        $fileName = "Http/Controllers/FileAvatarController.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeControllerUserAvatar() {
+        $this->setStub('install/controller-user-avatar');
+        $fileName = "Http/Controllers/UserAvatarController.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );

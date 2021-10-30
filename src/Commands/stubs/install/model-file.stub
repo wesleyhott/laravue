@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Models;
+
+class File extends LaravueModel
+{
+    // {{ laravue-insert:with }}
+
+    /**
+     * Casting
+     * 
+     * Informa o tipo de dados que é serializado nos objetos JSON.
+     */
+	protected $casts = [
+		'path' => 'string', 
+		'name' => 'string', 
+		'type' => 'string', 
+		'subtype' => 'string', 
+		'bytes' => 'string', 
+	];
+
+    // {{ laravue-insert:relationship }}
+}
