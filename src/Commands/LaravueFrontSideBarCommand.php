@@ -42,9 +42,9 @@ class LaravueFrontSideBarCommand extends LaravueCommand
         $paths = explode( "/", str_replace( '\\', '/', $currentDirectory) );
 
         if ( end( $paths ) == "laravue") { // Laravue Tests
-            $menuDirectory = $this->fileBuildPath($currentDirectory, 'Web', 'src' );
+            $menuDirectory = $this->fileBuildPath($currentDirectory, 'admin', 'src' );
         } else if ( $this->option('outdocker') ) {
-            $menuDirectory = Str::replaceFirst( end( $paths ), $this->fileBuildPath( 'web', 'src' ), $currentDirectory);
+            $menuDirectory = Str::replaceFirst( end( $paths ), $this->fileBuildPath( 'admin', 'src' ), $currentDirectory);
         } else { 
             $menuDirectory = Str::replaceFirst( end( $paths ), $this->fileBuildPath( 'src' ), $currentDirectory);
         }

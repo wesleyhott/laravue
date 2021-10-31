@@ -59,9 +59,9 @@ class LaravueMNFrontCommand extends LaravueCommand
         $paths = explode( "/", str_replace( '\\', '/', $currentDirectory) );
         $buildPath = $this->fileBuildPath( 'src', 'components', $projectName, 'Views', 'Pages', $model, 'forms' );
         if ( end( $paths ) == "laravue") { // Laravue Tests
-            $frontPath = $this->fileBuildPath( $currentDirectory, 'Web', $buildPath);
+            $frontPath = $this->fileBuildPath( $currentDirectory, 'admin', $buildPath);
         } else if ( $this->option('outdocker') ) {
-            $frontPath = Str::replaceFirst( end( $paths ), $this->fileBuildPath( 'web', $buildPath ), $currentDirectory);
+            $frontPath = Str::replaceFirst( end( $paths ), $this->fileBuildPath( 'admin', $buildPath ), $currentDirectory);
         } else {
             $frontPath = Str::replaceFirst( end( $paths ), $buildPath, $currentDirectory);
         }

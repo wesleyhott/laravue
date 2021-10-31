@@ -229,7 +229,7 @@ class LaravueInstallCommand extends LaravueCommand
         $date = now();
 
         $lowerAppName = strtolower($this->applicationName); 
-        $volumes = "- ../../$lowerAppName/web:/var/www/html/$lowerAppName/" . PHP_EOL;
+        $volumes = "- ../../$lowerAppName/admin:/var/www/html/$lowerAppName/" . PHP_EOL;
         $volumes .= "      - ../../$lowerAppName/api:/var/www/html/$lowerAppName/api/" . PHP_EOL;
         $volumes .= "      # {{ laravue-insert:volumes }}";
 
