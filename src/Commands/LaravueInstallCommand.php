@@ -72,8 +72,6 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeUserMigration();
         // Seeder
         $this->makeUserSeeder();
-        $this->makeFuncionarioMPSeeder();
-        $this->makeOauthClientSeeder();
         $this->makeTaskGroupSeeder();
         $this->makeTaskStatusSeeder();
         $this->makeProjectModuleSeeder();
@@ -113,7 +111,6 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeLaravueConfigApp();
         $this->makeLaravueConfigAuth();
         // Provider
-        $this->makeLaravueProviderApp();
         $this->makeLaravueProviderAuth();
         // Rule
         $this->makeIsCpfRule();
@@ -466,30 +463,6 @@ class LaravueInstallCommand extends LaravueCommand
         $stub = $this->replaceChoices( $choices );
 
         $this->files->put( $path, $stub );
-
-        $date = now();
-        $this->info("$date - [ Installing ] >> $fileName");
-    }
-
-    protected function makeFuncionarioMPSeeder() {
-        $this->setStub('install/seeder-funcionario-mp');
-        $fileName = "database/seeders/FuncionarioMpSeeder.php";
-        $outsideApp = true;
-        $path = $this->makePath( $fileName, $outsideApp);
-
-        $this->files->put( $path, $this->files->get( $this->getStub() ) );
-
-        $date = now();
-        $this->info("$date - [ Installing ] >> $fileName");
-    }
-
-    protected function makeOauthClientSeeder() {
-        $this->setStub('install/seeder-oauth-client');
-        $fileName = "database/seeders/OauthClientSeeder.php";
-        $outsideApp = true;
-        $path = $this->makePath( $fileName, $outsideApp);
-
-        $this->files->put( $path, $this->files->get( $this->getStub() ) );
 
         $date = now();
         $this->info("$date - [ Installing ] >> $fileName");
@@ -861,17 +834,6 @@ class LaravueInstallCommand extends LaravueCommand
         $fileName = "config/auth.php";
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp );
-
-        $this->files->put( $path, $this->files->get( $this->getStub() ) );
-
-        $date = now();
-        $this->info("$date - [ Installing ] >> $fileName");
-    }
-
-    protected function makeLaravueProviderApp() {
-        $this->setStub('install/provider-app');
-        $fileName = "Providers/AppServiceProvider.php";
-        $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
 

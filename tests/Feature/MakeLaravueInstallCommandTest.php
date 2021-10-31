@@ -29,7 +29,6 @@ class MakeLaravueInstallCommandTest extends TestCase
         $ruleIsCnpj = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Rules/IsCnpj.php" );
         $ruleIsCpfOrCnpj = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Rules/IsCpfOrCnpj.php" );
         // Seeder
-        $FuncionarioMpSeeder = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "database/seeders/FuncionarioMpSeeder.php" );
         // Filter
         $AbstractFilter = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Filters/AbstractFilter.php" );
         $LaravueFilter = $this->makeTestClass( str_replace( "tests/Feature", "", __DIR__) . "app/Filters/LaravueFilter.php" );
@@ -58,7 +57,6 @@ class MakeLaravueInstallCommandTest extends TestCase
         $this->makeTest($ruleIsCnpj, $deleteAfterCreation);
         $this->makeTest($ruleIsCpfOrCnpj, $deleteAfterCreation);
         // Seeders
-        $this->makeTest($FuncionarioMpSeeder, $deleteAfterCreation);
         // Filter
         $this->makeTest($AbstractFilter, $deleteAfterCreation);
         $this->makeTest($LaravueFilter, $deleteAfterCreation);

@@ -14,8 +14,6 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(UserSeeder::class);
-        $this->call(FuncionarioMpSeeder::class);
-        $this->call(OauthClientSeeder::class);
         /** OPTIONAL */ //$this->call(MonitorSeeder::class);
         $this->call(TaskGroupSeeder::class);
         $this->call(TaskStatusSeeder::class);

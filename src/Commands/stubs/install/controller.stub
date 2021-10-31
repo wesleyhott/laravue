@@ -422,7 +422,7 @@ abstract class LaravueController extends Controller
 
     private function getUri(){
         $routeParts = explode('/', $_SERVER['REQUEST_URI']);
-        $routePartsIndex = config('laravue.uri_index', 3);
+        $routePartsIndex = config('laravue.uri_index', 2);
         $uri = $routeParts[$routePartsIndex];
         if(strpos($uri , '?')){
             $query =  explode('?', $uri);
