@@ -19,22 +19,22 @@ class  FileAvatarController extends LaravueController
     /**
      * Implementação do modelo da classe abstrata em LaravueController
      *
-     * @return \App\File::class
+     * @return \App\Models\File::class
      */
     protected function getModel()
     {
-        return  \App\File::class;
+        return  \App\Models\File::class;
     }
 
     /**
      * Preenche o modelo com os valores correspondentes ao request
      *
-     * @return \App\File
+     * @return \App\Models\File
      */
     public function setModel(Request $request)
     {
         // verifica se é edição - PUT - ou inlcusão - POST.
-        $model = $request->isMethod('put') ? \App\File::findOrFail($request->id) : new \App\File;
+        $model = $request->isMethod('put') ? \App\Models\File::findOrFail($request->id) : new \App\Models\File;
 
         $data = $request->all();
         $ext = substr($data['image'], 11, strpos($data['image'], ';') - 11);
@@ -95,7 +95,7 @@ class  FileAvatarController extends LaravueController
     /**
      * Alterações necessárias antes de salvar o modelo
      *
-     * @return \App\File
+     * @return \App\Models\File
      */
     public function beforeSave($model)
     {
@@ -109,9 +109,9 @@ class  FileAvatarController extends LaravueController
         if (!file_exists($fileFolder)) {
             mkdir($fileFolder, 0755, true);
         }
-        (new \App\Monitor([
-            'tipo' => \App\Monitor::DEBUG,
-            'resultado' => \App\Monitor::RESULTADO_NEUTRO,
+        (new \App\Models\Monitor([
+            'tipo' => \App\Models\Monitor::DEBUG,
+            'resultado' => \App\Models\Monitor::RESULT_NEUTRAL,
             'arquivo' => __FILE__,
             'classe' => __CLASS__,
             'metodo' => __FUNCTION__,
@@ -120,12 +120,12 @@ class  FileAvatarController extends LaravueController
         ]))->dispatch();
 
         if ($model->file_id) { // if is updating file, erase de old one.
-            $fileToDelete = \App\File::find($model->file_id);
+            $fileToDelete = \App\Models\File::find($model->file_id);
             $oldFile = $fileToDelete->file; //str_replace(config('app.url') . DIRECTORY_SEPARATOR, '', $fileToDelete->file);
             $fileToDelete->delete();
-            (new \App\Monitor([
-                'tipo' => \App\Monitor::DEBUG,
-                'resultado' => \App\Monitor::RESULTADO_NEUTRO,
+            (new \App\Models\Monitor([
+                'tipo' => \App\Models\Monitor::DEBUG,
+                'resultado' => \App\Models\Monitor::RESULT_NEUTRAL,
                 'arquivo' => __FILE__,
                 'classe' => __CLASS__,
                 'metodo' => __FUNCTION__,
@@ -149,7 +149,7 @@ class  FileAvatarController extends LaravueController
     /**
      * Alterações necessárias depois de salvar o modelo
      *
-     * @return \App\File
+     * @return \App\Models\File
      */
     public function afterSave($model)
     {

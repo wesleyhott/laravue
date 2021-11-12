@@ -4,9 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserRegistration;
+use stdClass;
 
 class UserController extends LaravueController
 {
+    private $send_email;
+    private $clean_pass;
     /**
      * Implementação do modelo da classe abstrata em LaravueController
      * 
@@ -24,13 +30,14 @@ class UserController extends LaravueController
     public function setModel(Request $request)
     {
         // verifica se é edição - PUT - ou inlcusão - POST.
-        $model = $request->isMethod('put') ? $this->model::findOrFail($request->id) : new $this->model();
+        $model = $request->isMethod('put') ? \App\Models\User::findOrFail($request->id) : new \App\Models\User();
         
         // Preencher os atributos do modelo
         $model->name = $request->input('name');
         $model->email = $request->input('email');
         $model->password = Hash::make($request->input('password'));
-        $model->password_confirmation = $request->input('password_confirmation');
+        $this->send_email = $request->input('send_email');
+        $this->clean_pass = $request->input('password');
 
         return  $model;
     }
@@ -44,9 +51,21 @@ class UserController extends LaravueController
         return [
             'rules' =>  [
 				'name' => ['required', 'string', 'max:255'],
-				'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+				'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $data['id'] ],
 				'password' => ['required', 'string', 'min:8', 'confirmed'],
 			]
         ];
+    }
+
+    public function afterSave($model) {
+        if( $this->send_email ){
+            $user = new \stdClass();
+            $user->name = $model->name;
+            $user->email = $model->email;
+            $user->password = $this->clean_pass;
+            // Send registration mail
+            Mail::to($model->email)->queue(new UserRegistration($user));
+        }
+        return $model; 
     }
 }

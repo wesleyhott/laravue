@@ -25,7 +25,6 @@ class TaskSeeder extends Seeder
             'ended_at' => Carbon::now(),
             'is_milestone' => true,
             'is_roadmap' => true,
-            'usuario_ult_alteracao' => 'inserir usuário logado',
         ]);
     }
 }

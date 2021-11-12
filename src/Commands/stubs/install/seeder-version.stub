@@ -21,7 +21,6 @@ class VersionSeeder extends Seeder
             'feature_number' => 0,
             'issue_number' => 0,
             'is_milestone' => true,
-             'usuario_ult_alteracao' => 'inserir usuário logado',
         ]);
     }
 }

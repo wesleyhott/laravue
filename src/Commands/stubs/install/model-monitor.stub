@@ -86,7 +86,6 @@ class Monitor extends LaravueModel
                 'method' => $method,
                 'line' => $line,
                 'message' => $message,
-                'usuario_ult_alteracao' => 'laravue_user@mail.br',
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
             ]

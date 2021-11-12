@@ -68,6 +68,8 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeDotGitIgnoreStorageAppReports();
         // .htaccess
         $this->makeHtaccess();
+        // index.php for apache
+        $this->makeIndexPhp();
         // migration
         $this->makeUserMigration();
         // Seeder
@@ -91,6 +93,8 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeEventMonitor();
         // Listeners
         $this->makeListenerMonitor();
+        // E-mails
+        $this->makeMailUserRegistration();
         // Models
         $this->makeLaravueModel();
         $this->makeModelMonitor();
@@ -106,7 +110,9 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeModelFile();
         $this->makeModelFileGenerator();
         // Resource
+        $this->makeViewEmailUserRegistration();
         $this->makeViewPdfBlade();
+        $this->makeWelcomeBlade();
         // Config
         $this->makeLaravueConfigApp();
         $this->makeLaravueConfigAuth();
@@ -301,6 +307,7 @@ class LaravueInstallCommand extends LaravueCommand
         $fileName = ".env.example";
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp);
+        $lowerAppName = strtolower($this->applicationName);
 
         $choices = array(
             "applicationName" => $this->applicationName,
@@ -308,6 +315,7 @@ class LaravueInstallCommand extends LaravueCommand
             "databaseUserName" => $this->databaseUserName,
             "databaseUserPassword" => $this->databaseUserPassword,
             "serverUriIndex" => $this->serverUriIndex,
+            "localhostRoute" => $lowerAppName,
         );
         $stub = $this->replaceChoices( $choices );
 
@@ -364,13 +372,14 @@ class LaravueInstallCommand extends LaravueCommand
         $fileName = ".env.prod";
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp);
+        $lowerAppName = strtolower($this->applicationName);
 
         $choices = array(
             "applicationName" => $this->applicationName,
             "databaseName" => $this->databaseName,
             "databaseUserName" => $this->databaseUserName,
             "databaseUserPassword" => $this->databaseUserPassword,
-            "serverUriIndex" => $this->serverUriIndex,
+            "appUrl" => $lowerAppName,
         );
         $stub = $this->replaceChoices( $choices );
 
@@ -416,6 +425,18 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeHtaccess() {
         $this->setStub('install/.htaccess');
         $fileName = ".htaccess";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp);
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeIndexPhp() {
+        $this->setStub('install/index-php');
+        $fileName = "index.php";
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp);
 
@@ -634,6 +655,27 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
+    protected function makeMailUserRegistration() {
+        $this->setStub('install/mail-user-registration');
+        $fileName = "Mail/UserRegistration.php";
+
+        $path = $this->makePath( $fileName );
+
+        $lowerAppName = strtolower($this->applicationName);
+        $appName = $this->applicationName;
+
+        $choices = array(
+            "appName" => $appName,
+            "dominio" => $lowerAppName,
+        );
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
     protected function makeLaravueModel() {
         $this->setStub('install/model');
         $fileName = "Models/LaravueModel.php";
@@ -799,6 +841,22 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
+    protected function makeViewEmailUserRegistration() {
+        $this->setStub('install/resource-view-email-user-registration');
+        $fileName = "resources/views/emails/user/registration.blade.php";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp);
+
+        $lowerAppName = strtolower($this->applicationName);
+        $choices = array();
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
     protected function makeViewPdfBlade() {
         $this->setStub('install/resource-view-pdf-report');
         $fileName = "resources/views/reports/default_pdf_report.blade.php";
@@ -808,6 +866,23 @@ class LaravueInstallCommand extends LaravueCommand
         $lowerAppName = strtolower($this->applicationName);
         $choices = array(
             "applicationName" => $lowerAppName
+        );
+        $stub = $this->replaceChoices( $choices );
+
+        $this->files->put( $path, $stub );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeWelcomeBlade() {
+        $this->setStub('install/resource-view-welcome');
+        $fileName = "resources/views/welcome.blade.php";
+        $outsideApp = true;
+        $path = $this->makePath( $fileName, $outsideApp);
+        $appName = $this->getTitle( $this->applicationName );
+        $choices = array(
+            "applicationName" => $appName,
         );
         $stub = $this->replaceChoices( $choices );
 

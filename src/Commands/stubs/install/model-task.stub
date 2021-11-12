@@ -6,7 +6,7 @@ class Task extends LaravueModel
 {
     public const TASK_FINISHED = 'concluída';
 
-    protected $with = ['taskGroup', 'taskStatus', 'projectModule', 'version', 'user'];
+    protected $with = ['taskGroup', 'taskStatus'];
     // {{ laravue-insert:with }}
 
     /**

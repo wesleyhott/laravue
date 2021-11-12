@@ -1,0 +1,5 @@
+<div>
+    Seja bem vindo <b>{{ $user->name }}</b>! <br />
+    Seu login é {{ $user->email }} <br />
+    Sua senha é {{ $user->password }}
+</div>

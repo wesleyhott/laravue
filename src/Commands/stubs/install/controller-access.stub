@@ -16,7 +16,7 @@ class AccessController extends Controller
     public function show(Request $request)
     {
         $data = $request->all();
-        $user = new \App\User();
+        $user = new \App\Models\User();
 
         $validation = Validator::make($data, [
             'email' => 'required|string|email|max:255',
@@ -36,7 +36,7 @@ class AccessController extends Controller
             $user->access_token = $user->createToken($user->email)->accessToken;
             $user->access_keys = $user->getAllPermissions();
             if($user->avatar_id) {
-                $file = \App\File::find($user->avatar_id);
+                $file = \App\Models\File::find($user->avatar_id);
                 $user->avatar = config('app.url') . DIRECTORY_SEPARATOR . $file->file;
             }
         } else {
@@ -82,7 +82,7 @@ class AccessController extends Controller
         }
 
         // Store in database
-        $user = $request->isMethod('put') ? \App\User::findOrFail($request->id) : new \App\User();
+        $user = $request->isMethod('put') ? \App\Models\User::findOrFail($request->id) : new \App\Models\User();
 
         $user->id = $request->input('id');
         $user->name = $request->input('name');

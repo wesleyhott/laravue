@@ -28,6 +28,7 @@ class LaravueSeeder extends Seeder
 
         // create permissions
         $ver_users = Permission::create(['name' => 'ver users']);
+        $editar_users = Permission::create(['name' => 'editar users']);
         $apagar_users = Permission::create(['name' => 'apagar users']);
         $imprimir_users = Permission::create(['name' => 'imprimir users']);
 
@@ -82,6 +83,8 @@ class LaravueSeeder extends Seeder
         $editar_roles_users = Permission::create(['name' => 'editar roles users']);
         $editar_permissions_users = Permission::create(['name' => 'editar permissions users']);
         $editar_permissions_roles = Permission::create(['name' => 'editar permissions roles']);
+        $editar_fileavatars = Permission::create(['name' => 'editar fileavatars']);
+        $editar_avatars = Permission::create(['name' => 'editar avatar']);
 
         // create roles and assign existing permissions
         $roleAdmin = Role::create(['name' => 'Administrador', 'guard_name' => 'api']);

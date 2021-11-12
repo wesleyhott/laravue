@@ -18,22 +18,22 @@ class  FileController extends LaravueController
     /**
      * Implementação do modelo da classe abstrata em LaravueController
      *
-     * @return \App\File::class
+     * @return \App\Models\File::class
      */
     protected function getModel()
     {
-        return  \App\File::class;
+        return  \App\Models\File::class;
     }
 
     /**
      * Preenche o modelo com os valores correspondentes ao request
      *
-     * @return \App\File
+     * @return \App\Models\File
      */
     public function setModel(Request $request)
     {
         // verifica se é edição - PUT - ou inlcusão - POST.
-        $model = $request->isMethod('put') ? \App\File::findOrFail($request->id) : new \App\File;
+        $model = $request->isMethod('put') ? \App\Models\File::findOrFail($request->id) : new \App\Models\File;
 
         $this->uploadedFile = $request->file('file');
         $ext = $this->uploadedFile->getClientOriginalExtension();
@@ -78,12 +78,12 @@ class  FileController extends LaravueController
     /**
      * Alterações necessárias antes de mostrar a coleção do modelo
      *
-     * @return \App\File
+     * @return \App\Models\File
      */
     public function beforeIndex($data)
     {
         foreach( $data as $item ) {
-            $item->file_group_name = ( \App\FileGroup::findOrFail($item->file_group_id) )->name;
+            $item->file_group_name = ( \App\Models\FileGroup::findOrFail($item->file_group_id) )->name;
             $item->kbytes = round($item->bytes / 1024, 1);
         }
         return $data;
@@ -92,7 +92,7 @@ class  FileController extends LaravueController
     /**
      * Alterações necessárias antes de salvar o modelo
      *
-     * @return \App\File
+     * @return \App\Models\File
      */
     public function beforeSave($model)
     {
@@ -105,7 +105,7 @@ class  FileController extends LaravueController
     /**
      * Alterações necessárias depois de salvar o modelo
      *
-     * @return \App\File
+     * @return \App\Models\File
      */
     public function beforeDestroy($model)
     {

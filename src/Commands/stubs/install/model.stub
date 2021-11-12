@@ -20,29 +20,4 @@ abstract class LaravueModel extends Model
     {
         return (new LaravueFilter($request))->filter($builder);
     }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        self::creating(function($model){
-            try {
-                if( !$isView ) {
-                    $model->usuario_ult_alteracao = Auth::user()->email;
-                }
-            } catch (Exception $e) {
-                abort(401, 'Usuário não autenticado.');
-            }
-        });
-
-        self::updating(function($model){
-            try {
-                if( !$isView ) {
-                    $model->usuario_ult_alteracao = Auth::user()->email;
-                }
-            } catch (Exception $e) {
-                abort(401, 'Usuário não autenticado.');
-            }
-        });
-    }
 }

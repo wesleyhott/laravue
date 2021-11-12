@@ -24,7 +24,7 @@ Route::apiResources([
 ]);
 
 //Access
-Route::post('/login', 'AccessController@show');
+Route::post('/login', 'App\Http\Controllers\AccessController@show');
 
 Route::group(['namespace' => 'App\Http\Controllers','middleware' => 'auth:api'], function() {
     //Binding roles and permissions

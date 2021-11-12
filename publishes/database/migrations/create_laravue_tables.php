@@ -28,27 +28,23 @@ class CreateLaravueTables extends Migration
             $table->integer('line')->nullable();
             $table->text('message');
             $table->timestamps();
-            $table->string('usuario_ult_alteracao', 40);
         });
 
         Schema::create('task_groups', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
-            $table->String('usuario_ult_alteracao', 40);
             $table->timestamps();
         });
 
         Schema::create('task_statuses', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
-            $table->String('usuario_ult_alteracao', 40);
             $table->timestamps();
         });
 
         Schema::create('project_modules', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
-            $table->String('usuario_ult_alteracao', 40);
             $table->timestamps();
         });
 
@@ -85,7 +81,6 @@ class CreateLaravueTables extends Migration
             $table->dateTime('ended_at')->nullable();
             $table->boolean('is_milestone');
             $table->boolean('is_roadmap');
-            $table->String('usuario_ult_alteracao', 40);
             $table->timestamps();
         });
 
@@ -102,7 +97,6 @@ class CreateLaravueTables extends Migration
             $table->integer('feature_number');
             $table->integer('issue_number');
             $table->boolean('is_milestone');
-            $table->String('usuario_ult_alteracao', 40);
             $table->timestamps();
         });
 

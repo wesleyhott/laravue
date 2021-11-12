@@ -36,7 +36,6 @@ class MonitorController extends LaravueController
         $model->line = $request->input('line');
         $model->created_at = $request->input('created_at');
         $model->updated_at = $request->input('updated_at');
-        $model->usuario_ult_alteracao = $request->input('usuario_ult_alteracao');
 
         return  $model;
     }
