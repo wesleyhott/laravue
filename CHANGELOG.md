@@ -2,7 +2,7 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.35.160 - 23/out/2021
+## 8.35.161 - 16/nov/2021
 ### Adicionado
 - Inclusão da opção --view ou -i para criação de modelos a partir de views do banco de dados.
 - Pluralização e acentuação pelo usuário por meio de configuração.
