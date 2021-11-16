@@ -107,9 +107,14 @@ class CreateLaravueTables extends Migration
         });
 
         Schema::create('vw_funcionario_mps', function (Blueprint $table) {
-            $table->integer('pessoa_id');
-            $table->string('mamp', 6);
+            $table->integer('id')->primary();
             $table->binary('foto');
+            $table->char('mamp', 6);
+			$table->string('nome', 60);
+			$table->string('email', 50);
+			$table->integer('unidade_id');
+			$table->string('nome_unidade', 250);
+			$table->string('endereco', 614);
         });
     }
 

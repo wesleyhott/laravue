@@ -2,7 +2,7 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.34.159 - 19/out/2021
+## 8.34.160 - 23/out/2021
 ### Adicionado
 - Inclusão da opção --view ou -i para criação de modelos a partir de views do banco de dados.
 - Pluralização e acentuação pelo usuário por meio de configuração.
@@ -10,6 +10,7 @@ Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 ### Alterado
 - Correções menores.
 - Atualização do PHP Unit test.
+- Atualização da vw_funcionario_mps.
 ## 8.31.156 - 08/out/2021
 ### Adicionado
 - Acenutação para a palavra Repositório(s)
