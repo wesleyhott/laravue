@@ -68,8 +68,16 @@ class LaravueFrontIndexCommand extends LaravueCommand
             } else {
                 $returnFields .= PHP_EOL . $this->tabs(4);
             }
+
+            $propKey = $key;
+            if( $this->isFk( $key ) ) {
+                $keyFields = $this->getModelFieldsFromKey( $key );
+                $modellabel = $this->getSelectLabel( $keyFields );
+                $propKey = substr( $key, 0, -3 ) . '.' . $modellabel;
+            }
+            
             $returnFields .= "{" . PHP_EOL;
-            $returnFields .= $this->tabs(5) . "prop: \"$key\"," . PHP_EOL;
+            $returnFields .= $this->tabs(5) . "prop: \"$propKey\"," . PHP_EOL;
             $returnFields .= $this->tabs(5) . "label: \"$label\"," . PHP_EOL;
             $returnFields .= $this->tabs(5) . "minWidth: $minWidth," . PHP_EOL;
             if( $this->isBoolean( $value ) ) {
