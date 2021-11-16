@@ -15,13 +15,16 @@ Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 - Correção de erros de instalação
 - Pasta web para admin
 ## 8.34.159 - 19/out/2021
+## 8.35.161 - 16/nov/2021
 ### Adicionado
 - Inclusão da opção --view ou -i para criação de modelos a partir de views do banco de dados.
 - Pluralização e acentuação pelo usuário por meio de configuração.
 - Novo comando de aprendizagem do Laravue laravue:learn words[] -a | -p | -s
+- Suporte a FK labels na index.vue
 ### Alterado
 - Correções menores.
 - Atualização do PHP Unit test.
+- Atualização da vw_funcionario_mps.
 ## 8.31.156 - 08/out/2021
 ### Adicionado
 - Acenutação para a palavra Repositório(s)
