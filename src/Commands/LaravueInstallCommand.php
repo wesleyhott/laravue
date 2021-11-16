@@ -394,6 +394,7 @@ class LaravueInstallCommand extends LaravueCommand
         $fileName = ".env";
         $outsideApp = true;
         $path = $this->makePath( $fileName, $outsideApp);
+        $lowerAppName = strtolower($this->applicationName);
 
         $choices = array(
             "applicationName" => $this->applicationName,
@@ -401,6 +402,7 @@ class LaravueInstallCommand extends LaravueCommand
             "databaseUserName" => $this->databaseUserName,
             "databaseUserPassword" => $this->databaseUserPassword,
             "serverUriIndex" => $this->serverUriIndex,
+            "appUrl" => $lowerAppName,
         );
         $stub = $this->replaceChoices( $choices );
 

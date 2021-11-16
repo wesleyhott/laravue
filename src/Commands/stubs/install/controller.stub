@@ -208,7 +208,7 @@ abstract class LaravueController extends Controller
                 return response(
                     [
                         'message' => $this->message_store_200,
-                        'data' => $data
+                        'data' => $model
                     ],
                     Response::HTTP_OK
                 );

@@ -44,7 +44,6 @@ class  FileController extends LaravueController
         $model->bytes = $_FILES['file']['size'];
         $model->type = $type;
         $model->subtype = $ext;
-        $model->file_group_id = $request->input('file_group_id');
 
         return  $model;
     }
@@ -63,8 +62,7 @@ class  FileController extends LaravueController
         return [
 			'rules' =>  [
                 'name' => 'string | unique:files,name,'
-                . $data['id'] . ',id,'
-                . 'file_group_id,' .  $data['file_group_id'],
+                . $data['id'] . ',id,',
                 'type' => 'string ',
                 'subtype' => 'string',
                 'file' => 'required | file | mimes:' . $all_ext . ' | max:' . $max_size,
@@ -83,7 +81,6 @@ class  FileController extends LaravueController
     public function beforeIndex($data)
     {
         foreach( $data as $item ) {
-            $item->file_group_name = ( \App\Models\FileGroup::findOrFail($item->file_group_id) )->name;
             $item->kbytes = round($item->bytes / 1024, 1);
         }
         return $data;

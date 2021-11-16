@@ -42,6 +42,16 @@ class UserReportController extends LaravueReportController
      */
     public function beforeIndex($data)
     {
-        return $data;
+        $reportData = new \Illuminate\Support\Collection();  
+
+		foreach ( $data as $item ) {
+
+			$linha = array(
+				'Nome' => $item->name,
+				'E-mail' => $item->email,
+			);
+			$reportData->push( $linha );
+		}
+		return $reportData;
     }
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
-use App\File;
 use Validator;
 
 class  FileAvatarController extends LaravueController
@@ -53,7 +52,6 @@ class  FileAvatarController extends LaravueController
         $model->bytes = strlen($file);
         $model->type = $type;
         $model->subtype = $ext;
-        $model->file_group_id = $request->input('file_group_id');
         $model->file_id = $request->input('file_id');
         
         return  $model;
@@ -100,7 +98,7 @@ class  FileAvatarController extends LaravueController
     public function beforeSave($model)
     {
         $time = time();
-        $rootFolder = 'storage'; // TODO: colocar no .env
+        $rootFolder = 'storage/app'; // TODO: colocar no .env
         $fileFolder = $rootFolder . DIRECTORY_SEPARATOR . $model->type;
         $fileName = $time . '.' . $model->subtype;
 
@@ -141,7 +139,8 @@ class  FileAvatarController extends LaravueController
 
         if (file_put_contents($fileURL, $this->uploadedFile)) {
             $model->path = $fileURL;
-        }
+        } 
+
         return $model;
     }
 
