@@ -90,7 +90,10 @@ class LaravueInstallCommand extends LaravueCommand
         // Filters
         $this->makeAtivoEdicaoFilter();
         $this->makeFieldLikeFilter();
+        $this->makeModelFieldFilter();
         $this->makeModelFilter();
+        $this->makeNameFilter();
+        $this->makeNotNullFilter();
         $this->makeOrderByIdFilter();
         $this->makeOrderByNameFilter();
         $this->makeAbstractFilter();
@@ -669,9 +672,42 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
+    protected function makeModelFieldFilter() {
+        $this->setStub('install/filter-model-field');
+        $fileName = "Filters/ModelField.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
     protected function makeModelFilter() {
         $this->setStub('install/filter-model');
         $fileName = "Filters/ModelFilter.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+    
+    protected function makeNameFilter() {
+        $this->setStub('install/filter-name');
+        $fileName = "Filters/Name.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makeNotNullFilter() {
+        $this->setStub('install/filter-not-null');
+        $fileName = "Filters/NotNull.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );

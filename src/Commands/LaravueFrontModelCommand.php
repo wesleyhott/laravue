@@ -401,7 +401,7 @@ class LaravueFrontModelCommand extends LaravueCommand
         $selects = $this->tabs(2) ."{{ methodname }}() {" . PHP_EOL;
         $selects .= $this->tabs(3) . "this.setLoading(true, \"{{ title }}\")" . PHP_EOL;
         $selects .= $this->tabs(3) . "this.\$http" . PHP_EOL;
-        $selects .= $this->tabs(4) . ".get(`{{ route }}?per_page=-1`)" . PHP_EOL;
+        $selects .= $this->tabs(4) . ".get(`{{ route }}?per_page=-1&model_field={{ modelField }}&not_null={{ modelField }}`)" . PHP_EOL;
         $selects .= $this->tabs(4) . ".then(response => {" . PHP_EOL;
         $selects .= $this->tabs(5) . "this.setLoading(false)" . PHP_EOL;
         $selects .= $this->tabs(5) . "this.selects.{{ selectField }} = response.data.data.data" . PHP_EOL;
@@ -416,6 +416,8 @@ class LaravueFrontModelCommand extends LaravueCommand
         $return = "";
         $i = 0;
         foreach ($fks as $key => $value) {
+            $keyFields = $this->getModelFieldsFromKey( $key );
+            $modelField = $this->getSelectLabel( $keyFields );
             $methodName = "load" . Str::studly( $this->pluralize( str_replace("_id", "", $key ) ) );
             $title = $this->getTitle( $key );
             $route = $this->pluralize( str_replace( "_", "",  str_replace( "_id", "",  $key ) ) );
@@ -429,7 +431,8 @@ class LaravueFrontModelCommand extends LaravueCommand
             $title = str_replace( '{{ title }}', $title , $methodname );
             $route = str_replace( '{{ route }}', $route , $title );
             $selectField = str_replace( '{{ selectField }}', $selectField , $route );
-            $nextMethod = str_replace( '{{ nextMethod }}', $nextMethod , $selectField );
+            $modelField = str_replace( '{{ modelField }}', $modelField , $selectField );
+            $nextMethod = str_replace( '{{ nextMethod }}', $nextMethod , $modelField );
             $last = $i == $size ? "" : PHP_EOL;
             $lastSelect = str_replace( '{{ last }}', $last , $nextMethod );
 

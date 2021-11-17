@@ -7,6 +7,18 @@ class ModelFilter
     public function filter( $builder, $model )
     {   
         foreach ( json_decode( $model ) as $key => $value ) {
+            if( $key == 'id' || str_contains($key, '_id') ) {
+                if( gettype( $value ) == 'array' ) {
+                    $builder->whereIn( $key, $value );
+                } else {
+                    $builder->where( $key, $value );
+                }
+                continue;
+            }
+            if( $key == 'status' ) {
+                $builder->where( $key, $value );
+                continue;
+            }
             switch( $value ){
                 case 'true':
                     $builder->where( $key, 1 );
