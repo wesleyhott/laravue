@@ -14,8 +14,7 @@ Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 - Retirada Access Token controller
 - Correção de erros de instalação
 - Pasta web para admin
-## 8.34.159 - 19/out/2021
-## 8.35.161 - 16/nov/2021
+## 8.35.162 - 16/nov/2021
 ### Adicionado
 - Inclusão da opção --view ou -i para criação de modelos a partir de views do banco de dados.
 - Pluralização e acentuação pelo usuário por meio de configuração.
