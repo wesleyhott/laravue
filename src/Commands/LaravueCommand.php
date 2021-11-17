@@ -541,9 +541,10 @@ class LaravueCommand extends Command
     {
         $stub = $this->files->get($this->getStub());
 
-        if( is_array($model) && count( $model ) > 1 ) { // mxn
-            $class = $this->replaceClass($stub, $model[0] . $model[1]);
-            $table = $this->replaceTable($class, $model[0] . $model[1], $plural = false);
+        if( $this->option('mxn') ) {
+            $parsedModel =  is_array($model) ? $model[0] . $model[1] : $model;
+            $class = $this->replaceClass($stub, $parsedModel);
+            $table = $this->replaceTable($class, $parsedModel, $plural = false);
             return $this->replaceField($table, $model);
         }
 

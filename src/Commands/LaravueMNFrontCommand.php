@@ -113,6 +113,14 @@ class LaravueMNFrontCommand extends LaravueCommand
     }
 
     protected function getField( $model, $path ) {
+        $snakeModel = Str::snake( $model );
+        $modellabel = 'id';
+        foreach ($this->fields as $key => $value) {
+            if( strcmp( substr( $key, 0, -3), $snakeModel ) == 0 ) {
+                $keyFields = $this->getModelFieldsFromKey( $key );
+                $modellabel = $this->getSelectLabel( $keyFields );
+            }
+        }
         $title = $this->getTitle($model, true ); // true: plural.
         $plural = $this->pluralize( $model );
         $lowcasePlural = lcfirst( $plural );
@@ -128,14 +136,14 @@ class LaravueMNFrontCommand extends LaravueCommand
         $field .= $this->tabs(11) . "class=\"baseSelect\"" . PHP_EOL;
         $field .= $this->tabs(11) . "size=\"large\"" . PHP_EOL;
         $field .= $this->tabs(11) . "style=\"width: 100%;\"" . PHP_EOL;
-        $field .= $this->tabs(11) . ":placeholder=\"relatorio ? 'Não filtrar' : 'User'\"" . PHP_EOL;
+        $field .= $this->tabs(11) . ":placeholder=\"relatorio ? 'Não filtrar' : '$title'\"" . PHP_EOL;
         $field .= $this->tabs(11) . "v-model=\"model.${lowcase}_ids\" >" . PHP_EOL;
         $field .= $this->tabs(12) . "<el-option v-if=\"relatorio\" label=\"Não filtrar\" value=\"\"></el-option>" . PHP_EOL;
         $field .= $this->tabs(12) . "<el-option" . PHP_EOL;
         $field .= $this->tabs(13) . "v-for=\"item in selects.$lowcasePlural\"" . PHP_EOL;
         $field .= $this->tabs(13) . "class=\"select-danger\"" . PHP_EOL;
         $field .= $this->tabs(13) . ":value=\"item.id\"" . PHP_EOL;
-        $field .= $this->tabs(13) . ":label=\"item.id\"" . PHP_EOL;
+        $field .= $this->tabs(13) . ":label=\"item.$modellabel\"" . PHP_EOL;
         $field .= $this->tabs(13) . ":key=\"item.id\" >" . PHP_EOL;
         $field .= $this->tabs(12) . "</el-option>" . PHP_EOL;
         $field .= $this->tabs(10) . "</el-select>" . PHP_EOL;
@@ -190,7 +198,7 @@ class LaravueMNFrontCommand extends LaravueCommand
 
         $response = "this.model.${item}_ids = []" . PHP_EOL;
         $response .= $this->tabs(6) . "this.model.${items}.forEach(element => {" . PHP_EOL;
-        $response .= $this->tabs(7) . "this.model.${items}_ids.push( element.id )" . PHP_EOL;
+        $response .= $this->tabs(7) . "this.model.${item}_ids.push( element.id )" . PHP_EOL;
         $response .= $this->tabs(6) . "})" . PHP_EOL;
         $response .= $this->tabs(6) . "// {{ laravue-insert:loadModelResponse }}";
 
@@ -256,7 +264,14 @@ class LaravueMNFrontCommand extends LaravueCommand
     }
 
     public function getModalField( $model, $path ) {
-        $label = $this->getSelectLabel( $this->fields );
+        $snakeModel = Str::snake( $model );
+        $modellabel = 'id';
+        foreach ($this->fields as $key => $value) {
+            if( strcmp( substr( $key, 0, -3), $snakeModel ) != 0 ) {
+                $keyFields = $this->getModelFieldsFromKey( $key );
+                $modellabel = $this->getSelectLabel( $keyFields );
+            }
+        }
         $title = $this->getTitle( $model, true);
         $plural = $this->pluralize( $model );
         $lowerSingular = lcfirst( $model );
@@ -268,7 +283,7 @@ class LaravueMNFrontCommand extends LaravueCommand
         $modalField .= $this->tabs(4) . "<b>$title</b>" . PHP_EOL;
         $modalField .= $this->tabs(4) . "<br/>" . PHP_EOL;
         $modalField .= $this->tabs(4) . "<ul>" . PHP_EOL;
-        $modalField .= $this->tabs(5) . "<li v-for=\"($lowerSingular, key) in model.$lowerPlural\" :key=\"key\">{{ $lowerSingular.$label }}</li>" . PHP_EOL;
+        $modalField .= $this->tabs(5) . "<li v-for=\"($lowerSingular, key) in model.$lowerPlural\" :key=\"key\">{{ $lowerSingular.$modellabel }}</li>" . PHP_EOL;
         $modalField .= $this->tabs(4) . "</ul>" . PHP_EOL;
         $modalField .= $this->tabs(3) . "</p>" . PHP_EOL;
         $modalField .= $this->tabs(2) . "</div>" . PHP_EOL;
