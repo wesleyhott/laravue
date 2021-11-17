@@ -80,7 +80,9 @@ class LaravueReportCommand extends LaravueCommand
                 $beforeIndex .= $this->tabs(4) . "'$title' => \$${key}Maskared," . PHP_EOL;
             } else if( $this->isFk( $key ) ) {
                 $relation = str_replace( '_id', '', $key );
-                $beforeIndex .= $this->tabs(4) . "'$title' => \$item->${relation}->id," . PHP_EOL;
+                $keyFields = $this->getModelFieldsFromKey( $key );
+                $modelField = $this->getSelectLabel( $keyFields );
+                $beforeIndex .= $this->tabs(4) . "'$title' => isset( \$item->${relation}->${modelField} ) ? \$item->${relation}->${modelField} : '---'," . PHP_EOL;
             } else {
                 $beforeIndex .= $this->tabs(4) . "'$title' => \$item->$key," . PHP_EOL;
             }

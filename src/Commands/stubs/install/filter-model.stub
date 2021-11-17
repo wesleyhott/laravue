@@ -2,35 +2,45 @@
 
 namespace App\Filters;
 
+use Illuminate\Support\Str;
+
 class ModelFilter
 {
     public function filter( $builder, $model )
     {   
         foreach ( json_decode( $model ) as $key => $value ) {
-            if( $key == 'id' || str_contains($key, '_id') ) {
-                if( gettype( $value ) == 'array' ) {
-                    $builder->whereIn( $key, $value );
-                } else {
+            if ( $value != '' ) {
+                if( $key == 'id' || str_contains($key, '_id') ) {
+                    if( gettype( $value ) == 'array' ) {
+                        $builder->whereIn( $key, $value );
+                    } else {
+                        $builder->where( $key, $value );
+                    }
+                    continue;
+                }         
+                if( $key == 'status' ) {
                     $builder->where( $key, $value );
+                    continue;
                 }
-                continue;
-            }
-            if( $key == 'status' ) {
-                $builder->where( $key, $value );
-                continue;
-            }
-            switch( $value ){
-                case 'true':
-                    $builder->where( $key, 1 );
-                break;
-                case 'false':
-                    $builder->where( $key, 0 );
-                break;
-                default:
-                    $builder->where( $key, 'like', '%'. $value .'%' );
-            }
+                if( str_contains($key, '_date_range' ) ) {
+                    $key = Str::substr( $key, 0, strpos( $key, '_date_range' ) );
+                    if( $value != '' ) {
+                        $builder->whereBetween( $key, $value );
+                        continue;
+                    }
+                }
+                switch( $value ){
+                    case 'true':
+                        $builder->where( $key, 1 );
+                    break;
+                    case 'false':
+                        $builder->where( $key, 0 );
+                    break;
+                    default:
+                        $builder->where( $key, 'like', '%' . $value . '%' );
+                }
+            }    
         }
-
         return $builder;
     }
 }

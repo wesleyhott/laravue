@@ -2,13 +2,14 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.36.162 - 17/nov/2021
+## 8.37.162 - 17/nov/2021
 ### Adicionado
 - Inclusão da opção --view ou -i para criação de modelos a partir de views do banco de dados.
 - Pluralização e acentuação pelo usuário por meio de configuração.
 - Novo comando de aprendizagem do Laravue laravue:learn words[] -a | -p | -s
 - Suporte a FK labels na index.vue
 - Filtros ModelField e NotNull para os selects.
+- Período de data para os campos date e datetime em relatório.
 ### Alterado
 - Correções menores.
 - Atualização do PHP Unit test.
