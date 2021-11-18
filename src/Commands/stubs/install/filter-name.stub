@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Filters;
+
+class Name
+{
+    public function filter($builder, $value)
+    {
+        return $builder->where('name', 'like', '%'. $value .'%');
+    }
+}

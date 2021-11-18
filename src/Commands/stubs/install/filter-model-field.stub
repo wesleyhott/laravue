@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Filters;
+
+class ModelField
+{
+    public function filter($builder, $fields)
+    {   
+        $listFields = array();
+        if ($fields != '') {
+            $listFields = explode (',' , $fields);
+        }
+        $listFields[] = 'id';
+        return $builder->select($listFields);
+    }
+}
