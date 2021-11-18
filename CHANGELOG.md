@@ -2,10 +2,16 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.35.167 - 31/out/2021
+## 8.42.183 - 17/nov/2021
 ### Adicionado
 - Access Controller
 - Htacess
+- Inclusão da opção --view ou -i para criação de modelos a partir de views do banco de dados.
+- Pluralização e acentuação pelo usuário por meio de configuração.
+- Novo comando de aprendizagem do Laravue laravue:learn words[] -a | -p | -s
+- Suporte a FK labels na index.vue
+- Filtros ModelField e NotNull para os selects.
+- Período de data para os campos date e datetime em relatório.
 - ### Alterado
 - Ajustes de ambiente
 - Troca de ws para api
@@ -14,13 +20,6 @@ Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 - Retirada Access Token controller
 - Correção de erros de instalação
 - Pasta web para admin
-## 8.35.162 - 16/nov/2021
-### Adicionado
-- Inclusão da opção --view ou -i para criação de modelos a partir de views do banco de dados.
-- Pluralização e acentuação pelo usuário por meio de configuração.
-- Novo comando de aprendizagem do Laravue laravue:learn words[] -a | -p | -s
-- Suporte a FK labels na index.vue
-### Alterado
 - Correções menores.
 - Atualização do PHP Unit test.
 - Atualização da vw_funcionario_mps.

@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Filters;
+
+class NotNull
+{
+    public function filter($builder, $fields)
+    {   
+        $listFields = array();
+        if ($fields != '') {
+            $listFields = explode (',' , $fields);
+        }
+        return $builder->whereNotNull($listFields);
+    }
+}

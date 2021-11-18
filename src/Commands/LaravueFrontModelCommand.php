@@ -191,13 +191,25 @@ class LaravueFrontModelCommand extends LaravueCommand
         $input .= "<div class=\"row formSpace\">" . PHP_EOL;
         $input .= $this->tabs(7) . "<div class=\"col-sm-12\">" . PHP_EOL;
         $input .= $this->tabs(8) . "<ValidationProvider name=\"$label\" rules=\"$rules\" v-slot=\"{ errors }\">" . PHP_EOL;
-        $input .= $this->tabs(9) . "<div style=\"margin-bottom: 5px; color: #9A9A9A; font-size: .8571em;\">$label</div>" . PHP_EOL;
+        $input .= $this->tabs(9) . "<div v-if=\"!relatorio\" style=\"margin-bottom: 5px; color: #9A9A9A; font-size: .8571em;\">$label</div>" . PHP_EOL;
+        $input .= $this->tabs(9) . "<div v-else style=\"margin-bottom: 5px; color: #9A9A9A; font-size: .8571em;\">Período da $label</div>" . PHP_EOL;
         $input .= $this->tabs(9) . "<el-date-picker" . PHP_EOL;
+        $input .= $this->tabs(10) . "v-if=\"!relatorio\"" . PHP_EOL;
         $input .= $this->tabs(10) . "v-model=\"model.$field\"" . PHP_EOL;
         $input .= $this->tabs(10) . "type=\"date\"" . PHP_EOL;
         $input .= $this->tabs(10) . "format=\"dd/MM/yyyy\"" . PHP_EOL;
         $input .= $this->tabs(10) . "value-format=\"yyyy-MM-dd\"" . PHP_EOL;
         $input .= $this->tabs(10) . ":placeholder=\"relatorio ? 'Não filtrar' : 'Selecione data'\">" . PHP_EOL;
+        $input .= $this->tabs(9) . "</el-date-picker>" . PHP_EOL;
+        $input .= $this->tabs(9) . "<el-date-picker" . PHP_EOL;
+        $input .= $this->tabs(10) . "v-else" . PHP_EOL;
+        $input .= $this->tabs(10) . "v-model=\"model.$field\"_date_range" . PHP_EOL;
+        $input .= $this->tabs(10) . "type=\"daterange\"" . PHP_EOL;
+        $input .= $this->tabs(10) . "range-separator=\" à \"" . PHP_EOL;
+        $input .= $this->tabs(10) . "format=\"dd/MM/yyyy\"" . PHP_EOL;
+        $input .= $this->tabs(10) . "value-format=\"yyyy-MM-dd\"" . PHP_EOL;
+        $input .= $this->tabs(10) . "start-placeholder=\"Data inicial\"" . PHP_EOL;
+        $input .= $this->tabs(10) . "end-placeholder=\"Data final\">" . PHP_EOL;
         $input .= $this->tabs(9) . "</el-date-picker>" . PHP_EOL;
         $input .= $this->tabs(9) . "<div v-if=\"!relatorio\" class=\"text-danger\" style=\"font-size: .8271em; margin-top: 4px;\">{{ errors[0] }}</div>" . PHP_EOL;
         $input .= $this->tabs(8) . "</ValidationProvider>" . PHP_EOL;
@@ -305,7 +317,13 @@ class LaravueFrontModelCommand extends LaravueCommand
                     $checked = ($default == 1) || ($default == '1') || ($default == true) ? 'true' : 'false';
                     $return .= "$key: this.relatorio ? '' : $checked,";
                     $return .= $this->ending($index, $size, 4);
-                break;
+                    break;
+                case 'date':
+                case 'datetime':
+                    $return .= "$key: '',";
+                    $return .= "${key}_date_range: '',";
+                    $return .= $this->ending($index, $size, 4);
+                    break;
                 default:
                     $return .= "$key: '',";
                     $return .= $this->ending($index, $size, 4);
@@ -401,7 +419,7 @@ class LaravueFrontModelCommand extends LaravueCommand
         $selects = $this->tabs(2) ."{{ methodname }}() {" . PHP_EOL;
         $selects .= $this->tabs(3) . "this.setLoading(true, \"{{ title }}\")" . PHP_EOL;
         $selects .= $this->tabs(3) . "this.\$http" . PHP_EOL;
-        $selects .= $this->tabs(4) . ".get(`{{ route }}?per_page=-1`)" . PHP_EOL;
+        $selects .= $this->tabs(4) . ".get(`{{ route }}?per_page=-1&model_field={{ modelField }}&not_null={{ modelField }}`)" . PHP_EOL;
         $selects .= $this->tabs(4) . ".then(response => {" . PHP_EOL;
         $selects .= $this->tabs(5) . "this.setLoading(false)" . PHP_EOL;
         $selects .= $this->tabs(5) . "this.selects.{{ selectField }} = response.data.data.data" . PHP_EOL;
@@ -416,6 +434,8 @@ class LaravueFrontModelCommand extends LaravueCommand
         $return = "";
         $i = 0;
         foreach ($fks as $key => $value) {
+            $keyFields = $this->getModelFieldsFromKey( $key );
+            $modelField = $this->getSelectLabel( $keyFields );
             $methodName = "load" . Str::studly( $this->pluralize( str_replace("_id", "", $key ) ) );
             $title = $this->getTitle( $key );
             $route = $this->pluralize( str_replace( "_", "",  str_replace( "_id", "",  $key ) ) );
@@ -429,7 +449,8 @@ class LaravueFrontModelCommand extends LaravueCommand
             $title = str_replace( '{{ title }}', $title , $methodname );
             $route = str_replace( '{{ route }}', $route , $title );
             $selectField = str_replace( '{{ selectField }}', $selectField , $route );
-            $nextMethod = str_replace( '{{ nextMethod }}', $nextMethod , $selectField );
+            $modelField = str_replace( '{{ modelField }}', $modelField , $selectField );
+            $nextMethod = str_replace( '{{ nextMethod }}', $nextMethod , $modelField );
             $last = $i == $size ? "" : PHP_EOL;
             $lastSelect = str_replace( '{{ last }}', $last , $nextMethod );
 
