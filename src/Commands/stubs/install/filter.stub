@@ -10,13 +10,12 @@ class LaravueFilter extends AbstractFilter
         // Filters ( put in alphabetical order )
         'ativo_edicao' => AtivoEdicao::class,
         'field_like' => FieldLike::class,
-        'model_field' => ModelField::class,
         'model_filter' => ModelFilter::class,
         'name' => Name::class,
         'not_null' => NotNull::class,
+        'select' => Select::class,
         
         // Sorters ( put in alphabetical order )
-        'orderby_id' => OrderById::class,
-        'orderby_name' => OrderByName::class,
+        'order_by' => OrderBy::class,
     ];
 }

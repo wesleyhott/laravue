@@ -2,7 +2,7 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.42.183 - 17/nov/2021
+## 8.42.184 - 20/nov/2021
 ### Adicionado
 - Access Controller
 - Htacess
@@ -10,7 +10,7 @@ Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 - Pluralização e acentuação pelo usuário por meio de configuração.
 - Novo comando de aprendizagem do Laravue laravue:learn words[] -a | -p | -s
 - Suporte a FK labels na index.vue
-- Filtros ModelField e NotNull para os selects.
+- Filtros Select e NotNull e OrderBy para os selects.
 - Período de data para os campos date e datetime em relatório.
 - ### Alterado
 - Ajustes de ambiente

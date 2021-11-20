@@ -196,6 +196,7 @@ class LaravueFrontModelCommand extends LaravueCommand
         $input .= $this->tabs(9) . "<el-date-picker" . PHP_EOL;
         $input .= $this->tabs(10) . "v-if=\"!relatorio\"" . PHP_EOL;
         $input .= $this->tabs(10) . "v-model=\"model.$field\"" . PHP_EOL;
+        $input .= $this->tabs(10) . "style=\"width: 100%;\"" . PHP_EOL;
         $input .= $this->tabs(10) . "type=\"date\"" . PHP_EOL;
         $input .= $this->tabs(10) . "format=\"dd/MM/yyyy\"" . PHP_EOL;
         $input .= $this->tabs(10) . "value-format=\"yyyy-MM-dd\"" . PHP_EOL;
@@ -204,6 +205,7 @@ class LaravueFrontModelCommand extends LaravueCommand
         $input .= $this->tabs(9) . "<el-date-picker" . PHP_EOL;
         $input .= $this->tabs(10) . "v-else" . PHP_EOL;
         $input .= $this->tabs(10) . "v-model=\"model.$field\"_date_range" . PHP_EOL;
+        $input .= $this->tabs(10) . "style=\"width: 100%;\"" . PHP_EOL;
         $input .= $this->tabs(10) . "type=\"daterange\"" . PHP_EOL;
         $input .= $this->tabs(10) . "range-separator=\" à \"" . PHP_EOL;
         $input .= $this->tabs(10) . "format=\"dd/MM/yyyy\"" . PHP_EOL;
@@ -231,6 +233,7 @@ class LaravueFrontModelCommand extends LaravueCommand
         $time .= $this->tabs(9) . "<div style=\"margin-bottom: 5px; color: #9A9A9A; font-size: .8571em;\">$label</div>" . PHP_EOL;
         $time .= $this->tabs(9) . "<el-time-select" . PHP_EOL;
         $time .= $this->tabs(10) . "v-model=\"model.$field\"" . PHP_EOL;
+        $time .= $this->tabs(10) . "style=\"width: 100%;\"" . PHP_EOL;
         $time .= $this->tabs(10) . ":picker-options=\"{" . PHP_EOL;
         $time .= $this->tabs(11) . "start: '08:00'," . PHP_EOL;
         $time .= $this->tabs(11) . "step: '02:00'," . PHP_EOL;
@@ -419,7 +422,7 @@ class LaravueFrontModelCommand extends LaravueCommand
         $selects = $this->tabs(2) ."{{ methodname }}() {" . PHP_EOL;
         $selects .= $this->tabs(3) . "this.setLoading(true, \"{{ title }}\")" . PHP_EOL;
         $selects .= $this->tabs(3) . "this.\$http" . PHP_EOL;
-        $selects .= $this->tabs(4) . ".get(`{{ route }}?per_page=-1&model_field={{ modelField }}&not_null={{ modelField }}`)" . PHP_EOL;
+        $selects .= $this->tabs(4) . ".get(`{{ route }}?per_page=-1&select={{ modelField }}&not_null={{ modelField }}&order_by={{ modelField }}`)" . PHP_EOL;
         $selects .= $this->tabs(4) . ".then(response => {" . PHP_EOL;
         $selects .= $this->tabs(5) . "this.setLoading(false)" . PHP_EOL;
         $selects .= $this->tabs(5) . "this.selects.{{ selectField }} = response.data.data.data" . PHP_EOL;

@@ -2,15 +2,16 @@
 
 namespace App\Filters;
 
-class ModelField
+class Select
 {
     public function filter($builder, $fields)
     {   
         $listFields = array();
         if ($fields != '') {
+            $fields = str_replace(' ', '', $fields);
             $listFields = explode (',' , $fields);
         }
         $listFields[] = 'id';
         return $builder->select($listFields);
     }
-}
+} 

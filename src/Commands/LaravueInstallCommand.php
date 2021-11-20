@@ -84,12 +84,11 @@ class LaravueInstallCommand extends LaravueCommand
         // Filters
         $this->makeAtivoEdicaoFilter();
         $this->makeFieldLikeFilter();
-        $this->makeModelFieldFilter();
+        $this->makeSelectFilter();
         $this->makeModelFilter();
         $this->makeNameFilter();
         $this->makeNotNullFilter();
-        $this->makeOrderByIdFilter();
-        $this->makeOrderByNameFilter();
+        $this->makeOrderByFilter();
         $this->makeAbstractFilter();
         $this->makeLaravueFilter();
         // Events
@@ -605,9 +604,9 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
-    protected function makeModelFieldFilter() {
-        $this->setStub('install/filter-model-field');
-        $fileName = "Filters/ModelField.php";
+    protected function makeSelectFilter() {
+        $this->setStub('install/filter-select');
+        $fileName = "Filters/Select.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
@@ -649,20 +648,9 @@ class LaravueInstallCommand extends LaravueCommand
         $this->info("$date - [ Installing ] >> $fileName");
     }
 
-    protected function makeOrderByIdFilter() {
-        $this->setStub('install/filter-orderby-id');
-        $fileName = "Filters/OrderById.php";
-        $path = $this->makePath( $fileName );
-
-        $this->files->put( $path, $this->files->get( $this->getStub() ) );
-
-        $date = now();
-        $this->info("$date - [ Installing ] >> $fileName");
-    }
-
-    protected function makeOrderByNameFilter() {
-        $this->setStub('install/filter-orderby-name');
-        $fileName = "Filters/OrderByName.php";
+    protected function makeOrderByFilter() {
+        $this->setStub('install/filter-order-by');
+        $fileName = "Filters/OrderBy.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
