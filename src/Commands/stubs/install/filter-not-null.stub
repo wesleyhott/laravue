@@ -8,6 +8,7 @@ class NotNull
     {   
         $listFields = array();
         if ($fields != '') {
+            $fields = str_replace(' ', '', $fields);
             $listFields = explode (',' , $fields);
         }
         return $builder->whereNotNull($listFields);
