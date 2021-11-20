@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Filters;
+
+class OrderBy
+{
+    public function filter($builder, $fields)
+    {   
+        if ($fields != '') {
+            $fields = str_replace(' ', '', $fields);
+            foreach (explode (',' , $fields) as $field) {
+                $terms = explode(':', $field);
+                if (isset($terms[1])) {
+                    $builder->orderBy($terms[0], strtoupper($terms[1])); 
+                } else {
+                    $builder->orderBy($field, 'ASC'); 
+                }
+            }
+        } else {
+            $builder->orderBy('id', 'ASC');
+        }
+        return $builder;
+    }
+}
