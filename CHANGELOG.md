@@ -2,7 +2,7 @@
 
 Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 
-## 8.42.184 - 20/nov/2021
+## 8.42.185 - 20/nov/2021
 ### Adicionado
 - Access Controller
 - Htacess
@@ -23,6 +23,7 @@ Todas as mudanças importantes  em `Laravue` são documentadas neste arquivo.
 - Correções menores.
 - Atualização do PHP Unit test.
 - Atualização da vw_funcionario_mps.
+- Retirada usuario_ult_alteracao
 ## 8.31.156 - 08/out/2021
 ### Adicionado
 - Acenutação para a palavra Repositório(s)

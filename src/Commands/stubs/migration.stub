@@ -16,7 +16,6 @@ class Create{{ class }}Table extends Migration
         Schema::create('{{ table }}', function (Blueprint $table) {
             $table->increments('id');
             {{ fields }}
-            $table->string('usuario_ult_alteracao', 40);
             $table->timestamps();
         });
     }
