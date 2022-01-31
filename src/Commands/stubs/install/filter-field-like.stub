@@ -22,6 +22,7 @@ class FieldLike
             if (isset($typeField) && $typeField !== '') {
                 switch (strtolower($typeField)) {
                     case 'bit':
+                    case 'boolean':
                         switch (strtolower($search)) {
                             case 'nao':
                             case 'não':	
@@ -41,6 +42,13 @@ class FieldLike
                         break;
                     case 'decimal':
                         $search = str_replace(',', '%', str_replace('.', '%', $search));
+                        break;
+                    case 'cpf':
+                    case 'cnpj':
+                    case 'cpfcnpj':
+                    case 'cpj':
+                    case 'telefone':
+                        $search = str_replace(['.', '-', '/','(',')', '+'], '', $search);
                         break;
                 }		
             }    

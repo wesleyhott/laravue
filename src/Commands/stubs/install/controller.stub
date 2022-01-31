@@ -66,6 +66,10 @@ abstract class LaravueController extends Controller
      */
     private function filter($filtros)
     {
+        if($filtros['per_page'] == -1){ // sem paginação
+            return $this->model::filter($filtros)->paginate();
+        }
+
         $per_page = isset($filtros['per_page']) ? intval($filtros['per_page']) : $this->default_per_page;
 
         return $this->model::filter($filtros)->paginate($per_page);
@@ -462,4 +466,13 @@ abstract class LaravueController extends Controller
   
       return $maskared;
   }
+
+  /**
+    * Método para retirar máscara nos campos.
+    * Segundo parâmetro sendo true, permite letras e números
+    * Exemplo: $this->unmask($numbers), $this->unmask($alfa_num, true)
+    */
+    function unmask($string, $alfanum = false) {
+        return $alfanum ? preg_match('/^[a-zA-Z0-9]+$/', $firstname) : preg_replace("/[^0-9]/", "", $string);
+    }
 }

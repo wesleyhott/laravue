@@ -3,41 +3,58 @@
 namespace App\Filters;
 
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
 
 class ModelFilter
 {
+    private $key, $value;
+
     public function filter( $builder, $model )
     {   
-        foreach ( json_decode( $model ) as $key => $value ) {
+        foreach (json_decode($model) as $key => $value) {
+
             if ( $value != '' ) {
-                if( $key == 'id' || str_contains($key, '_id') ) {
-                    if( gettype( $value ) == 'array' ) {
-                        $builder->whereIn( $key, $value );
+                if ( $key == 'id' || str_contains($key, '_id') && !str_contains($key, '_ids') ) {
+                    if ( gettype($value) == 'array' && sizeof( $value ) > 0 )  {
+                        $builder->whereIn($key, $value);
                     } else {
-                        $builder->where( $key, $value );
+                        $builder->where($key, $value);
                     }
                     continue;
-                }         
-                if( $key == 'status' ) {
-                    $builder->where( $key, $value );
+                } else if ( str_contains($key, '_ids') ) { // MxN relationships
+                    if ( sizeof( $value ) == 0 ) continue;
+                    $singular = substr($key, 0, -4);
+                    $relation = pluralize( $singular );
+                    $this->key = "${singular}_id";
+                    $this->value = $value;
+                    $builder->whereHas($relation, function (Builder $query) {
+                        $query->whereIn($this->key, $this->value);
+                    });
                     continue;
                 }
-                if( str_contains($key, '_date_range' ) ) {
-                    $key = Str::substr( $key, 0, strpos( $key, '_date_range' ) );
-                    if( $value != '' ) {
-                        $builder->whereBetween( $key, $value );
+                    
+                if ($key == 'status') {
+                    $builder->where($key, $value);
+                    continue;
+                }
+
+                if (str_contains($key, '_date_range')) {
+                    $key = Str::substr($key, 0, strpos($key, '_date_range'));
+                    if ($value != '') {
+                        $builder->whereBetween($key, $value);
                         continue;
                     }
                 }
-                switch( $value ){
+
+                switch ($value){
                     case 'true':
-                        $builder->where( $key, 1 );
+                        $builder->where($key, 1);
                     break;
                     case 'false':
-                        $builder->where( $key, 0 );
+                        $builder->where($key, 0);
                     break;
                     default:
-                        $builder->where( $key, 'like', '%' . $value . '%' );
+                        $builder->where($key, 'like', '%' . $value . '%');
                 }
             }    
         }

@@ -91,6 +91,8 @@ class LaravueInstallCommand extends LaravueCommand
         $this->makeOrderByFilter();
         $this->makeAbstractFilter();
         $this->makeLaravueFilter();
+        // Helpers
+        $this->makePluralizeHelper();
         // Events
         $this->makeEventMonitor();
         // Listeners
@@ -673,6 +675,17 @@ class LaravueInstallCommand extends LaravueCommand
     protected function makeLaravueFilter() {
         $this->setStub('install/filter');
         $fileName = "Filters/LaravueFilter.php";
+        $path = $this->makePath( $fileName );
+
+        $this->files->put( $path, $this->files->get( $this->getStub() ) );
+
+        $date = now();
+        $this->info("$date - [ Installing ] >> $fileName");
+    }
+
+    protected function makePluralizeHelper() {
+        $this->setStub('install/helper-pluralize');
+        $fileName = "Helpers/pluralize.php";
         $path = $this->makePath( $fileName );
 
         $this->files->put( $path, $this->files->get( $this->getStub() ) );
