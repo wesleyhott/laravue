@@ -20,7 +20,8 @@ class LaravueBuildCommand extends LaravueCommand
         {--o|outdocker : Indicates running outside docker}
         {--k|keys= : custom foreing keys that belongs to relationship}
         {--p|pivots= : Feilds that belongs to relationship}
-        {--i|view : build a model based on view, not table}';
+        {--i|view : build a model based on view, not table}
+        {--s|schema : build a model based on view, not table}';
 
     /**
      * The console command description.
@@ -37,23 +38,23 @@ class LaravueBuildCommand extends LaravueCommand
     public function handle()
     {
         $argumentModel = $this->argument('model');
-        if( gettype( $this->argument('model') ) == 'string' ) {
-            $argumentModel = array( $this->argument('model') );
+        if (gettype($this->argument('model')) == 'string') {
+            $argumentModel = array($this->argument('model'));
         }
 
         $models = [];
-        foreach ($argumentModel as $model){
-            array_push( $models,  Str::studly( $model ) );
+        foreach ($argumentModel as $model) {
+            array_push($models, Str::studly($model));
         }
 
-        $this->backend( $models );
-        $this->frontend( $models );
+        $this->backend($models, $this->option('schema'));
+        // $this->frontend($models, $this->option('schema'));
 
-        if( $this->option('backward') || $this->option('bw') ){
+        if ($this->option('backward') || $this->option('bw')) {
             $this->backward();
-        } else if( $this->option('forward') || $this->option('fw') ){
+        } else if ($this->option('forward') || $this->option('fw')) {
             $this->forward();
-        } 
+        }
     }
 
     /**
@@ -61,11 +62,12 @@ class LaravueBuildCommand extends LaravueCommand
      *
      * @return void
      */
-    protected function backend( $models )
+    protected function backend($models, $schema)
     {
-        if( count($models) == 1 ) {
+        if (count($models) == 1) {
             $this->call('laravue:api', [
                 'model' => $models,
+                '--schema' => $schema,
                 '--fields' =>  $this->option('fields'),
                 '--view' =>  $this->option('view'),
             ]);
@@ -83,9 +85,9 @@ class LaravueBuildCommand extends LaravueCommand
      *
      * @return void
      */
-    protected function frontend( $models )
+    protected function frontend($models, $schema)
     {
-        if( count($models) == 1 ) {
+        if (count($models) == 1) {
             $this->call('laravue:front', [
                 'model' => $models,
                 '--fields' =>  $this->option('fields'),
@@ -99,7 +101,8 @@ class LaravueBuildCommand extends LaravueCommand
      *
      * @return void
      */
-    protected function backward() {
+    protected function backward()
+    {
         $date = now();
         $this->info("$date - [ composer ] >> dump-autoload");
         $this->composer->dumpAutoloads();
@@ -114,7 +117,8 @@ class LaravueBuildCommand extends LaravueCommand
      *
      * @return void
      */
-    protected function forward() {
+    protected function forward()
+    {
         $date = now();
 
         $this->info("$date - [ artisan ] >> migrate");
@@ -124,10 +128,10 @@ class LaravueBuildCommand extends LaravueCommand
         $this->composer->dumpAutoloads();
 
         $argumentModel = $this->argument('model');
-        $model = is_array( $argumentModel ) ? trim( $argumentModel[0] ) : trim( $argumentModel ); 
-        $permissionName = $this->pluralize( strtolower( $model ) );
+        $model = is_array($argumentModel) ? trim($argumentModel[0]) : trim($argumentModel);
+        $permissionName = $this->pluralize(strtolower($model));
         $this->info("$date - [ spatie ] >> permission:create-permission");
-        
+
         $this->call('permission:create-permission', [
             'name' =>  "ver $permissionName",
         ]);

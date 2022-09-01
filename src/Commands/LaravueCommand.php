@@ -105,22 +105,26 @@ class LaravueCommand extends Command
      * @param  string  $ext file extension
      * @return string
      */
-    protected function getPath($model = '', $ext = 'php')
+    protected function getPath($model = '', $ext = 'php', $schema = '')
     {
         $path = '';
+        $schemaPath = '';
+        if ($schema != '') {
+            $schemaPath = "$schema/";
+        }
         $currentDirectory =  getcwd();
         switch ($this->type) {
             case 'model':
-                $path = $this->makePath("Models/$model.$ext");
+                $path = $this->makePath("Models/${schemaPath}$model.$ext");
                 break;
             case 'controller':
-                $path = $this->makePath("Http/Controllers/${model}Controller.$ext");
+                $path = $this->makePath("Http/Controllers/${schemaPath}${model}Controller.$ext");
                 break;
             case 'report':
-                $path = $this->makePath("Http/Controllers/Reports/${model}ReportController.$ext");
+                $path = $this->makePath("Http/Controllers/Reports/${schemaPath}${model}ReportController.$ext");
                 break;
             case 'route':
-                $path = $this->makePath("routes/api.php", true);
+                $path = $this->makePath("routes/${schemaPath}api.php", true);
                 break;
             case 'permission':
                 $path = $this->makePath("database/seeders/LaravueSeeder.php", true);
@@ -140,10 +144,10 @@ class LaravueCommand extends Command
                 if (is_array($model) && count($model) > 1) {
                     $model1 = $model[0];
                     $model2 = $model[1];
-                    $path = $this->makePath("database/seeders/${model1}${model2}Seeder.php", true);
+                    $path = $this->makePath("database/seeders/${schemaPath}${model1}${model2}Seeder.php", true);
                 } else {
                     $parsedModel = is_array($model) ? $model[0] : $model;
-                    $path = $this->makePath("database/seeders/${parsedModel}Seeder.php", true);
+                    $path = $this->makePath("database/seeders/${schemaPath}${parsedModel}Seeder.php", true);
                 }
                 break;
             case 'seeder':
@@ -468,6 +472,45 @@ class LaravueCommand extends Command
     }
 
     /**
+     * Replace the Schema Class in the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $model
+     * @return string
+     */
+    protected function replaceSchemaClass($stub, $schema)
+    {
+        return str_replace('{{ schemaClass }}', ucfirst($schema), $stub);
+    }
+
+    /**
+     * Replace the Schema Table in the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $model
+     * @return string
+     */
+    protected function replaceSchemaTable($stub, $schema)
+    {
+        return str_replace('{{ schemaTable }}', "$schema.", $stub);
+    }
+
+    /**
+     * Replace the Schema Namespace in the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $model
+     * @return string
+     */
+    protected function replaceSchemaNamespace($stub, $schema)
+    {
+        if (empty($schema)) {
+            return str_replace('{{ schemaNamespace }}', "", $stub);
+        }
+        return str_replace('{{ schemaNamespace }}', "\\" . ucfirst($schema), $stub);
+    }
+
+    /**
      * Replace the title for the given stub.
      *
      * @param  string  $stub
@@ -489,21 +532,23 @@ class LaravueCommand extends Command
      *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    protected function buildModel($model, $fields = null)
+    protected function buildModel($model, $fields = null, $schema)
     {
+        $stub = $this->files->get($this->getStub());
+
         if (is_array($model)) {
-            return $this->replaceRelation($table, $model, $fields);
+            return $this->replaceRelation($stub, $model, $fields);
         }
 
-        $stub = $this->files->get($this->getStub());
         $isPlural = true;
         $title = $this->replaceTitle($stub, $model, $isPlural);
         $route = $this->replaceRoute($title, $model);
         $field = $this->replaceField($route, $model);
         $table = $this->replaceTable($field, $model);
         $relation = $this->replaceRelation($table, $model, $fields);
+        $parsedSchema = $this->replaceSchemaNamespace($relation, $schema);
 
-        return $this->replaceModel($relation, $model);
+        return $this->replaceModel($parsedSchema, $model);
     }
 
     /**
@@ -514,21 +559,26 @@ class LaravueCommand extends Command
      *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    protected function buildMigration($model)
+    protected function buildMigration($model, $schema)
     {
         $stub = $this->files->get($this->getStub());
 
         if (is_array($model) && count($model) > 1) { // mxn
             $class = $this->replaceClass($stub, $model[0] . $model[1]);
             $table = $this->replaceTable($class, $model[0] . $model[1], $plural = false);
-            return $this->replaceField($table, $model);
+            $parsedSchemaTable = $this->replaceSchemaTable($table, $schema);
+            $parsedSchemaClass = $this->replaceSchemaClass($parsedSchemaTable, $schema);
+
+            return $this->replaceField($parsedSchemaClass, $model);
         }
 
         $parsedModel =  is_array($model) ? $model[0] : $model;
         $class = $this->replaceClass($stub, $parsedModel);
         $table = $this->replaceTable($class, $parsedModel);
+        $parsedSchemaTable = $this->replaceSchemaTable($table, $schema);
+        $parsedSchemaClass = $this->replaceSchemaClass($parsedSchemaTable, $schema);
 
-        return $this->replaceField($table, $parsedModel);
+        return $this->replaceField($parsedSchemaClass, $parsedModel);
     }
 
     /**
@@ -539,7 +589,7 @@ class LaravueCommand extends Command
      *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    protected function buildSeed($model)
+    protected function buildSeed($model, $schema)
     {
         $stub = $this->files->get($this->getStub());
 
@@ -553,8 +603,9 @@ class LaravueCommand extends Command
         $parsedModel =  is_array($model) ? $model[0] : $model;
         $class = $this->replaceClass($stub, $parsedModel);
         $table = $this->replaceTable($class, $parsedModel);
+        $parsedSchema = $this->replaceSchemaNamespace($table, $schema);
 
-        return $this->replaceField($table, $parsedModel);
+        return $this->replaceField($parsedSchema, $parsedModel);
     }
 
     /**

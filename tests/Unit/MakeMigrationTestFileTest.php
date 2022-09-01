@@ -13,12 +13,14 @@ class MakeMigrationTestFileTest extends TestCase
     {
         $prefix = date('Y_m_d_His');
         $model = array('TestFieldOption');
+        $schema = 'recipe';
         // destination path of the Foo class
-        $testClass = str_replace( "tests/Unit", "", __DIR__) . "database/migrations/$prefix"."_create_test_field_option"."_table.php";
+        $testClass = str_replace("tests/Unit", "", __DIR__) . "database/migrations/$prefix" . "_create_${schema}_test_field_option" . "_table.php";
 
         // Run the make command
         Artisan::call('laravue:migration', [
             'model' => $model,
+            '--schema' => $schema,
             '--fields' => "name:s.50u#'Fulano'#,age:i.#40#,user_id:i.n,file_id:i,descricao:s.nu,modelo_id:i.u*,fabrica_id:i.nu*,idade:i.+",
         ]);
 
@@ -26,3 +28,4 @@ class MakeMigrationTestFileTest extends TestCase
         $this->assertTrue(File::exists($testClass));
     }
 }
+// /Users/wesley/desenvolvimento/laravue/laravue/database/migrations/2022_08_30_205857_create__big_file_user_table.php

@@ -12,7 +12,10 @@ class LaravueApiCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'laravue:api {model*} {--f|fields=} {--i|view : build a model based on view, not table}';
+    protected $signature = 'laravue:api {model*} 
+                                {--f|fields=} 
+                                {--i|view : build a model based on view, not table}
+                                {--s|schema= : determine a schema for model (postgres)}';
 
     /**
      * The console command description.
@@ -32,10 +35,10 @@ class LaravueApiCommand extends Command
         $this->createSeeder();
         $this->createDataSeeder();
         $this->createModel();
-        $this->createController();
-        $this->createReport();
-        $this->createRoute();
-        $this->createPermission();
+        // $this->createController();
+        // $this->createReport();
+        // $this->createRoute();
+        // $this->createPermission();
     }
 
     /**
@@ -47,6 +50,7 @@ class LaravueApiCommand extends Command
     {
         $this->call('laravue:migration', [
             'model' => $this->argument('model'),
+            '--schema' =>  $this->option('schema'),
             '--fields' =>  $this->option('fields'),
             '--view' =>  $this->option('view'),
         ]);
@@ -61,6 +65,7 @@ class LaravueApiCommand extends Command
     {
         $this->call('laravue:seed', [
             'model' => $this->argument('model'),
+            '--schema' =>  $this->option('schema'),
             '--fields' =>  $this->option('fields'),
             '--view' =>  $this->option('view'),
         ]);
@@ -100,6 +105,7 @@ class LaravueApiCommand extends Command
     {
         $this->call('laravue:model', [
             'model' => $this->argument('model')[0],
+            '--schema' =>  $this->option('schema'),
             '--fields' =>  $this->option('fields'),
             '--view' =>  $this->option('view'),
         ]);
