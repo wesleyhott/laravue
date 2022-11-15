@@ -1,59 +1,77 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin{{ schemaNamespace }};
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Http\Controllers\Controller;
+use Illuminate\Database\QueryException;
+use App\Contracts\{{ model }}ServiceContract;
+use App\Http\Requests\Admin\Add{{ model }}Request;
+use App\Http\Requests\Admin\Update{{ model }}Request;
 
-class {{ model }}Controller extends LaravueController
+class {{ model }}Controller extends Controller
 {
-    // {{ laravue-insert:property }}
-    
+    private $service;
+
     /**
-     * Implementação do modelo da classe abstrata em LaravueController
-     *
-     * @return \App\Models\{{ model }}::class
+     * {{ model }}Controller constructor.
+     * @param {{ model }}ServiceContract $service
      */
-    protected function getModel()
+
+    public function __construct({{ model }}ServiceContract $service)
     {
-        return  \App\Models\{{ model }}::class;
+        $this->service = $service;
     }
 
-    /**
-     * Preenche o modelo com os valores correspondentes ao request
-     *
-     * @return \App\Models\{{ model }}
-     */
-    public function setModel(Request $request)
+    public function index()
     {
-        // verifica se é edição - PUT - ou inlcusão - POST.
-        $model = $request->isMethod('put') ? \App\Models\{{ model }}::findOrFail($request->id) : new \App\Models\{{ model }};
-
-        // Preencher os atributos do modelo
-        {{ fields }}
-        // {{ laravue-insert:setModel }}
-
-        return  $model;
+        ${{ modelVar }} = $this->service->all();
+        return view('admin{{ schemaRoute }}.index', compact('{{ modelVar }}'));
     }
 
-    /**
-     * Método que passa as validações para o método que implementa Validator no LaravueController
-     *
-     * @return array de validação dos campos do modelo
-     */
-    public function getModelValidation($data)
-    {       
-        return [
-			'rules' =>  [
-                {{ rules }}
-            ], {{ unique:messages }}
-        ];
+    public function edit(string $id)
+    {
+        ${{ modelVar }} = $this->service->find((int) $id);
+
+        return view('admin{{ schemaRoute }}.edit', compact('{{ modelVar }}'));
     }
 
-    /**
-     * Métodos de inserção de lógica específica.
-     */
-    {{ beforeIndex }}
+    public function update(Update{{ model }}Request $request, int $id)
+    {
+        try {
+            $fields = collect($request->all())->only([{{ fields }}])->all();
+            $this->service->update((int)$id, $fields);
+            return redirect(route('admin{{ schemaRoute }}.index'))->with('success', '{{ title }} successfully updated');
+        } catch (\Exception $e) {
+            return redirect(route('admin{{ schemaRoute }}.index'))->withError($e->getMessage());
+        }
+    }
 
-    // {{ laravue-insert:method }}
+    public function store(Add{{ model }}Request $request)
+    {
+        try {
+            $fields = collect($request->all())->only(['field1', 'field2', 'fieldN'])->all();
+            $fields = collect($request->all())->only([{{ fields }}])->all();
+            $this->service->store($fields);
+            return redirect(route('admin{{ schemaRoute }}.index'))->with('success', '{{ title }} successfully updated');
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+
+            if ($e instanceof QueryException && $e->errorInfo[1] == 1062) {
+                $message = "{{ model }} already exists";
+            }
+
+            return redirect(route('admin{{ schemaRoute }}.index'))->with('error', $message);
+        }
+    }
+
+    public function delete(int $id)
+    {
+        try {
+            $this->service->delete($id);
+            return response()->json(['success' => true, 'message' => '{{ title }} deleted successfully']);
+        } catch (\Exception $e) {
+            error_log($e->getMessage());
+            return response()->json(['success' => true, 'message' => 'Delete error. ' . $e->getMessage()]);
+        }
+    }
 }

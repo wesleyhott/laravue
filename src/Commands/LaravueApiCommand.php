@@ -35,7 +35,7 @@ class LaravueApiCommand extends Command
         $this->createSeeder();
         $this->createDataSeeder();
         $this->createModel();
-        // $this->createController();
+        $this->createController();
         // $this->createReport();
         // $this->createRoute();
         // $this->createPermission();
@@ -92,6 +92,7 @@ class LaravueApiCommand extends Command
     {
         $this->call('laravue:controller', [
             'model' => $this->argument('model')[0],
+            '--schema' =>  $this->option('schema'),
             '--fields' =>  $this->option('fields'),
         ]);
     }

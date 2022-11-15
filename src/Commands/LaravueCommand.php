@@ -511,6 +511,33 @@ class LaravueCommand extends Command
     }
 
     /**
+     * Replace the Schema Route in the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $model
+     * @return string
+     */
+    protected function replaceSchemaRoute($stub, $schema)
+    {
+        return str_replace('{{ schemaRoute }}', strtolower($schema), $stub);
+    }
+
+    /**
+     * Replace the Schema Namespace in the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $model
+     * @return string
+     */
+    protected function replaceModelVar($stub, $model)
+    {
+        if (empty($model)) {
+            return str_replace('{{ modelVar }}', "", $stub);
+        }
+        return str_replace('{{ modelVar }}', Str::snake($model), $stub);
+    }
+
+    /**
      * Replace the title for the given stub.
      *
      * @param  string  $stub
