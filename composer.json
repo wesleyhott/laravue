@@ -1,52 +1,51 @@
 {
-    "name": "wesleyhott/laravue",
-    "description": "Code generation for projects that use Laravel and VueJs tecnologies.",
-    "type": "library",
-    "keywords": [
-        "laravue",
-        "vue",
-        "vuejs",
-        "laravel"
-    ],
-    "homepage": "https://github.com/wesleyhott/laravue",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Wesley Hott Soares",
-            "email": "wesley.hott@gmail.com",
-            "role": "Developer"
-        }
-    ],
-    "require": {
-        "orchestra/testbench": "^6.3",
-        "laravel/passport": "^10.0",
-        "league/flysystem-aws-s3-v3": "^1.0",
-        "spatie/laravel-permission": "^3.17",
-        "barryvdh/laravel-dompdf": "^0.8.7",
-        "phpoffice/phpspreadsheet": "^1.15",
-        "intervention/image": "^2.5",
-        "lucascudo/laravel-pt-br-localization": "^1.1"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^9.4"
-    },
-    "autoload": {
-        "psr-4": {
-            "wesleyhott\\Laravue\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "wesleyhott\\Laravue\\Tests\\": "tests"
-        }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "wesleyhott\\Laravue\\LaravueServiceProvider"
-            ]
-        }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+  "name": "wesleyhott/laravue",
+  "description": "Code generation for projects that use Laravel and VueJs tecnologies.",
+  "type": "library",
+  "keywords": [
+    "laravue",
+    "vue",
+    "vuejs",
+    "laravel"
+  ],
+  "homepage": "https://github.com/wesleyhott/laravue",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Wesley Hott Soares",
+      "email": "wesley.hott@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "league/flysystem-aws-s3-v3": "^3.10",
+    "spatie/laravel-permission": "^5.7",
+    "barryvdh/laravel-dompdf": "^2.0",
+    "phpoffice/phpspreadsheet": "^1.26",
+    "intervention/image": "^2.7",
+    "lucascudo/laravel-pt-br-localization": "^1.2"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^7.17",
+    "phpunit/phpunit": "^9.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "wesleyhott\\Laravue\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "wesleyhott\\Laravue\\Tests\\": "tests"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "wesleyhott\\Laravue\\LaravueServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
