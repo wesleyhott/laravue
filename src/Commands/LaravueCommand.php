@@ -492,7 +492,8 @@ class LaravueCommand extends Command
      */
     protected function replaceSchemaTable($stub, $schema)
     {
-        return str_replace('{{ schemaTable }}', "$schema.", $stub);
+        $replacement = empty($schema) ? '' : "$schema.";
+        return str_replace('{{ schemaTable }}', $replacement, $stub);
     }
 
     /**
@@ -576,36 +577,6 @@ class LaravueCommand extends Command
         $parsedSchema = $this->replaceSchemaNamespace($relation, $schema);
 
         return $this->replaceModel($parsedSchema, $model);
-    }
-
-    /**
-     * Build the class with the given model.
-     *
-     * @param  string  $model
-     * @return string
-     *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
-    protected function buildMigration($model, $schema)
-    {
-        $stub = $this->files->get($this->getStub());
-
-        if (is_array($model) && count($model) > 1) { // mxn
-            $class = $this->replaceClass($stub, $model[0] . $model[1]);
-            $table = $this->replaceTable($class, $model[0] . $model[1], $plural = false);
-            $parsedSchemaTable = $this->replaceSchemaTable($table, $schema);
-            $parsedSchemaClass = $this->replaceSchemaClass($parsedSchemaTable, $schema);
-
-            return $this->replaceField($parsedSchemaClass, $model);
-        }
-
-        $parsedModel =  is_array($model) ? $model[0] : $model;
-        $class = $this->replaceClass($stub, $parsedModel);
-        $table = $this->replaceTable($class, $parsedModel);
-        $parsedSchemaTable = $this->replaceSchemaTable($table, $schema);
-        $parsedSchemaClass = $this->replaceSchemaClass($parsedSchemaTable, $schema);
-
-        return $this->replaceField($parsedSchemaClass, $parsedModel);
     }
 
     /**

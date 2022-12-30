@@ -14,9 +14,14 @@ class Create{{ schemaClass }}{{ class }}Table extends Migration
     public function up()
     {
         Schema::create('{{ schemaTable }}{{ table }}', function (Blueprint $table) {
-            $table->increments('id');
+            // Primary Key
+            $table->id('id');
+
+            // Attributes
             {{ fields }}
-            $table->timestamps();
+
+            // Control Fields
+            $table->timestamps(); {{ softDeletes }}
         });
     }
 

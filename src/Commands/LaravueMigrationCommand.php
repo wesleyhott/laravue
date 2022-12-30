@@ -51,7 +51,39 @@ class LaravueMigrationCommand extends LaravueCommand
         $path = $this->getPath(model: $model, schema: $schema);
         $this->files->put($path, $this->buildMigration($model, $schema));
 
-        $name = $this->buildName($model);
+        $this->infoLog($model, $schema);
+    }
+
+    /**
+     * Build the class with the given model.
+     *
+     * @param  string  $model
+     * @return string
+     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    protected function buildMigration($model, $schema)
+    {
+        $stub = $this->files->get($this->getStub());
+
+        if (is_array($model) && count($model) > 1) { // mxn
+            $class = $this->replaceClass($stub, $model[0] . $model[1]);
+            $table = $this->replaceTable($class, $model[0] . $model[1], $plural = false);
+            $parsedSchemaTable = $this->replaceSchemaTable($table, $schema);
+            $parsedSchemaClass = $this->replaceSchemaClass($parsedSchemaTable, $schema);
+            $parsedSoftDeletes = $this->replaceSoftDeletes($parsedSchemaClass);
+
+            return $this->replaceField($parsedSoftDeletes, $model);
+        }
+
+        $parsedModel =  is_array($model) ? $model[0] : $model;
+        $class = $this->replaceClass($stub, $parsedModel);
+        $table = $this->replaceTable($class, $parsedModel);
+        $parsedSchemaTable = $this->replaceSchemaTable($table, $schema);
+        $parsedSchemaClass = $this->replaceSchemaClass($parsedSchemaTable, $schema);
+        $parsedSoftDeletes = $this->replaceSoftDeletes($parsedSchemaClass);
+
+        return $this->replaceField($parsedSoftDeletes, $parsedModel);
     }
 
     public function setViewName($model)
@@ -71,7 +103,7 @@ class LaravueMigrationCommand extends LaravueCommand
         return $model;
     }
 
-    public function buildName($model)
+    public function infoLog(array $model, string $schema): void
     {
         $date = now();
         $prefix = date('Y_m_d_His');
@@ -79,14 +111,12 @@ class LaravueMigrationCommand extends LaravueCommand
             $model1 = Str::snake($model[0]);
             $model2 = Str::snake($model[1]);
             $this->info("$date - [ ${model1}_${model2} ] >> ${prefix}_create_${model1}_${model2}_table.php");
-            return Str::snake($this->pluralize(trim($this->argument('model')[0])));
         }
 
         $parsedModel = is_array($model) ? trim($model[0]) : trim($model);
         $name = Str::snake($this->pluralize($parsedModel));
-        $this->info("$date - [ $parsedModel ] >> $prefix" . "_create_$name" . "_table.php");
-
-        return $name;
+        $parsedSchema = empty($schema) ? '' : "{$schema}_";
+        $this->info("{$date} - [ {$parsedModel} ] >> {$prefix}_create_{$parsedSchema}{$name}_table.php");
     }
 
     protected function replaceField($stub, $model)
@@ -237,5 +267,20 @@ class LaravueMigrationCommand extends LaravueCommand
         }
 
         return $allFields;
+    }
+
+    /**
+     * Replace the Soft Deletes in the given stub.
+     *
+     * @param  string  $stub
+     * @return string
+     */
+    protected function replaceSoftDeletes(string $stub): string
+    {
+        $use_soft_deletes = config('laravue.use_soft_deletes');
+        $softDelete = $use_soft_deletes
+            ? PHP_EOL . $this->tabs(3) . '$table->softDeletes();'
+            : '';
+        return str_replace('{{ softDeletes }}', $softDelete, $stub);
     }
 }

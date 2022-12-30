@@ -2,6 +2,13 @@
 
 return [
     /**
+     * Use Soft Deletes
+     * 
+     * Determines if models will be generated with soft deltes
+     */
+    'use_soft_deletes' => false,
+
+    /**
      * Accentuation
      * 
      * As there are no rules without exceptions in Portuguese for graphic 
