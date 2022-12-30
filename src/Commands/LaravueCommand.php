@@ -131,13 +131,14 @@ class LaravueCommand extends Command
                 break;
             case 'migration':
                 $prefix = date('Y_m_d_His');
+                $parsed_schema = empty($schema) ? '' : "{$schema}_";
                 if (is_array($model) && count($model) > 1) {
                     $model1 = Str::snake($model[0]);
                     $model2 = Str::snake($model[1]);
-                    $path = $this->makePath("database/migrations/${prefix}_create_${model1}_${model2}_table.$ext", true);
+                    $path = $this->makePath("database/migrations/{$prefix}_create_{$parsed_schema}{$model1}_{$model2}_table.{$ext}", true);
                 } else {
-                    $model = is_array($model) ? Str::snake($model[0]) : Str::snake($model);
-                    $path = $this->makePath("database/migrations/${prefix}_create_${model}_table.$ext", true);
+                    $model = is_array($model) ? Str::snake($this->pluralize($model[0])) : Str::snake($this->pluralize($model));
+                    $path = $this->makePath("database/migrations/{$prefix}_create_{$parsed_schema}{$model}_table.{$ext}", true);
                 }
                 break;
             case 'seed':

@@ -89,7 +89,7 @@ class LaravueMigrationCommand extends LaravueCommand
     public function setViewName($model)
     {
         if (is_array($model) && count($model) > 1 && $this->option('view')) {
-            dd('Erro: relacionamento MxN com view não é suportado.');
+            dd('Err: MxN relationship whith view is not suported.');
         }
 
         if (is_array($model) && count($model) == 1 && $this->option('view')) {
@@ -103,7 +103,7 @@ class LaravueMigrationCommand extends LaravueCommand
         return $model;
     }
 
-    public function infoLog(array $model, string $schema): void
+    public function infoLog(array $model, ?string $schema): void
     {
         $date = now();
         $prefix = date('Y_m_d_His');
@@ -122,7 +122,7 @@ class LaravueMigrationCommand extends LaravueCommand
     protected function replaceField($stub, $model)
     {
         if (!$this->option('fields') && !is_array($model)) {
-            return str_replace('{{ fields }}', "// insira código aqui.", $stub);
+            return str_replace('{{ fields }}', "// insert code here.", $stub);
         }
 
         $fields = $this->buildFields($model);
@@ -198,17 +198,13 @@ class LaravueMigrationCommand extends LaravueCommand
             if ($this->isFk($key)) {
                 $referenced_table = $this->pluralize(str_replace("_id", "", $key));
 
-                $returnFields .= "\$table->$type('$key')" . PHP_EOL;
+                $returnFields .= "\$table->foreignId('$key')" . PHP_EOL;
                 if ($isNullable) {
                     $returnFields .= $this->tabs(4) . $nullable . PHP_EOL;
                 } else if ($isUnique) {
                     $returnFields .= $this->tabs(4) . $unique . PHP_EOL;
                 }
-                $returnFields .= $this->tabs(4) . "->unsigned();" . PHP_EOL;
-                $returnFields .= $this->tabs(3) . "\$table->foreign('$key')" . PHP_EOL;
-                $returnFields .= $this->tabs(4) . "->references('id')" . PHP_EOL;
-                $returnFields .= $this->tabs(4) . "->on('$referenced_table')" . PHP_EOL;
-                $returnFields .= $this->tabs(4) . "->onDelete('$onDelete');";
+                $returnFields .= $this->tabs(4) . "->constrained('$referenced_table');";
             } else {
                 if ($isNullable && $isUnique) {
                     $returnFields .= "\$table->$type('$key'$size)" . PHP_EOL;
@@ -253,9 +249,9 @@ class LaravueMigrationCommand extends LaravueCommand
 
         if (is_array($model)) {
             $key1 = Str::snake($model[0]) . "_id";
-            $model1 = array($key1 => 'i');
+            $model1 = array($key1 => 'bi');
             $key2 = Str::snake($model[1]) . "_id";
-            $model2 = array($key2 => 'i');
+            $model2 = array($key2 => 'bi');
 
             if (!array_key_exists($key1, $fields) && !array_key_exists($key2, $fields)) {
                 $allFields = $model1 + $model2 + $fields;
