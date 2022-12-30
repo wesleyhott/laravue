@@ -14,7 +14,7 @@ class MakeMigrationSchemaTest extends TestCase
     {
         $prefix = date('Y_m_d_His');
         $model = array('ComplexName');
-        $schema = 'recipe';
+        $schema = 'Schema';
         $name = Str::snake($model[0]);
         // destination path of the Foo class
         $testClass = str_replace("tests/Unit", "", __DIR__) . "database/migrations/{$prefix}_create_{$schema}_{$name}s_table.php";

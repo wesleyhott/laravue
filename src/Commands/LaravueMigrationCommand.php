@@ -22,10 +22,10 @@ class LaravueMigrationCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $description = 'Criação de migration nos padrões do Laravue.';
+    protected $description = 'Build migration in Laravue standart.';
 
     /**
-     * Tipo de modelo que está sendo criado.
+     * Model type that is been built.
      *
      * @var string
      */
@@ -107,16 +107,18 @@ class LaravueMigrationCommand extends LaravueCommand
     {
         $date = now();
         $prefix = date('Y_m_d_His');
+        $parsed_schema = empty($schema) ? '' : strtolower("{$schema}_");
+
         if ($this->option('mxn')) {
             $model1 = Str::snake($model[0]);
             $model2 = Str::snake($model[1]);
-            $this->info("$date - [ ${model1}_${model2} ] >> ${prefix}_create_${model1}_${model2}_table.php");
+            $this->info("{$date} - [ {$model1}_{$model2} ] >> {$prefix}_create_{$parsed_schema}{$model1}_{$model2}_table.php");
         }
 
         $parsedModel = is_array($model) ? trim($model[0]) : trim($model);
         $name = Str::snake($this->pluralize($parsedModel));
-        $parsedSchema = empty($schema) ? '' : "{$schema}_";
-        $this->info("{$date} - [ {$parsedModel} ] >> {$prefix}_create_{$parsedSchema}{$name}_table.php");
+
+        $this->info("{$date} - [ {$parsedModel} ] >> {$prefix}_create_{$parsed_schema}{$name}_table.php");
     }
 
     protected function replaceField($stub, $model)
@@ -181,8 +183,8 @@ class LaravueMigrationCommand extends LaravueCommand
                 $type = 'string';
                 $size = ", 14";
             }
-            // Valor monetário
-            if ($type == 'monetario') {
+            // Monetary value
+            if ($type == 'monetario' || $type == 'monetary') {
                 $type = 'decimal';
                 $size = ", 16, 2";
             }
@@ -278,5 +280,30 @@ class LaravueMigrationCommand extends LaravueCommand
             ? PHP_EOL . $this->tabs(3) . '$table->softDeletes();'
             : '';
         return str_replace('{{ softDeletes }}', $softDelete, $stub);
+    }
+
+    /**
+     * Replace the Schema Class in the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $model
+     * @return string
+     */
+    protected function replaceSchemaClass($stub, $schema)
+    {
+        return str_replace('{{ schemaClass }}', strtolower($schema), $stub);
+    }
+
+    /**
+     * Replace the Schema Table in the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $model
+     * @return string
+     */
+    protected function replaceSchemaTable($stub, $schema)
+    {
+        $replacement = empty($schema) ? '' : strtolower("$schema.");
+        return str_replace('{{ schemaTable }}', $replacement, $stub);
     }
 }

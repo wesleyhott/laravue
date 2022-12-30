@@ -1,7 +1,9 @@
 # Laravue
+
 Code generation for projects that use Laravel and VueJs tecnologies.
 
 ## Instalation
+
 ```
 composer require wesleyhott/laravue
 ```
@@ -25,46 +27,56 @@ php artisan passport:install
 ## Documentation
 
 ### Commands
+
 #### Build
+
 ```
 php artisan laravue:build <model>
 ```
+
 Generates code for backend (Laravel) and frontend (VueJs) for model \<model\>
 
 #### Build with options
+
 ```
 php artisan laravue:build <model> <-f|--fields>
 ```
+
 #### Comand Description
+
 Generates code for backend (Laravel) and frontend (VueJs) for model \<model\> with fields <-f|--fields>
 
 ### Examples
+
 Supose we have the situation that users have posts and models are
 **Users**
-| Field | Type    | Detais                |
+| Field | Type | Detais |
 | :---: | ------- | --------------------- |
-|  id   | integer | not null; primary key |
-| name  | string  | not null              |
-|  age  | integer | nullable              |
+| id | integer | not null; primary key |
+| name | string | not null |
+| age | integer | nullable |
 
 **Posts**
-|   Field    | Type     | Detais                          |
+| Field | Type | Detais |
 | :--------: | -------- | ------------------------------- |
-|     id     | integer  | not null; primary key           |
-|  user_id   | int      | not null; foreing key for users |
-|    text    | string   | not null                        |
-| created_at | datetime | not null                        |
-|  approved  | boolean  | not null                        |
+| id | integer | not null; primary key |
+| user_id | int | not null; foreing key for users |
+| text | string | not null |
+| created_at | datetime | not null |
+| approved | boolean | not null |
 
 **Command for generate User model**
+
 ```
 php artisan laravue:build User -f name:s,age:i.n
 ```
 
 **Command for generate Post model**
+
 ```
 php artisan laravue:build Post -f user_id:i,text:s,age:i.n,created_at:dt,approved:b
 ```
+
 ### Fields types and shortcus
 
 | Shortcut  | Generate                                      | Description                                                                        |
@@ -100,11 +112,11 @@ php artisan laravue:build Post -f user_id:i,text:s,age:i.n,created_at:dt,approve
 |   .#5#    | ->default(5)                                  | Declare a default value for a column                                               |
 |    .+     | ->unsigned()                                  | Unsigned integer                                                                   |
 |    .u     | ->unique()                                    | Unique field                                                                       |
-|    .u*    | $table->unique['un1','unN'];                  | Fields that are unique together                                                    |
+|   .u\*    | $table->unique['un1','unN'];                  | Fields that are unique together                                                    |
 |    pf     | $table->string(11);                           | VARCHAR size 11 equivalent column                                                  |
 |    pj     | $table->string(14);                           | VARCHAR size 14 equivalent column                                                  |
 |    fj     | $table->string(14);                           | VARCHAR size 14 equivalent column                                                  |
-|    vm     | $table->decimal('money', 16,2);               | DECIMAL equivalent with a precision 2 and scale 16                                 |
+|    mv     | $table->decimal('money', 16,2);               | DECIMAL equivalent with a precision 2 and scale 16                                 |
 
 ### Changelog
 

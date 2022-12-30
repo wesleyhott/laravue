@@ -131,7 +131,7 @@ class LaravueCommand extends Command
                 break;
             case 'migration':
                 $prefix = date('Y_m_d_His');
-                $parsed_schema = empty($schema) ? '' : "{$schema}_";
+                $parsed_schema = empty($schema) ? '' : strtolower("{$schema}_");
                 if (is_array($model) && count($model) > 1) {
                     $model1 = Str::snake($model[0]);
                     $model2 = Str::snake($model[1]);
@@ -470,31 +470,6 @@ class LaravueCommand extends Command
             $model = $this->pluralize($model);
         }
         return str_replace('{{ table }}', Str::snake($model), $stub);
-    }
-
-    /**
-     * Replace the Schema Class in the given stub.
-     *
-     * @param  string  $stub
-     * @param  string  $model
-     * @return string
-     */
-    protected function replaceSchemaClass($stub, $schema)
-    {
-        return str_replace('{{ schemaClass }}', ucfirst($schema), $stub);
-    }
-
-    /**
-     * Replace the Schema Table in the given stub.
-     *
-     * @param  string  $stub
-     * @param  string  $model
-     * @return string
-     */
-    protected function replaceSchemaTable($stub, $schema)
-    {
-        $replacement = empty($schema) ? '' : "$schema.";
-        return str_replace('{{ schemaTable }}', $replacement, $stub);
     }
 
     /**
@@ -908,7 +883,7 @@ class LaravueCommand extends Command
                 return 'timestamp';
             case 'tt':
                 return 'timestamps';
-            case 'vm':
+            case 'mv':
                 return 'monetario';
             default:
                 return 'string';
