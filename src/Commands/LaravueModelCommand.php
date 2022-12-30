@@ -64,7 +64,7 @@ class LaravueModelCommand extends LaravueCommand
     /**
      * ReplaceField is setting the $casts attirbute for fields for model.
      */
-    protected function replaceField($stub, $model)
+    protected function replaceField($stub, $model = null, $shema = null)
     {
         if (!$this->option('fields')) {
             return str_replace('{{ fields }}', "", $stub);

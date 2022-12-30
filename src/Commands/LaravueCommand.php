@@ -410,9 +410,10 @@ class LaravueCommand extends Command
      *
      * @param  string  $stub
      * @param  string  $model
+     * @param  string  $schema
      * @return string
      */
-    protected function replaceField($stub, $model)
+    protected function replaceField($stub, $model = null, $schema = null)
     {
         return str_replace('{{ fields }}', "", $stub);
     }

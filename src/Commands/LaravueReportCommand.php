@@ -43,7 +43,7 @@ class LaravueReportCommand extends LaravueCommand
         $this->info("$date - [ $model ] >> $model" . "ReportController.php");
     }
 
-    protected function replaceField($stub, $model)
+    protected function replaceField($stub, $model = null, $shema = null)
     {
         return $this->replaceBeforeIndex($stub, $model);
     }

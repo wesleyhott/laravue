@@ -62,7 +62,7 @@ class LaravueSeedCommand extends LaravueCommand
         }
     }
 
-    protected function replaceField($stub, $model)
+    protected function replaceField($stub, $model = null, $shema = null)
     {
         if (!$this->option('fields') && !is_array($model)) {
             return str_replace('{{ fields }}', "// insert code here.", $stub);

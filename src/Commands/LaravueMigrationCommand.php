@@ -73,7 +73,7 @@ class LaravueMigrationCommand extends LaravueCommand
             $parsedSchemaClass = $this->replaceSchemaClass($parsedSchemaTable, $schema);
             $parsedSoftDeletes = $this->replaceSoftDeletes($parsedSchemaClass);
 
-            return $this->replaceField($parsedSoftDeletes, $model);
+            return $this->replaceField($parsedSoftDeletes, $model, $schema);
         }
 
         $parsedModel =  is_array($model) ? $model[0] : $model;
@@ -83,7 +83,7 @@ class LaravueMigrationCommand extends LaravueCommand
         $parsedSchemaClass = $this->replaceSchemaClass($parsedSchemaTable, $schema);
         $parsedSoftDeletes = $this->replaceSoftDeletes($parsedSchemaClass);
 
-        return $this->replaceField($parsedSoftDeletes, $parsedModel);
+        return $this->replaceField($parsedSoftDeletes, $parsedModel, $schema);
     }
 
     public function setViewName($model)
@@ -121,7 +121,7 @@ class LaravueMigrationCommand extends LaravueCommand
         $this->info("{$date} - [ {$parsedModel} ] >> {$prefix}_create_{$parsed_schema}{$name}_table.php");
     }
 
-    protected function replaceField($stub, $model)
+    protected function replaceField($stub, $model = null, $schema = null)
     {
         if (!$this->option('fields') && !is_array($model)) {
             return str_replace('{{ fields }}', "// insert code here.", $stub);
@@ -138,7 +138,6 @@ class LaravueMigrationCommand extends LaravueCommand
             // Nullable
             $isNullable = $this->hasNullable($value);
             $nullable = $isNullable ? '->nullable()' : '';
-            $onDelete = $isNullable ? 'set null' : 'cascade';
             // String, char Size
             $size = '';
             if ($type == 'string' || $type == 'char') {
@@ -206,7 +205,8 @@ class LaravueMigrationCommand extends LaravueCommand
                 } else if ($isUnique) {
                     $returnFields .= $this->tabs(4) . $unique . PHP_EOL;
                 }
-                $returnFields .= $this->tabs(4) . "->constrained('$referenced_table');";
+                $parsedSchema = empty($schema) ? '' : strtolower("{$schema}.");
+                $returnFields .= $this->tabs(4) . "->constrained('{$parsedSchema}{$referenced_table}');";
             } else {
                 if ($isNullable && $isUnique) {
                     $returnFields .= "\$table->$type('$key'$size)" . PHP_EOL;

@@ -49,7 +49,7 @@ class LaravueFrontModelCommand extends LaravueCommand
         $this->info("$date - [ $model ] >> forms/Model.vue");
     }
 
-    protected function replaceField($stub, $model)
+    protected function replaceField($stub, $model = null, $schema = null)
     {
         $default = "<div class=\"row formSpace\">" . PHP_EOL;
         $default .= $this->tabs(5) .  "<div class=\"col-sm-12\">" . PHP_EOL;

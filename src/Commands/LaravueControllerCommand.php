@@ -107,7 +107,7 @@ class LaravueControllerCommand extends LaravueCommand
         return str_replace('{{ unique:messages }}', $message, $stub);
     }
 
-    protected function replaceField($stub, $model)
+    protected function replaceField($stub, $model = null, $schema = null)
     {
         if (!$this->option('fields')) {
             $fieldsParsed = str_replace('{{ fields }}', "//$" . "model->field = $" . "request->input('field');", $stub);
