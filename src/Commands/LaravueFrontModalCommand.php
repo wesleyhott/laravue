@@ -34,7 +34,7 @@ class LaravueFrontModalCommand extends LaravueCommand
     {
         $this->setStub('/front/forms/modal');
         $argumentModel = $this->argument('model');
-        $model = is_array( $argumentModel ) ? trim( $argumentModel[0] ) : trim( $argumentModel ); 
+        $model = is_array($argumentModel) ? trim($argumentModel[0]) : trim($argumentModel);
         $date = now();
 
         $path = $this->getPath($model, "Show");
@@ -51,21 +51,21 @@ class LaravueFrontModalCommand extends LaravueCommand
         $default .= $this->tabs(2) .  "</div>" . PHP_EOL;
         $default .= $this->tabs(1) .  "</div>";
 
-        if(!$this->option('fields')){
-            $defaultCommented = str_replace( '{{ fields }}', '<!-- Insira código aqui. -->', $default );
-            
-            return str_replace( '{{ fields }}', $defaultCommented , $stub );
+        if (!$this->option('fields')) {
+            $defaultCommented = str_replace('{{ fields }}', '<!-- insert code here. -->', $default);
+
+            return str_replace('{{ fields }}', $defaultCommented, $stub);
         }
 
-        $fields = $this->getFieldsArray( $this->option('fields') );
+        $fields = $this->getFieldsArray($this->option('fields'));
 
         $parse = "";
         $lastKey = array_key_last($fields);
         $firstKey = array_key_first($fields);
         foreach ($fields as $key => $value) {
-            $label = $this->isFk($key) ? $this->getTitle( str_replace( "_id", "", $key ) ) : $this->getTitle( $key );
+            $label = $this->isFk($key) ? $this->getTitle(str_replace("_id", "", $key)) : $this->getTitle($key);
 
-            if( strcmp($firstKey, $key) != 0 ) {
+            if (strcmp($firstKey, $key) != 0) {
                 $parse .= $this->tabs(1);
             }
             $parse .= "<div class=\"row\">" . PHP_EOL;
@@ -77,11 +77,11 @@ class LaravueFrontModalCommand extends LaravueCommand
             $parse .= $this->tabs(3) . "</p>" . PHP_EOL;
             $parse .= $this->tabs(2) .  "</div>" . PHP_EOL;
             $parse .= $this->tabs(1) .  "</div>";
-            if( strcmp($lastKey, $key) != 0 ) {
+            if (strcmp($lastKey, $key) != 0) {
                 $parse .= PHP_EOL;
             }
         }
 
-        return str_replace( '{{ fields }}', $parse , $stub );
+        return str_replace('{{ fields }}', $parse, $stub);
     }
 }

@@ -82,6 +82,7 @@ class LaravueModelCommand extends LaravueCommand
                     $type = 'string';
                     break;
                 case 'monetario':
+                case 'monetary':
                     $type = 'decimal:2';
                     break;
                 default:

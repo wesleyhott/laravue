@@ -65,7 +65,7 @@ class LaravueSeedCommand extends LaravueCommand
     protected function replaceField($stub, $model)
     {
         if (!$this->option('fields') && !is_array($model)) {
-            return str_replace('{{ fields }}', "// insira código aqui.", $stub);
+            return str_replace('{{ fields }}', "// insert code here.", $stub);
         }
 
         $fields = $this->buildFields($model);

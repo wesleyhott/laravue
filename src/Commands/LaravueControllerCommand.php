@@ -164,8 +164,8 @@ class LaravueControllerCommand extends LaravueCommand
                     $unsigned = "|min:0";
                 }
             }
-            // Valor monetário
-            if ($type == 'monetario') {
+            // Monetary Value
+            if ($type == 'monetario' || $type == 'monetary') {
                 $type = 'decimal:2';
             }
             // Small integer
@@ -293,7 +293,7 @@ class LaravueControllerCommand extends LaravueCommand
             if ($type === 'date') {
                 array_push($dateArray, $key);
             }
-            if ($type === 'monetario') {
+            if ($type === 'monetario' || $type === 'monetary') {
                 array_push($moneyArray, $key);
             }
             if ($type === 'cpf') {
