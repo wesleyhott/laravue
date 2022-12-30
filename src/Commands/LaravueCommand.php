@@ -624,8 +624,16 @@ class LaravueCommand extends Command
         );
         $arr_fileds = [];
         foreach (explode(",", $pureOptions) as $field) {
-            list($key, $value) = explode(":", $field);
-            $arr_fileds[$key] = $value;
+            // Foreing Keys are big integer by default
+            $hasType = str_contains($field, ':');
+            if ($hasType) {
+                list($key, $value) = explode(":", $field);
+                $arr_fileds[$key] = $value;
+            } else {
+                // Fields are string by default
+                $isFK = str_contains($field, '_id');
+                $arr_fileds[$field] = $isFK ? 'bi' : 's';
+            }
         }
 
         return $arr_fileds;
