@@ -9,7 +9,7 @@ use wesleyhott\Laravue\Tests\TestCase;
 class MakeSeedTest extends TestCase
 {
     /** @test */
-    function it_creates_a_seed_test_file()
+    function it_makes_a_seed_test()
     {
         $model = array('ComplexModel');
         // destination path of the Foo class

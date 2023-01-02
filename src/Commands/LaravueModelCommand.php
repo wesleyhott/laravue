@@ -22,10 +22,10 @@ class LaravueModelCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $description = 'Criação de modelo de negócio nos padrões do Laravue.';
+    protected $description = 'Makes a model in Laravue Pattern.';
 
     /**
-     * Tipo de modelo que está sendo criado.
+     * Model type that is being created.
      *
      * @var string
      */
@@ -72,6 +72,7 @@ class LaravueModelCommand extends LaravueCommand
 
         $fields = $this->getFieldsArray($this->option('fields'));
         $returnFields = '';
+        $returnMethods = '';
         $first = true;
         foreach ($fields as $key => $value) {
             switch ($this->getType($value)) {
@@ -83,7 +84,16 @@ class LaravueModelCommand extends LaravueCommand
                     break;
                 case 'monetario':
                 case 'monetary':
-                    $type = 'decimal:2';
+                    $type = 'float';
+                    break;
+                case 'bigInteger':
+                case 'mediumInteger':
+                case 'smallInteger':
+                case 'tinyInteger':
+                    $type = 'int';
+                    break;
+                case 'decimal':
+                    $type = 'float';
                     break;
                 default:
                     $type = $this->getType($value);
@@ -100,40 +110,79 @@ class LaravueModelCommand extends LaravueCommand
     }
 
     /**
+     * Build the model.
+     *
+     * @param  string  $model
+     * @param  string  $fields = null
+     * @return string
+     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    protected function buildModel($model, $fields = null, $schema = null)
+    {
+        $stub = $this->files->get($this->getStub());
+
+        if (is_array($model)) {
+            return $this->replaceRelation($stub, $model, $fields);
+        }
+
+        $field = $this->replaceField($stub, $model);
+        $table = $this->replaceTable($field, $model);
+        $relation = $this->replaceRelation($table, $model, $fields);
+        $parsedSchema = $this->replaceSchemaNamespace($relation, $schema);
+
+        return $this->replaceModel($parsedSchema, $model);
+    }
+
+    /**
      * Replace the relationship for the given stub.
      *
      * @param  string  $stub
      * @param  string  $model
+     * @param  array  $fields
      * @return string $stub
      */
     protected function replaceRelation($modelFile, $model, $fields)
     {
-        $parsedWith = $modelFile;
+        $newRelations = $modelFile;
 
         foreach ($fields as $key => $value) {
             if ($this->isFk($key)) {
                 $fieldRelationModel = Str::studly(str_replace("_id", "", $key));
                 $relationName = lcfirst($fieldRelationModel);
+                $title = $this->getTitle($model);
 
                 $newRelation = "/**" . PHP_EOL;
-                $newRelation .= $this->tabs(1) . " * Retorna $fieldRelationModel que $model contém." . PHP_EOL;
+                $newRelation .= $this->tabs(1) . " * Returns $fieldRelationModel that $title contains." . PHP_EOL;
                 $newRelation .= $this->tabs(1) . " */" . PHP_EOL;
-                $newRelation .= $this->tabs(1) . "public function $relationName()" . PHP_EOL;
+                $newRelation .= $this->tabs(1) . "public function $relationName(): BelongsTo" . PHP_EOL;
                 $newRelation .= $this->tabs(1) . "{" . PHP_EOL;
-                $newRelation .= $this->tabs(2) . "return \$this->belongsTo('App\Models\\$fieldRelationModel');" . PHP_EOL;
+                $newRelation .= $this->tabs(2) . "return \$this->belongsTo({$fieldRelationModel}::class);" . PHP_EOL;
                 $newRelation .= $this->tabs(1) . "}" . PHP_EOL;
                 $newRelation .= PHP_EOL;
                 $newRelation .= $this->tabs(1) . "// {{ laravue-insert:relationship }}";
 
-                $newRelations = str_replace('// {{ laravue-insert:relationship }}', $newRelation, $modelFile);
+                $newRelations = str_replace('// {{ laravue-insert:relationship }}', $newRelation, $newRelations);
 
-                $parsedWith = $this->makeWith($newRelations, $relationName);
+                $newProperty = '';
+                $newProperty .= " * @property {$fieldRelationModel} \${$relationName}";
+                $newProperty .= PHP_EOL;
+                $newProperty .= " * {{ laravue-insert:property }}";
+
+                $newRelations = str_replace(' * {{ laravue-insert:property }}', $newProperty, $newRelations);
+
+                $newMethod = '';
+                $newMethod .= " * @method {$relationName}()";
+                $newMethod .= PHP_EOL;
+                $newMethod .= " * {{ laravue-insert:method }}";
+
+                $newRelations = str_replace(' * {{ laravue-insert:method }}', $newMethod, $newRelations);
 
                 $this->reverseRelation($fieldRelationModel, $model);
             }
         }
 
-        return $parsedWith;
+        return $newRelations;
     }
 
     protected function reverseRelation($reverseModel, $model)
@@ -145,20 +194,32 @@ class LaravueModelCommand extends LaravueCommand
         $relationName = lcfirst($this->pluralize($model));
 
         $newRelation = "/**" . PHP_EOL;
-        $newRelation .= $this->tabs(1) . " * Retorna os $relationName de $reverseModel." . PHP_EOL;
+        $newRelation .= $this->tabs(1) . " * Returns $relationName of $reverseModel." . PHP_EOL;
         $newRelation .= $this->tabs(1) . " */" . PHP_EOL;
-        $newRelation .= $this->tabs(1) . "public function $relationName()" . PHP_EOL;
+        $newRelation .= $this->tabs(1) . "public function $relationName(): HasMany" . PHP_EOL;
         $newRelation .= $this->tabs(1) . "{" . PHP_EOL;
-        $newRelation .= $this->tabs(2) . "return \$this->hasMany('App\Models\\$model');" . PHP_EOL;
+        $newRelation .= $this->tabs(2) . "return \$this->hasMany({$model}::class);" . PHP_EOL;
         $newRelation .= $this->tabs(1) . "}" . PHP_EOL;
         $newRelation .= PHP_EOL;
         $newRelation .= $this->tabs(1) . "// {{ laravue-insert:relationship }}";
 
         $parsedRelation = str_replace('// {{ laravue-insert:relationship }}', $newRelation, $modelFile);
 
-        $parsedWith = $this->makeWith($parsedRelation, $relationName);
+        $newProperty = '';
+        $newProperty .= " * @property {$model}[] \${$relationName}";
+        $newProperty .= PHP_EOL;
+        $newProperty .= " * {{ laravue-insert:property }}";
 
-        $this->files->put($path, $parsedWith);
+        $parsedProperty = str_replace(' * {{ laravue-insert:property }}', $newProperty, $parsedRelation);
+
+        $newMethod = '';
+        $newMethod .= " * @method {$relationName}()";
+        $newMethod .= PHP_EOL;
+        $newMethod .= " * {{ laravue-insert:method }}";
+
+        $parsedMethod = str_replace(' * {{ laravue-insert:method }}', $newMethod, $parsedProperty);
+
+        $this->files->put($path, $parsedMethod);
     }
 
     protected function mxnRelation($modelM, $modelN)
@@ -169,13 +230,13 @@ class LaravueModelCommand extends LaravueCommand
         try {
             $modelFile = $this->files->get($path);
         } catch (\Exception $e) {
-            $this->error("Arquivo - $currentDirectory/app/Models/$modelM.php - não encontrado.");
+            $this->error("File - $currentDirectory/app/Models/$modelM.php - not found.");
         }
 
         $relationName = lcfirst($this->pluralize($modelN));
 
         $newRelation = "/**" . PHP_EOL;
-        $newRelation .= $this->tabs(1) . " * Retorna os $relationName de $modelM." . PHP_EOL;
+        $newRelation .= $this->tabs(1) . " * Returns$relationName of $modelM." . PHP_EOL;
         $newRelation .= $this->tabs(1) . " */" . PHP_EOL;
         $newRelation .= $this->tabs(1) . "public function $relationName()" . PHP_EOL;
         $newRelation .= $this->tabs(1) . "{" . PHP_EOL;
@@ -189,19 +250,5 @@ class LaravueModelCommand extends LaravueCommand
         $parsedWith = $this->makeWith($parsedNewRelation, $relationName);
 
         $this->files->put($path, $parsedWith);
-    }
-
-    protected function makeWith($parsedNewRelation, $relationName)
-    {
-        if (strpos($parsedNewRelation, "protected \$with = [") === false) {
-            $with = "protected \$with = ['$relationName'];" . PHP_EOL;
-            $with .= $this->tabs(1) . "// {{ laravue-insert:with }}";
-
-            return str_replace('// {{ laravue-insert:with }}', $with, $parsedNewRelation);
-        } else {
-            $with = "protected \$with = ['$relationName', ";
-
-            return str_replace("protected \$with = [", $with, $parsedNewRelation);
-        }
     }
 }

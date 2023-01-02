@@ -541,7 +541,7 @@ class LaravueCommand extends Command
      *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    protected function buildModel($model, $fields = null, $schema)
+    protected function buildModel($model, $fields = null, $schema = null)
     {
         $stub = $this->files->get($this->getStub());
 

@@ -2,7 +2,9 @@
 
 namespace App\Models{{ schemaNamespace }};
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\LaravueModel;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class {{ class }}
@@ -10,18 +12,13 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  {{ fields }}
- * @ method newMethod()
+ * {{ laravue-insert:property }}
+ *
+ * {{ laravue-insert:method }}
  */
-class {{ class }} extends Model
+class {{ class }} extends LaravueModel
 {
-    use SoftDeletes;
-
-    protected $table = '{{ table }}';
-
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
-
-    // Model Methods must be declared in this documentation header
-    // newMethod() {} 
+    protected $table = '{{ table }}'; 
 
     // {{ laravue-insert:relationship }}
 }
