@@ -6,14 +6,14 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use wesleyhott\Laravue\Tests\TestCase;
 
-class MakeDbSeedTestFileTest extends TestCase
+class MakeDbSeedTest extends TestCase
 {
     /** @test */
-    function it_creates_a_seed_test_file()
+    function it_makes_a_dbseed_test()
     {
-        $model = array('TestFieldOption');
+        $model = array('ComplexModel');
         // destination path of the Foo class
-        $testClass = str_replace( "tests/Unit", "", __DIR__) . "database/seeders/DatabaseSeeder.php";
+        $testClass = str_replace("tests/Unit", "", __DIR__) . "database/seeders/DatabaseSeeder.php";
 
         // Run the make command
         Artisan::call('laravue:dbseeder', [

@@ -2,6 +2,14 @@
 
 return [
     /**
+     * Language
+     * 
+     * Determines the language for generation rules.
+     * Supported languages: en, pt-BR
+     */
+    'language' => 'en',
+
+    /**
      * Use Soft Deletes
      * 
      * Determines if models will be generated with soft deltes

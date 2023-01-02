@@ -341,18 +341,22 @@ class LaravueCommand extends Command
                 return substr($singular, 0, -3) . 'sers';
         }
 
-        $ending_letters = substr($singular, -2);
-        switch ($ending_letters) {
-            case 'ao':
-                return substr($singular, 0, -2) . 'oes';
-            case 'al':
-                return substr($singular, 0, -2) . 'ais';
-            case 'el':
-                return substr($singular, 0, -2) . 'eis';
-            case 'il':
-                return substr($singular, 0, -2) . 'is';
-            case 'ol':
-                return substr($singular, 0, -2) . 'ois';
+
+        $lang = config('laravue.language');
+        if ($lang === 'pt-BR') {
+            $ending_letters = substr($singular, -2);
+            switch ($ending_letters) {
+                case 'ao':
+                    return substr($singular, 0, -2) . 'oes';
+                case 'al':
+                    return substr($singular, 0, -2) . 'ais';
+                case 'el':
+                    return substr($singular, 0, -2) . 'eis';
+                case 'il':
+                    return substr($singular, 0, -2) . 'is';
+                case 'ol':
+                    return substr($singular, 0, -2) . 'ois';
+            }
         }
 
         $last_letter = strtolower($singular[strlen($singular) - 1]);
@@ -1112,5 +1116,36 @@ class LaravueCommand extends Command
         }
 
         return $modelFields;
+    }
+
+    /**
+     * Returns language setted on config/laravue.php.
+     * Ex: user_id, returns fields from model User.
+     *
+     * @return string language pt-BR or en
+     */
+    protected function getLanguage()
+    {
+        return config('laravue.language');
+    }
+
+    /**
+     * Returns true is setted Brazilian Portuguese language, false otherwise.
+     *
+     * @return boolean isPtBR
+     */
+    protected function isPtBRLanguage()
+    {
+        return $this->getLanguage() === 'pt-BR';
+    }
+
+    /**
+     * Returns true is setted EUA language, false otherwise.
+     *
+     * @return boolean isEUA
+     */
+    protected function isEnLanguage()
+    {
+        return $this->getLanguage() === 'en';
     }
 }
