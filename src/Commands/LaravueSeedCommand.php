@@ -80,7 +80,37 @@ class LaravueSeedCommand extends LaravueCommand
                 $returnFields .= PHP_EOL;
                 $returnFields .= $this->tabs(2);
             }
-            $returnFields .= "// " . $this->tabs(1) . "\"$key\" => '',";
+            switch ($this->getType($value)) {
+                case 'boolean':
+                    $parsedValue = 'true';
+                    break;
+                case 'bigIncrements':
+                case 'bigInteger':
+                case 'integer':
+                case 'mediumInteger':
+                case 'tinyInteger':
+                    $parsedValue = 1;
+                    break;
+                case 'double':
+                case 'decimal':
+                case 'float':
+                case 'monetario':
+                    $parsedValue = '1.0';
+                    break;
+                case 'date':
+                case 'timestamp':
+                    $parsedValue = '\'' . date("Y-m-d H:i:s") . '\'';
+                    break;
+                case 'time':
+                    $parsedValue = '\'' . date("H:i:s") . '\'';
+                    break;
+                default:
+                    $parsedValue = '\'\'';
+            }
+            if ($this->isFk($key)) {
+                $parsedValue = 1;
+            }
+            $returnFields .= "// " . $this->tabs(1) . "\"$key\" => {$parsedValue},";
         }
 
         return str_replace('{{ fields }}', $returnFields, $stub);
