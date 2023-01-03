@@ -62,6 +62,34 @@ class LaravueSeedCommand extends LaravueCommand
         }
     }
 
+    /**
+     * Build the class with the given model.
+     *
+     * @param  string  $model
+     * @return string
+     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    protected function buildSeed($model, $schema)
+    {
+        $stub = $this->files->get($this->getStub());
+
+        if ($this->option('mxn')) {
+            $parsedModel =  is_array($model) ? $model[0] . $model[1] : $model;
+            $class = $this->replaceClass($stub, $parsedModel);
+            $table = $this->replaceTable($class, $parsedModel, $plural = false);
+            return $this->replaceField($table, $model);
+        }
+
+        $parsedModel =  is_array($model) ? $model[0] : $model;
+        $classStub = $this->replaceClass($stub, $parsedModel);
+        $tableStub = $this->replaceTable($classStub, $parsedModel);
+        $schemaStub = $this->replaceSchemaNamespace($tableStub, $schema);
+        $tableSchemaStub = $this->replaceSchemaTable($schemaStub, $schema);
+
+        return $this->replaceField($tableSchemaStub, $parsedModel);
+    }
+
     protected function replaceField($stub, $model = null, $shema = null)
     {
         if (!$this->option('fields') && !is_array($model)) {

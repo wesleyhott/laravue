@@ -13,8 +13,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id
  {{ fields }}
  * {{ laravue-insert:property }}
- *
- * {{ laravue-insert:method }}
  */
 class {{ class }} extends LaravueModel
 {

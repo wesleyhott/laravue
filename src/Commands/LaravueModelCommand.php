@@ -15,7 +15,7 @@ class LaravueModelCommand extends LaravueCommand
                                 {--f|fields=} 
                                 {--x|mxn} 
                                 {--i|view : build a model based on view, not table}
-                                {--s|schema= : determine a schema for model (postgres)}';
+                                {--s|schema= : determines a schema for model (postgres)}';
 
     /**
      * The console command description.
@@ -123,15 +123,15 @@ class LaravueModelCommand extends LaravueCommand
         $stub = $this->files->get($this->getStub());
 
         if (is_array($model)) {
-            return $this->replaceRelation($stub, $model, $fields);
+            return $this->replaceRelation($stub, $model, $fields, $schema);
         }
 
-        $field = $this->replaceField($stub, $model);
-        $table = $this->replaceTable($field, $model);
-        $relation = $this->replaceRelation($table, $model, $fields);
-        $parsedSchema = $this->replaceSchemaNamespace($relation, $schema);
+        $fieldStub = $this->replaceField($stub, $model);
+        $tableStub = $this->replaceTable($fieldStub, $model);
+        $relationStub = $this->replaceRelation($tableStub, $model, $fields, $schema);
+        $schemaStub = $this->replaceSchemaNamespace($relationStub, $schema);
 
-        return $this->replaceModel($parsedSchema, $model);
+        return $this->replaceModel($schemaStub, $model);
     }
 
     /**
@@ -142,7 +142,7 @@ class LaravueModelCommand extends LaravueCommand
      * @param  array  $fields
      * @return string $stub
      */
-    protected function replaceRelation($modelFile, $model, $fields)
+    protected function replaceRelation($modelFile, $model, $fields, $schema)
     {
         $newRelations = $modelFile;
 
@@ -171,24 +171,25 @@ class LaravueModelCommand extends LaravueCommand
 
                 $newRelations = str_replace(' * {{ laravue-insert:property }}', $newProperty, $newRelations);
 
-                $newMethod = '';
-                $newMethod .= " * @method {$relationName}()";
-                $newMethod .= PHP_EOL;
-                $newMethod .= " * {{ laravue-insert:method }}";
+                // $newMethod = '';
+                // $newMethod .= " * @method {$relationName}()";
+                // $newMethod .= PHP_EOL;
+                // $newMethod .= " * {{ laravue-insert:method }}";
 
-                $newRelations = str_replace(' * {{ laravue-insert:method }}', $newMethod, $newRelations);
+                // $newRelations = str_replace(' * {{ laravue-insert:method }}', $newMethod, $newRelations);
 
-                $this->reverseRelation($fieldRelationModel, $model);
+                $this->reverseRelation($fieldRelationModel, $model, $schema);
             }
         }
 
         return $newRelations;
     }
 
-    protected function reverseRelation($reverseModel, $model)
+    protected function reverseRelation($reverseModel, $model, $schema)
     {
         $currentDirectory =  getcwd();
-        $path = "$currentDirectory/app/Models/$reverseModel.php";
+        $parsedSchema = empty($schema) ? '' : "/{$schema}";
+        $path = "$currentDirectory/app/Models{$parsedSchema}/{$reverseModel}.php";
         $modelFile = $this->files->get($path);
 
         $relationName = lcfirst($this->pluralize($model));
@@ -212,14 +213,14 @@ class LaravueModelCommand extends LaravueCommand
 
         $parsedProperty = str_replace(' * {{ laravue-insert:property }}', $newProperty, $parsedRelation);
 
-        $newMethod = '';
-        $newMethod .= " * @method {$relationName}()";
-        $newMethod .= PHP_EOL;
-        $newMethod .= " * {{ laravue-insert:method }}";
+        // $newMethod = '';
+        // $newMethod .= " * @method {$relationName}()";
+        // $newMethod .= PHP_EOL;
+        // $newMethod .= " * {{ laravue-insert:method }}";
 
-        $parsedMethod = str_replace(' * {{ laravue-insert:method }}', $newMethod, $parsedProperty);
+        // $parsedMethod = str_replace(' * {{ laravue-insert:method }}', $newMethod, $parsedProperty);
 
-        $this->files->put($path, $parsedMethod);
+        $this->files->put($path, $parsedProperty);
     }
 
     protected function mxnRelation($modelM, $modelN)

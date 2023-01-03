@@ -430,7 +430,7 @@ class LaravueCommand extends Command
      * @param  string  $fields
      * @return string $stub
      */
-    protected function replaceRelation($stub, $model, $fields)
+    protected function replaceRelation($stub, $model, $fields, $schema)
     {
         // {{ laravue-insert:relationship }} must be implemented
         return $stub;
@@ -493,6 +493,20 @@ class LaravueCommand extends Command
     }
 
     /**
+     * Replace the Schema Table in the given stub.
+     * Used in migration and seeder
+     *
+     * @param  string  $stub
+     * @param  string  $model
+     * @return string
+     */
+    protected function replaceSchemaTable($stub, $schema)
+    {
+        $replacement = empty($schema) ? '' : strtolower("$schema.");
+        return str_replace('{{ schemaTable }}', $replacement, $stub);
+    }
+
+    /**
      * Replace the Schema Route in the given stub.
      *
      * @param  string  $stub
@@ -546,7 +560,7 @@ class LaravueCommand extends Command
         $stub = $this->files->get($this->getStub());
 
         if (is_array($model)) {
-            return $this->replaceRelation($stub, $model, $fields);
+            return $this->replaceRelation($stub, $model, $fields, $schema);
         }
 
         $isPlural = true;
@@ -554,37 +568,10 @@ class LaravueCommand extends Command
         $route = $this->replaceRoute($title, $model);
         $field = $this->replaceField($route, $model);
         $table = $this->replaceTable($field, $model);
-        $relation = $this->replaceRelation($table, $model, $fields);
+        $relation = $this->replaceRelation($table, $model, $fields, $schema);
         $parsedSchema = $this->replaceSchemaNamespace($relation, $schema);
 
         return $this->replaceModel($parsedSchema, $model);
-    }
-
-    /**
-     * Build the class with the given model.
-     *
-     * @param  string  $model
-     * @return string
-     *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
-    protected function buildSeed($model, $schema)
-    {
-        $stub = $this->files->get($this->getStub());
-
-        if ($this->option('mxn')) {
-            $parsedModel =  is_array($model) ? $model[0] . $model[1] : $model;
-            $class = $this->replaceClass($stub, $parsedModel);
-            $table = $this->replaceTable($class, $parsedModel, $plural = false);
-            return $this->replaceField($table, $model);
-        }
-
-        $parsedModel =  is_array($model) ? $model[0] : $model;
-        $class = $this->replaceClass($stub, $parsedModel);
-        $table = $this->replaceTable($class, $parsedModel);
-        $parsedSchema = $this->replaceSchemaNamespace($table, $schema);
-
-        return $this->replaceField($parsedSchema, $parsedModel);
     }
 
     /**

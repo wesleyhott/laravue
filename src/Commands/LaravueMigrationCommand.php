@@ -293,17 +293,4 @@ class LaravueMigrationCommand extends LaravueCommand
     {
         return str_replace('{{ schemaClass }}', strtolower($schema), $stub);
     }
-
-    /**
-     * Replace the Schema Table in the given stub.
-     *
-     * @param  string  $stub
-     * @param  string  $model
-     * @return string
-     */
-    protected function replaceSchemaTable($stub, $schema)
-    {
-        $replacement = empty($schema) ? '' : strtolower("$schema.");
-        return str_replace('{{ schemaTable }}', $replacement, $stub);
-    }
 }
