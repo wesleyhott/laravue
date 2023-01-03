@@ -54,7 +54,7 @@ class LaravueModelCommand extends LaravueCommand
         $model = is_array($argumentModel) ? trim($argumentModel[0]) : trim($argumentModel);
         $date = now();
 
-        $path = $this->getPath($model);
+        $path = $this->getPath($model, 'php', $this->option('schema'));
         $fields =  $this->option('fields') ? $this->getFieldsArray($this->option('fields')) : [];
         $this->files->put($path, $this->buildModel($model, $fields, $this->option('schema')));
 

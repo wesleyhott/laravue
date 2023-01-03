@@ -84,21 +84,7 @@ class LaravueApiCommand extends Command
     }
 
     /**
-     * Cria o controller para o modelo.
-     *
-     * @return void
-     */
-    protected function createController()
-    {
-        $this->call('laravue:controller', [
-            'model' => $this->argument('model')[0],
-            '--schema' =>  $this->option('schema'),
-            '--fields' =>  $this->option('fields'),
-        ]);
-    }
-
-    /**
-     * Cria o controller para o modelo.
+     * Create the entry model.
      *
      * @return void
      */
@@ -109,6 +95,20 @@ class LaravueApiCommand extends Command
             '--schema' =>  $this->option('schema'),
             '--fields' =>  $this->option('fields'),
             '--view' =>  $this->option('view'),
+        ]);
+    }
+
+    /**
+     * Cria o controller para o modelo.
+     *
+     * @return void
+     */
+    protected function createController()
+    {
+        $this->call('laravue:controller', [
+            'model' => $this->argument('model')[0],
+            '--schema' =>  $this->option('schema'),
+            '--fields' =>  $this->option('fields'),
         ]);
     }
 
