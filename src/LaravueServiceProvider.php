@@ -9,7 +9,7 @@ class LaravueServiceProvider extends ServiceProvider
     public function boot()
     {
         // Register the command if we are using the application via the CLI
-        if( $this->app->runningInConsole() ) {
+        if ($this->app->runningInConsole()) {
             $this->commands([
                 Commands\LaravueApiCommand::class,
                 Commands\LaravueBuildCommand::class,
@@ -36,26 +36,27 @@ class LaravueServiceProvider extends ServiceProvider
                 Commands\LaravueMNFrontCommand::class,
                 Commands\LaravuePermissionCommand::class,
                 Commands\LaravueReportCommand::class,
+                Commands\LaravueRequestCommand::class,
                 Commands\LaravueRouteCommand::class,
                 Commands\LaravueSeedCommand::class,
             ]);
 
-            if (! class_exists('CreateMonitorsTable')) {
+            if (!class_exists('CreateMonitorsTable')) {
                 // Export the migrations
                 $this->publishes([
-                __DIR__ . '/../publishes/database/migrations/create_laravue_tables.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_laravue_tables.php'),
+                    __DIR__ . '/../publishes/database/migrations/create_laravue_tables.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_laravue_tables.php'),
                 ], 'migrations');
 
                 // Export Images
                 $this->publishes([
-                    __DIR__.'/../publishes/assets/img/logo_header.png' => public_path('img/logo_header.png'),
-                    __DIR__.'/../publishes/assets/img/profile.jpg' => public_path('img/users/avatar/profile.jpg'),
+                    __DIR__ . '/../publishes/assets/img/logo_header.png' => public_path('img/logo_header.png'),
+                    __DIR__ . '/../publishes/assets/img/profile.jpg' => public_path('img/users/avatar/profile.jpg'),
                 ], 'public');
 
                 // Export Config
                 $this->publishes([
-                    __DIR__.'/../config/config.php' => config_path('laravue.php'),
-                  ], 'config');
+                    __DIR__ . '/../config/config.php' => config_path('laravue.php'),
+                ], 'config');
             }
         }
     }

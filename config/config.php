@@ -17,6 +17,15 @@ return [
     'use_soft_deletes' => false,
 
     /**
+     * Form Request Connection
+     * 
+     * When generating unique rules for table in a specific schema (Like Postgres schemas),
+     * Laravel demands to wirte explicit connection for this schema table.
+     * Example: 'required|unique:connection_name.schema_name.table_name,column,NULL,id',
+     */
+    'form_request_connection' => '',
+
+    /**
      * Accentuation
      * 
      * As there are no rules without exceptions in Portuguese for graphic 

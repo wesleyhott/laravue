@@ -154,6 +154,17 @@ class LaravueCommand extends Command
             case 'seeder':
                 $path = $this->makePath("database/seeders/DatabaseSeeder.php", true);
                 break;
+            case 'request':
+                $parsedModel = is_array($model) ? $model[0] : $model;
+                $type = '';
+                if ($this->option('store')) {
+                    $type = 'Store';
+                }
+                if ($this->option('update')) {
+                    $type = 'Update';
+                }
+                $path = $this->makePath("Http/Requests/{$schemaPath}{$type}{$parsedModel}Request.{$ext}");
+                break;
             case 'front-modal':
                 $paths = explode("/", str_replace('\\', '/', $currentDirectory));
 
@@ -1134,5 +1145,32 @@ class LaravueCommand extends Command
     protected function isEnLanguage()
     {
         return $this->getLanguage() === 'en';
+    }
+
+    /**
+     * Returns a string that contais de biggest number possible for a key decimal value..
+     * Example: for decimal('amount', 6, 2) we have key: amount, value: 6-2. Then the
+     * biggest possible number is 9999.99
+     * @return string biggest_number
+     */
+    protected function decimalMaxSize(string $value): string
+    {
+        $numbers = $this->getPrecisionNumbers($value);
+
+        if ($numbers !== false) {
+            $base = '';
+            for ($b = 0; $b < ($numbers[0] - $numbers[1]); $b++) {
+                $base .= '9';
+            }
+
+            $digits = '';
+            for ($f = 0; $f < $numbers[1]; $f++) {
+                $digits .= '9';
+            }
+
+            return "{$base}.{$digits}";
+        }
+
+        return '';
     }
 }

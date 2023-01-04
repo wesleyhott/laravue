@@ -35,6 +35,8 @@ class LaravueApiCommand extends Command
         $this->createSeeder();
         $this->createDataSeeder();
         $this->createModel();
+        $this->createStoreRequest();
+        $this->createUpdateRequest();
         $this->createController();
         // $this->createReport();
         // $this->createRoute();
@@ -95,6 +97,36 @@ class LaravueApiCommand extends Command
             '--schema' =>  $this->option('schema'),
             '--fields' =>  $this->option('fields'),
             '--view' =>  $this->option('view'),
+        ]);
+    }
+
+    /**
+     * Creates a Store Request for the entry model.
+     *
+     * @return void
+     */
+    protected function createStoreRequest()
+    {
+        $this->call('laravue:request', [
+            'model' => $this->argument('model')[0],
+            '--schema' =>  $this->option('schema'),
+            '--fields' =>  $this->option('fields'),
+            '--store' =>  true,
+        ]);
+    }
+
+    /**
+     * Creates a Update Request for the entry model.
+     *
+     * @return void
+     */
+    protected function createUpdateRequest()
+    {
+        $this->call('laravue:request', [
+            'model' => $this->argument('model')[0],
+            '--schema' =>  $this->option('schema'),
+            '--fields' =>  $this->option('fields'),
+            '--update' =>  true,
         ]);
     }
 
