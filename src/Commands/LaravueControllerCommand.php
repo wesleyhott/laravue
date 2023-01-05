@@ -232,16 +232,16 @@ class LaravueControllerCommand extends LaravueCommand
             if ($type == 'cpf') { // CPF
                 $isRequired = $required != '' ? " 'required'," : '';
                 $isUnique = $unique != '' ? " 'unique'," : '';
-                $returnRules .= "'$key' => [ 'string', 'max:11',${isRequired}${isUnique} new \App\Rules\IsCpf() ],";
+                $returnRules .= "'$key' => [ 'string', 'max:11',{$isRequired}{$isUnique} new \App\Rules\IsCpf() ],";
             } else if ($type == 'cnpj') { // CNPJ
                 $isRequired = $required != '' ? " 'required'," : '';
-                $returnRules .= "'$key' => [ 'string', 'max:14',${isRequired}${isUnique} new \App\Rules\IsCnpj() ],";
+                $returnRules .= "'$key' => [ 'string', 'max:14',{$isRequired}{$isUnique} new \App\Rules\IsCnpj() ],";
             } else if ($type == 'cpfcnpj') { // CPF ou CNPJ
                 $isRequired = $required != '' ? " 'required'," : '';
-                $returnRules .= "'$key' => [ 'string', 'max:14',${isRequired}${isUnique} new \App\Rules\IsCpfOrCnpj() ],";
+                $returnRules .= "'$key' => [ 'string', 'max:14',{$isRequired}{$isUnique} new \App\Rules\IsCpfOrCnpj() ],";
             } else {
-                $returnRules .= "'$key' => '${type}${required}${maxSize}${unique}${uniqueArray}${unsigned}";
-                $returnRules .= "${ending}";
+                $returnRules .= "'$key' => '{$type}{$required}{$maxSize}{$unique}{$uniqueArray}{$unsigned}";
+                $returnRules .= "{$ending}";
             }
         }
 
@@ -326,7 +326,7 @@ class LaravueControllerCommand extends LaravueCommand
             $beforeIndex .= $this->tabs(3) . "\$item->$field = \$this->mask(\$item->$field, '###.###.###-##');" . PHP_EOL;
         }
         foreach ($cpfCnpjArray as $field) {
-            $item = $this->tabs(3) . "\$${field}Maskared = strlen( \$item->$field ) == 11" . PHP_EOL;
+            $item = $this->tabs(3) . "\${$field}Maskared = strlen( \$item->$field ) == 11" . PHP_EOL;
             $item .= $this->tabs(4) . "? \$this->mask(\$item->$field, '###.###.###-##')" . PHP_EOL;
             $item .= $this->tabs(4) . ": \$this->mask(\$item->$field, '##.###.###/####-##');" . PHP_EOL;
             $beforeIndex .= $item;
@@ -344,17 +344,17 @@ class LaravueControllerCommand extends LaravueCommand
     protected function mxnProperty($modelM, $modelN)
     {
         $currentDirectory =  getcwd();
-        $path = "$currentDirectory/app/Http/Controllers/${modelM}Controller.php";
+        $path = "$currentDirectory/app/Http/Controllers/{$modelM}Controller.php";
         $controllerFile = "";
         try {
             $controllerFile = $this->files->get($path);
         } catch (\Exception $e) {
-            $this->error("Arquivo - $currentDirectory/app/Http/Controllers/${modelM}Controller.php - não encontrado.");
+            $this->error("Arquivo - $currentDirectory/app/Http/Controllers/{$modelM}Controller.php - não encontrado.");
         }
 
         $pluraLower = $this->pluralize(lcfirst($modelN));
 
-        $property = "protected \$${pluraLower}_ids = null;" . PHP_EOL;
+        $property = "protected \${$pluraLower}_ids = null;" . PHP_EOL;
         $property .= $this->tabs(1) . "// {{ laravue-insert:property }}";
 
         $parsedProperty = str_replace('// {{ laravue-insert:property }}', $property, $controllerFile);;
@@ -365,17 +365,17 @@ class LaravueControllerCommand extends LaravueCommand
     protected function mxnModel($modelM, $modelN)
     {
         $currentDirectory =  getcwd();
-        $path = "$currentDirectory/app/Http/Controllers/${modelM}Controller.php";
+        $path = "$currentDirectory/app/Http/Controllers/{$modelM}Controller.php";
         $controllerFile = "";
         try {
             $controllerFile = $this->files->get($path);
         } catch (\Exception $e) {
-            $this->error("Arquivo - $currentDirectory/app/Http/Controllers/${modelM}Controller.php - não encontrado.");
+            $this->error("Arquivo - $currentDirectory/app/Http/Controllers/{$modelM}Controller.php - não encontrado.");
         }
 
         $singularLower = lcfirst($modelN);
 
-        $model = "\$this->${singularLower}_ids = \$request->input('${singularLower}_ids');" . PHP_EOL;
+        $model = "\$this->{$singularLower}_ids = \$request->input('{$singularLower}_ids');" . PHP_EOL;
         $model .= $this->tabs(2) . "// {{ laravue-insert:setModel }}";
 
         $parsedModel = str_replace('// {{ laravue-insert:setModel }}', $model, $controllerFile);;
@@ -386,12 +386,12 @@ class LaravueControllerCommand extends LaravueCommand
     protected function mxnAfterSave($modelM, $modelN)
     {
         $currentDirectory =  getcwd();
-        $path = "$currentDirectory/app/Http/Controllers/${modelM}Controller.php";
+        $path = "$currentDirectory/app/Http/Controllers/{$modelM}Controller.php";
         $controllerFile = "";
         try {
             $controllerFile = $this->files->get($path);
         } catch (\Exception $e) {
-            $this->error("Arquivo - $currentDirectory/app/Http/Controllers/${modelM}Controller.php - não encontrado.");
+            $this->error("Arquivo - $currentDirectory/app/Http/Controllers/{$modelM}Controller.php - não encontrado.");
         }
 
         $singularLower = lcfirst($modelN);
@@ -399,8 +399,8 @@ class LaravueControllerCommand extends LaravueCommand
 
         $afterSaveMethod = "public function afterSave(\$model) {" . PHP_EOL;
 
-        $afterSaveIf = $this->tabs(2) . "if( isset( \$this->${singularLower}_ids) ) {" . PHP_EOL;
-        $afterSaveIf .= $this->tabs(3) . "\$model->$pluraLower()->sync(\$this->${singularLower}_ids);" . PHP_EOL;
+        $afterSaveIf = $this->tabs(2) . "if( isset( \$this->{$singularLower}_ids) ) {" . PHP_EOL;
+        $afterSaveIf .= $this->tabs(3) . "\$model->$pluraLower()->sync(\$this->{$singularLower}_ids);" . PHP_EOL;
         $afterSaveIf .= $this->tabs(2) . "}" . PHP_EOL;
 
         $afterSaveReturn = $this->tabs(2) . "return \$model; " . PHP_EOL;

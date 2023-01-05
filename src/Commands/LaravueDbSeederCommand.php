@@ -86,7 +86,7 @@ class LaravueDbSeederCommand extends LaravueCommand
     protected function replaceUse($databaseSeederFile, $schema)
     {
         $schemaPath = isset($schema) && $schema != '' ? "$schema\\" : '';
-        $newUse = "use Database\Seeders\Recipe\\${schemaPath}NutritionSeeder;" . PHP_EOL;
+        $newUse = "use Database\Seeders\Recipe\\{$schemaPath}NutritionSeeder;" . PHP_EOL;
         $newUse .= "// {{ laravue-insert:use }}";
 
         return str_replace('// {{ laravue-insert:use }}', $newUse, $databaseSeederFile);

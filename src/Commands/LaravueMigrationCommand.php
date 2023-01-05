@@ -210,21 +210,21 @@ class LaravueMigrationCommand extends LaravueCommand
             } else {
                 if ($isNullable && $isUnique) {
                     $returnFields .= "\$table->$type('$key'$size)" . PHP_EOL;
-                    $returnFields .= $this->tabs(4) . "${nullable}" . PHP_EOL;
+                    $returnFields .= $this->tabs(4) . "{$nullable}" . PHP_EOL;
                     if ($isUnsigned) {
-                        $returnFields .= $this->tabs(4) . "${unsigned}" . PHP_EOL;
+                        $returnFields .= $this->tabs(4) . "{$unsigned}" . PHP_EOL;
                     }
-                    $returnFields .= $this->tabs(4) . "${unique};";
+                    $returnFields .= $this->tabs(4) . "{$unique};";
                 } else if ($default !== false && $isUnique) {
                     $returnFields .= "\$table->$type('$key'$size)" . PHP_EOL;
-                    $returnFields .= $this->tabs(4) . "${unique}";
+                    $returnFields .= $this->tabs(4) . "{$unique}";
                     if ($isUnsigned) {
-                        $returnFields .=  PHP_EOL . $this->tabs(4) . "${unsigned}";
+                        $returnFields .=  PHP_EOL . $this->tabs(4) . "{$unsigned}";
                     }
                     $tabulation = $default == '' ? '' : PHP_EOL . $this->tabs(4);
-                    $returnFields .=  $tabulation . "${default};";
+                    $returnFields .=  $tabulation . "{$default};";
                 } else {
-                    $returnFields .= "\$table->$type('$key'$size)${nullable}${unique}${default}${unsigned};";
+                    $returnFields .= "\$table->$type('$key'$size){$nullable}{$unique}{$default}{$unsigned};";
                 }
             }
         }
@@ -237,7 +237,7 @@ class LaravueMigrationCommand extends LaravueCommand
             $key1 = Str::snake($model[0]);
             $key2 = Str::snake($model[1]);
             $returnFields .= PHP_EOL;
-            $returnFields .= $this->tabs(3) . "\$table->primary(['${key1}_id', '${key2}_id'], '${key1}_${key2}_${key1}_id_${key2}_id_primary');";
+            $returnFields .= $this->tabs(3) . "\$table->primary(['{$key1}_id', '{$key2}_id'], '{$key1}_{$key2}_{$key1}_id_{$key2}_id_primary');";
         }
 
         return str_replace('{{ fields }}', $returnFields, $stub);

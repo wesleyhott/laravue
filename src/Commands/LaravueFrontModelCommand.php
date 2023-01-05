@@ -332,7 +332,7 @@ class LaravueFrontModelCommand extends LaravueCommand
                 case 'date':
                 case 'datetime':
                     $return .= "$key: '',";
-                    $return .= "${key}_date_range: '',";
+                    $return .= "{$key}_date_range: '',";
                     $return .= $this->ending($index, $size, 4);
                     break;
                 default:

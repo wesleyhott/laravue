@@ -115,16 +115,16 @@ class LaravueCommand extends Command
         $currentDirectory =  getcwd();
         switch ($this->type) {
             case 'model':
-                $path = $this->makePath("Models/${schemaPath}$model.$ext");
+                $path = $this->makePath("Models/{$schemaPath}$model.$ext");
                 break;
             case 'controller':
-                $path = $this->makePath("Http/Controllers/${schemaPath}${model}Controller.$ext");
+                $path = $this->makePath("Http/Controllers/{$schemaPath}{$model}Controller.$ext");
                 break;
             case 'report':
-                $path = $this->makePath("Http/Controllers/Reports/${schemaPath}${model}ReportController.$ext");
+                $path = $this->makePath("Http/Controllers/Reports/{$schemaPath}{$model}ReportController.$ext");
                 break;
             case 'route':
-                $path = $this->makePath("routes/${schemaPath}api.php", true);
+                $path = $this->makePath("routes/{$schemaPath}api.php", true);
                 break;
             case 'permission':
                 $path = $this->makePath("database/seeders/LaravueSeeder.php", true);
@@ -145,10 +145,10 @@ class LaravueCommand extends Command
                 if (is_array($model) && count($model) > 1) {
                     $model1 = $model[0];
                     $model2 = $model[1];
-                    $path = $this->makePath("database/seeders/${schemaPath}${model1}${model2}Seeder.php", true);
+                    $path = $this->makePath("database/seeders/{$schemaPath}{$model1}{$model2}Seeder.php", true);
                 } else {
                     $parsedModel = is_array($model) ? $model[0] : $model;
-                    $path = $this->makePath("database/seeders/${schemaPath}${parsedModel}Seeder.php", true);
+                    $path = $this->makePath("database/seeders/{$schemaPath}{$parsedModel}Seeder.php", true);
                 }
                 break;
             case 'seeder':
@@ -1091,7 +1091,7 @@ class LaravueCommand extends Command
     {
         $modelFields = [];
         $controllerName = Str::studly(substr($key, 0, -3)) . "Controller.php";
-        $path = $this->makePath("Http/Controllers/${controllerName}");
+        $path = $this->makePath("Http/Controllers/{$controllerName}");
 
         $controllerFile = @fopen($path, "r");
         if ($controllerFile) {

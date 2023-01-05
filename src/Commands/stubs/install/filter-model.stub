@@ -25,7 +25,7 @@ class ModelFilter
                     if ( sizeof( $value ) == 0 ) continue;
                     $singular = substr($key, 0, -4);
                     $relation = pluralize( $singular );
-                    $this->key = "${singular}_id";
+                    $this->key = "{$singular}_id";
                     $this->value = $value;
                     $builder->whereHas($relation, function (Builder $query) {
                         $query->whereIn($this->key, $this->value);

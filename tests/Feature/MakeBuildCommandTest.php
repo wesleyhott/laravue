@@ -20,17 +20,17 @@ class MakeBuildCommandTest extends TestCase
         $fields2 = 'abbreviation:s.50u,name:s.100u,description:s.n';
 
         // destination path of the Migration class
-        $migrationPath = "database/migrations/${prefix}_create_test_field_options_table.php";
-        $migrationPath2 = "database/migrations/${prefix}_recipe_nutrition_table.php";
+        $migrationPath = "database/migrations/{$prefix}_create_test_field_options_table.php";
+        $migrationPath2 = "database/migrations/{$prefix}_recipe_nutrition_table.php";
 
         // destination path of the Seeder class
         $seeder = "database/seeders/" . $model[0] . "Seeder.php";
-        $seeder2 = "database/seeders/${schema2}" . $model2[0] . "Seeder.php";
+        $seeder2 = "database/seeders/{$schema2}" . $model2[0] . "Seeder.php";
 
         // destination path of the Controller class
-        // $controller = $this->makeCleanStateTest( "app/Http/Controllers/${model}Controller.php" );
+        // $controller = $this->makeCleanStateTest( "app/Http/Controllers/{$model}Controller.php" );
         // destination path of the FrontModel class
-        // $frontModel = $this->makeCleanStateTest( "Frontend/LaravueTest/Views/Pages/${model}/forms/Model.vue" );
+        // $frontModel = $this->makeCleanStateTest( "Frontend/LaravueTest/Views/Pages/{$model}/forms/Model.vue" );
 
         // Run the make command
         // Artisan::call('laravue:build', [

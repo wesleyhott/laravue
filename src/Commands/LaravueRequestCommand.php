@@ -57,10 +57,10 @@ class LaravueRequestCommand extends LaravueCommand
         $this->files->put($path, $this->buildRequest($parsedModel, $this->option('schema')));
 
         if ($this->option('mxn')) {
-            $this->info("$date - [ ${model} ] >> ${model}" . "Seeder.php");
+            $this->info("$date - [ {$model} ] >> {$model}" . "Request.php");
         } else {
             $stringModel = is_array($parsedModel) ? trim($parsedModel[0]) : trim($parsedModel);
-            $this->info("$date - [ $stringModel ] >> ${stringModel}Seeder.php");
+            $this->info("$date - [ $stringModel ] >> {$stringModel}Request.php");
         }
     }
 

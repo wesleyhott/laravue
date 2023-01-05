@@ -78,12 +78,12 @@ class LaravueReportCommand extends LaravueCommand
                 $beforeIndex .= $this->tabs(4) . "'$title' => \$this->mask( \$item->$key, '##.###.###/####-##' )," . PHP_EOL;
             } else if ($type === 'cpfcnpj') {
                 array_push($maskaredArray, $key);
-                $beforeIndex .= $this->tabs(4) . "'$title' => \$${key}Maskared," . PHP_EOL;
+                $beforeIndex .= $this->tabs(4) . "'$title' => \${$key}Maskared," . PHP_EOL;
             } else if ($this->isFk($key)) {
                 $relation = str_replace('_id', '', $key);
                 $keyFields = $this->getModelFieldsFromKey($key);
                 $modelField = $this->getSelectLabel($keyFields);
-                $beforeIndex .= $this->tabs(4) . "'$title' => isset( \$item->${relation}->${modelField} ) ? \$item->${relation}->${modelField} : '---'," . PHP_EOL;
+                $beforeIndex .= $this->tabs(4) . "'$title' => isset( \$item->{$relation}->{$modelField} ) ? \$item->{$relation}->{$modelField} : '---'," . PHP_EOL;
             } else {
                 $beforeIndex .= $this->tabs(4) . "'$title' => \$item->$key," . PHP_EOL;
             }
@@ -95,7 +95,7 @@ class LaravueReportCommand extends LaravueCommand
         $beforeIndex .= $this->tabs(2) . 'return $reportData;';
 
         foreach ($maskaredArray as $field) {
-            $maskared .= $this->tabs(3) . "\$${field}Maskared = strlen( \$item->$field ) == 11" . PHP_EOL;
+            $maskared .= $this->tabs(3) . "\${$field}Maskared = strlen( \$item->$field ) == 11" . PHP_EOL;
             $maskared .= $this->tabs(4) . "? \$this->mask( \$item->$field, '###.###.###-##' )" . PHP_EOL;
             $maskared .= $this->tabs(4) . ": \$this->mask( \$item->$field, '##.###.###/####-##' );" . PHP_EOL;
         }

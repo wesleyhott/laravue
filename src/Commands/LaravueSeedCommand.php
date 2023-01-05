@@ -55,10 +55,10 @@ class LaravueSeedCommand extends LaravueCommand
         $this->files->put($path, $this->buildSeed($parsedModel, $this->option('schema')));
 
         if ($this->option('mxn')) {
-            $this->info("$date - [ ${model} ] >> ${model}" . "Seeder.php");
+            $this->info("$date - [ {$model} ] >> {$model}" . "Seeder.php");
         } else {
             $stringModel = is_array($parsedModel) ? trim($parsedModel[0]) : trim($parsedModel);
-            $this->info("$date - [ $stringModel ] >> ${stringModel}Seeder.php");
+            $this->info("$date - [ $stringModel ] >> {$stringModel}Seeder.php");
         }
     }
 
