@@ -107,8 +107,9 @@ class LaravueRequestCommand extends LaravueCommand
 
         $rulesStub = $this->replaceRules($stub, $model, $fields);
         $messagesStub = $this->replaceMessages($rulesStub, $model, $fields);
+        $prepareForValidationStub = $this->replacePrepareForValidation($messagesStub, $model, $fields);
 
-        return $messagesStub;
+        return $prepareForValidationStub;
     }
 
     public function replaceRules(string $stub, string $model, array $fields): string
@@ -308,6 +309,51 @@ class LaravueRequestCommand extends LaravueCommand
         }
         $messages .= PHP_EOL . $this->tabs(2);
         return str_replace('{{ messages }}', $messages, $stub);;
+    }
+
+    public function replacePrepareForValidation(string $stub, string $model, array $fields): string
+    {
+        $prepare_for_valiation = '';
+
+        $prepare_for_validation_stub = PHP_EOL . PHP_EOL . <<<STUB
+            /**
+             * Prepare the data for validation.
+             *
+             * @return void
+             */
+            protected function prepareForValidation(): void
+            {
+                \$this->merge([{{ merge_item }}
+                ]);
+            }
+        STUB;
+        $merge_item_stub = PHP_EOL . <<<STUB
+                    '{{ field }}' => isset(\$this->{{ property }})
+                        ? \$this->{{ relation }}['id']
+                        : null,
+        STUB;
+
+        $merge_item = '';
+        $has_fk = false;
+        foreach ($fields as $key => $value) {
+            // Foreing Key
+            if ($this->isFk($key)) {
+                $has_fk = true;
+                $property = str_replace('_id', '', $key);
+                $relation = Str::camel($property);
+
+                $merge_item .= $merge_item_stub;
+
+                $merge_item = str_replace('{{ field }}', $key, $merge_item);
+                $merge_item = str_replace('{{ property }}', $property, $merge_item);
+                $merge_item = str_replace('{{ relation }}', $relation, $merge_item);
+            }
+        }
+        if ($has_fk) {
+            $prepare_for_validation_stub = str_replace('{{ merge_item }}', $merge_item, $prepare_for_validation_stub);
+            $prepare_for_valiation = $prepare_for_validation_stub;
+        }
+        return str_replace('{{ prepare_for_alidation }}', $prepare_for_valiation, $stub);;
     }
 
 
