@@ -165,6 +165,10 @@ class LaravueCommand extends Command
                 }
                 $path = $this->makePath("Http/Requests/{$schemaPath}{$type}{$parsedModel}Request.{$ext}");
                 break;
+            case 'resource':
+                $parsedModel = is_array($model) ? $model[0] : $model;
+                $path = $this->makePath("Http/Resources/{$schemaPath}{$parsedModel}Resource.{$ext}");
+                break;
             case 'front-modal':
                 $paths = explode("/", str_replace('\\', '/', $currentDirectory));
 

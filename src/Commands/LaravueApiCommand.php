@@ -37,7 +37,8 @@ class LaravueApiCommand extends Command
         $this->createModel();
         $this->createStoreRequest();
         $this->createUpdateRequest();
-        $this->createController();
+        $this->createResource();
+        // $this->createController();
         // $this->createReport();
         // $this->createRoute();
         // $this->createPermission();
@@ -127,6 +128,20 @@ class LaravueApiCommand extends Command
             '--schema' =>  $this->option('schema'),
             '--fields' =>  $this->option('fields'),
             '--update' =>  true,
+        ]);
+    }
+
+    /**
+     * Creates a Resource for the entry model.
+     *
+     * @return void
+     */
+    protected function createResource()
+    {
+        $this->call('laravue:resource', [
+            'model' => $this->argument('model')[0],
+            '--schema' =>  $this->option('schema'),
+            '--fields' =>  $this->option('fields'),
         ]);
     }
 

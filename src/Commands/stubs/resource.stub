@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Http\Resources{{ schemaNamespace }};
+
+use App\Http\Resources\LaravueResource;{{ use }}
+
+/**
+ * class {{ class }}Resource
+ * 
+ * @package App\Http\Resources{{ schemaNamespace }}{{ properties_doc }}
+ * {{ laravue-insert:doc }}
+ */
+class {{ class }}Resource extends LaravueResource
+{
+    public function defineProperties(): array
+    {
+        return [
+            'id',{{ properties }}
+        ];
+    }
+
+    public function defineRelations(): array
+    {
+        return [{{ relations }}
+            // {{ laravue-insert:relations }}
+        ];
+    }
+}

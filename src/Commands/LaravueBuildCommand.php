@@ -133,19 +133,23 @@ class LaravueBuildCommand extends LaravueCommand
         $this->info("$date - [ spatie ] >> permission:create-permission");
 
         $this->call('permission:create-permission', [
-            'name' =>  "ver $permissionName",
+            'name' =>  "c-{$permissionName}",
         ]);
 
         $this->call('permission:create-permission', [
-            'name' =>  "editar $permissionName",
+            'name' =>  "r-{$permissionName}",
         ]);
 
         $this->call('permission:create-permission', [
-            'name' =>  "apagar $permissionName",
+            'name' =>  "u-{$permissionName}",
         ]);
 
         $this->call('permission:create-permission', [
-            'name' =>  "imprimir $permissionName",
+            'name' =>  "d-{$permissionName}",
+        ]);
+
+        $this->call('permission:create-permission', [
+            'name' =>  "p-{$permissionName}",
         ]);
     }
 }

@@ -37,6 +37,7 @@ class LaravueServiceProvider extends ServiceProvider
                 Commands\LaravuePermissionCommand::class,
                 Commands\LaravueReportCommand::class,
                 Commands\LaravueRequestCommand::class,
+                Commands\LaravueResourceCommand::class,
                 Commands\LaravueRouteCommand::class,
                 Commands\LaravueSeedCommand::class,
             ]);
