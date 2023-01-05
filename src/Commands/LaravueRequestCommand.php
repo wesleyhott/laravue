@@ -56,11 +56,18 @@ class LaravueRequestCommand extends LaravueCommand
         $path = $this->getPath(model: $parsedModel, schema: $this->option('schema'));
         $this->files->put($path, $this->buildRequest($parsedModel, $this->option('schema')));
 
+        $prefix = '';
+        if ($this->option('store')) {
+            $prefix = 'Store';
+        }
+        if ($this->option('update')) {
+            $prefix = 'Update';
+        }
         if ($this->option('mxn')) {
-            $this->info("$date - [ {$model} ] >> {$model}" . "Request.php");
+            $this->info("$date - [ {$model} ] >> {$prefix}{$model}Request.php");
         } else {
             $stringModel = is_array($parsedModel) ? trim($parsedModel[0]) : trim($parsedModel);
-            $this->info("$date - [ $stringModel ] >> {$stringModel}Request.php");
+            $this->info("{$date} - [ {$stringModel} ] >> {$prefix}{$stringModel}Request.php");
         }
     }
 
@@ -210,16 +217,42 @@ class LaravueRequestCommand extends LaravueCommand
         $messages = '';
         $language = config('laravue.language');
         $firstUniqueArray = true;
+        $parsedModel = $this->getTitle($model);
         foreach ($fields as $key => $value) {
+            $label = $this->getTitle($key);
             // Foreing Key
             if ($this->isFk($key)) {
+                if (!$this->hasNullable($value)) {
+                    $text = $language == 'en' ? 'cannot be empty' : 'é obrigatório';
+                    $parsedModel = $this->getTitle($model);
+                    $label = $this->getTitle($key);
+                    $messages .= PHP_EOL . $this->tabs(3) . "'{$key}.required' => '{$parsedModel} {$label} {$text}.',";
+                }
             }
             $type = $this->getType($value);
+            switch ($type) {
+                case 'bigInteger':
+                case 'mediumInteger':
+                case 'integer':
+                case 'smallInteger':
+                case 'tinyInteger':
+                    $text = $language == 'en' ? 'must be an integer number' : 'deve ser um número inteiro';
+                    $messages .= PHP_EOL . $this->tabs(3) . "'{$key}.integer' => '{$parsedModel} {$label} {$text}.',";
+                    break;
+                case 'numeric':
+                case 'float':
+                case 'double':
+                case 'monetary':
+                case 'decimal':
+                    $text = $language == 'en' ? 'must be a number' : 'deve ser um número';
+                    $messages .= PHP_EOL . $this->tabs(3) . "'{$key}.numeric' => '{$parsedModel} {$label} {$text}.',";
+                    break;
+                case '':
+                    break;
+            }
             // Required
             if (!$this->hasNullable($value) && !$this->isFk($key)) {
                 $text = $language == 'en' ? 'cannot be empty' : 'é obrigatório';
-                $parsedModel = $this->getTitle($model);
-                $label = $this->getTitle($key);
                 $messages .= PHP_EOL . $this->tabs(3) . "'{$key}.required' => '{$parsedModel} {$label} {$text}.',";
             }
             // String Size
@@ -281,7 +314,6 @@ class LaravueRequestCommand extends LaravueCommand
     public function buildFields($model)
     {
         $model1 = $model2 = "";
-        $keys = array();
         $allFields = $fields = $this->getFieldsArray($this->option('fields'));
 
         if (is_array($model)) {
