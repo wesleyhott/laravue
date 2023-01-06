@@ -113,7 +113,7 @@ class LaravueResourceCommand extends LaravueCommand
         foreach ($fields as $key => $value) {
             if ($this->isFk($key)) {
                 $property = str_replace('_id', '', $key);
-                $schema = Str::ucfirst($this->option('schema'));
+                $schema = empty($this->option('schema')) ? '' : '\\' . Str::ucfirst($this->option('schema'));
                 $relatedModel = Str::studly($property);
                 $use .= PHP_EOL . "use App\Models{$schema}\\{$relatedModel};";
             }
