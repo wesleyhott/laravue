@@ -13,9 +13,21 @@ class MakeResourceTest extends TestCase
     {
         $model = array('ComplexModel');
         // destination path of the Foo class
+        $big_file_resource = str_replace("tests/Unit", "", __DIR__) . "app/Http/Resources/BigFileResource.php";
+        $user_resource = str_replace("tests/Unit", "", __DIR__) . "app/Http/Resources/UserResource.php";
         $resource = str_replace("tests/Unit", "", __DIR__) . "app/Http/Resources/" . $model[0] . "Resource.php";
 
         $fields = "name:s.50u#'John Doe'#,age:i.+.#40#,user_id:i.n,birthday:d,awakeAt:t,foreingCitzen:b,wage:de.5-2,big_file_id";
+
+        // Make auxiliar resources form model attributes test
+        Artisan::call('laravue:resource', [
+            'model' => 'User',
+            '--fields' => 'name',
+        ]);
+        Artisan::call('laravue:resource', [
+            'model' => 'BigFile',
+            '--fields' => 'name',
+        ]);
 
         // Run the make command
         Artisan::call('laravue:resource', [
@@ -24,6 +36,8 @@ class MakeResourceTest extends TestCase
         ]);
 
         // Assert a new file is created
+        $this->assertTrue(File::exists($user_resource));
+        $this->assertTrue(File::exists($big_file_resource));
         $this->assertTrue(File::exists($resource));
     }
 }

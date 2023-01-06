@@ -349,7 +349,7 @@ class LaravueControllerCommand extends LaravueCommand
         try {
             $controllerFile = $this->files->get($path);
         } catch (\Exception $e) {
-            $this->error("Arquivo - $currentDirectory/app/Http/Controllers/{$modelM}Controller.php - não encontrado.");
+            $this->error("File - $currentDirectory/app/Http/Controllers/{$modelM}Controller.php - not found.");
         }
 
         $pluraLower = $this->pluralize(lcfirst($modelN));
