@@ -169,6 +169,10 @@ class LaravueCommand extends Command
                 $parsedModel = is_array($model) ? $model[0] : $model;
                 $path = $this->makePath("Http/Resources/{$schemaPath}{$parsedModel}Resource.{$ext}");
                 break;
+            case 'service':
+                $parsedModel = is_array($model) ? $model[0] : $model;
+                $path = $this->makePath("Services/{$schemaPath}{$parsedModel}Service.{$ext}");
+                break;
             case 'front-modal':
                 $paths = explode("/", str_replace('\\', '/', $currentDirectory));
 
@@ -661,6 +665,7 @@ class LaravueCommand extends Command
         $default = $this->hasDefault($field);
 
         if ($default !== false) {
+            /** @var string $default */
             $field = str_replace($default, '', $field);
         }
 

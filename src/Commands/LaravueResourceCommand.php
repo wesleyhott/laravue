@@ -15,9 +15,7 @@ class LaravueResourceCommand extends LaravueCommand
                                 {--f|fields=} 
                                 {--x|mxn} 
                                 {--i|view : build a model based on view, not table}
-                                {--s|schema= : determine a schema for model (postgres)}
-                                {--t|store : makes a store request}
-                                {--u|update : makes a update request}';
+                                {--s|schema= : determine a schema for model (postgres)}';
 
     /**
      * The console command description.

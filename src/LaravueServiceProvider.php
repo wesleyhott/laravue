@@ -40,6 +40,7 @@ class LaravueServiceProvider extends ServiceProvider
                 Commands\LaravueResourceCommand::class,
                 Commands\LaravueRouteCommand::class,
                 Commands\LaravueSeedCommand::class,
+                Commands\LaravueServiceCommand::class,
             ]);
 
             if (!class_exists('CreateMonitorsTable')) {
