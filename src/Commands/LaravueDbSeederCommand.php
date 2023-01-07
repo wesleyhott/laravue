@@ -2,6 +2,8 @@
 
 namespace wesleyhott\Laravue\Commands;
 
+use Illuminate\Support\Str;
+
 class LaravueDbSeederCommand extends LaravueCommand
 {
     /**
@@ -43,7 +45,8 @@ class LaravueDbSeederCommand extends LaravueCommand
         $date = now();
 
         $path = $this->getPath($model);
-        $this->files->put($path, $this->buildDataSeeder($model, $this->option('schema')));
+        $schema = Str::ucfirst($this->option('schema'));
+        $this->files->put($path, $this->buildDataSeeder($model, $schema));
 
         $formatedModel = $model;
         if ($this->option('mxn')) {
@@ -71,7 +74,7 @@ class LaravueDbSeederCommand extends LaravueCommand
 
         $stub = $this->files->get($this->getPath($formatedModel));
         $seeder = $this->replaceSeeder($stub, $formatedModel);
-        return $this->replaceUse($seeder, $schema);
+        return $this->replaceUse($seeder, $model, $schema);
     }
 
     protected function replaceSeeder($databaseSeederFile, $model)
@@ -83,10 +86,10 @@ class LaravueDbSeederCommand extends LaravueCommand
         return str_replace('// {{ laravue-insert:seed }}', $newSeeder, $databaseSeederFile);
     }
 
-    protected function replaceUse($databaseSeederFile, $schema)
+    protected function replaceUse($databaseSeederFile, $model, $schema)
     {
-        $schemaPath = isset($schema) && $schema != '' ? "$schema\\" : '';
-        $newUse = "use Database\Seeders\Recipe\\{$schemaPath}NutritionSeeder;" . PHP_EOL;
+        $schemaPath = empty($schema) ? '' : "\\{$schema}";
+        $newUse = "use Database\Seeders{$schemaPath}\\{$model}Seeder;" . PHP_EOL;
         $newUse .= "// {{ laravue-insert:use }}";
 
         return str_replace('// {{ laravue-insert:use }}', $newUse, $databaseSeederFile);
