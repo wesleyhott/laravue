@@ -1,77 +1,46 @@
 <?php
 
-namespace App\Http\Controllers\Admin{{ schemaNamespace }};
+namespace App\Http\Controllers{{ schemaNamespace }};
 
-use App\Http\Controllers\Controller;
-use Illuminate\Database\QueryException;
-use App\Contracts\{{ model }}ServiceContract;
-use App\Http\Requests\Admin\Add{{ model }}Request;
-use App\Http\Requests\Admin\Update{{ model }}Request;
+use App\Http\Requests\LaravueFormRequest;
+use App\Services{{ schemaNamespace }}\{{ model }}Service;
+use App\Http\Controllers\LaravueController;
+use App\Http\Requests{{ schemaNamespace }}\Store{{ model }}Request;
+use App\Http\Requests{{ schemaNamespace }}\Update{{ model }}Request;
 
-class {{ model }}Controller extends Controller
+class {{ class }}Controller extends LaravueController
 {
-    private $service;
-
     /**
-     * {{ model }}Controller constructor.
-     * @param {{ model }}ServiceContract $service
+     * Controller constructor.
+     * @param {{ model }}Service $service
      */
-
-    public function __construct({{ model }}ServiceContract $service)
+    public function __construct({{ model }}Service $service)
     {
         $this->service = $service;
     }
 
-    public function index()
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\LaravueFormRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(LaravueFormRequest $request)
     {
-        ${{ modelVar }} = $this->service->all();
-        return view('admin{{ schemaRoute }}.index', compact('{{ modelVar }}'));
+        $input = app()->make(Store{{ model }}Request::class, compact('request'));
+        return parent::store($input);
     }
 
-    public function edit(string $id)
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \App\Http\Requests\LaravueFormRequest  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(LaravueFormRequest $request, $id)
     {
-        ${{ modelVar }} = $this->service->find((int) $id);
-
-        return view('admin{{ schemaRoute }}.edit', compact('{{ modelVar }}'));
-    }
-
-    public function update(Update{{ model }}Request $request, int $id)
-    {
-        try {
-            $fields = collect($request->all())->only([{{ fields }}])->all();
-            $this->service->update((int)$id, $fields);
-            return redirect(route('admin{{ schemaRoute }}.index'))->with('success', '{{ title }} successfully updated');
-        } catch (\Exception $e) {
-            return redirect(route('admin{{ schemaRoute }}.index'))->withError($e->getMessage());
-        }
-    }
-
-    public function store(Add{{ model }}Request $request)
-    {
-        try {
-            $fields = collect($request->all())->only(['field1', 'field2', 'fieldN'])->all();
-            $fields = collect($request->all())->only([{{ fields }}])->all();
-            $this->service->store($fields);
-            return redirect(route('admin{{ schemaRoute }}.index'))->with('success', '{{ title }} successfully updated');
-        } catch (\Exception $e) {
-            $message = $e->getMessage();
-
-            if ($e instanceof QueryException && $e->errorInfo[1] == 1062) {
-                $message = "{{ model }} already exists";
-            }
-
-            return redirect(route('admin{{ schemaRoute }}.index'))->with('error', $message);
-        }
-    }
-
-    public function delete(int $id)
-    {
-        try {
-            $this->service->delete($id);
-            return response()->json(['success' => true, 'message' => '{{ title }} deleted successfully']);
-        } catch (\Exception $e) {
-            error_log($e->getMessage());
-            return response()->json(['success' => true, 'message' => 'Delete error. ' . $e->getMessage()]);
-        }
+        $input = app()->make(Update{{ model }}Request::class, $request->all());
+        return parent::update(new LaravueFormRequest($input), $id);
     }
 }

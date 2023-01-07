@@ -6,16 +6,16 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use wesleyhott\Laravue\Tests\TestCase;
 
-class MakeServiceTest extends TestCase
+class MakeControllerTest extends TestCase
 {
     /** @test */
-    function it_makes_a_service_test()
+    function it_makes_a_controller_test()
     {
         $model = array('ComplexModel');
-        $resource = str_replace("tests/Unit", "", __DIR__) . "app/Services/" . $model[0] . "Service.php";
+        $resource = str_replace("tests/Unit", "", __DIR__) . "app/Http/Controllers/" . $model[0] . "Controller.php";
 
         // Run the make command
-        Artisan::call('laravue:service', [
+        Artisan::call('laravue:controller', [
             'model' => $model,
         ]);
 

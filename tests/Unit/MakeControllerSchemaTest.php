@@ -6,17 +6,19 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use wesleyhott\Laravue\Tests\TestCase;
 
-class MakeServiceTest extends TestCase
+class MakeControllerSchemaTest extends TestCase
 {
     /** @test */
-    function it_makes_a_service_test()
+    function it_makes_a_controller_schema_test()
     {
         $model = array('ComplexModel');
-        $resource = str_replace("tests/Unit", "", __DIR__) . "app/Services/" . $model[0] . "Service.php";
+        $schema = 'Schema';
+        $resource = str_replace("tests/Unit", "", __DIR__) . "app/Http/Controllers/{$schema}/" . $model[0] . "Controller.php";
 
         // Run the make command
-        Artisan::call('laravue:service', [
+        Artisan::call('laravue:controller', [
             'model' => $model,
+            '--schema' => $schema,
         ]);
 
         // Assert a new file is created
