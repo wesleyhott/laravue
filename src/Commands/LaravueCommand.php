@@ -124,7 +124,7 @@ class LaravueCommand extends Command
                 $path = $this->makePath("Http/Controllers/Reports/{$schemaPath}{$model}ReportController.$ext");
                 break;
             case 'route':
-                $path = $this->makePath("routes/{$schemaPath}api.php", true);
+                $path = $this->makePath("routes/api.php", true);
                 break;
             case 'permission':
                 $path = $this->makePath("database/seeders/LaravueSeeder.php", true);
@@ -1029,24 +1029,26 @@ class LaravueCommand extends Command
      * @param  string  File with relative app path
      * @return string
      */
-    protected function makePath($file, $outsideApp = false)
+    protected function makePath($file, $outside_app = false)
     {
         $folders = "";
+        $folder_separator = DIRECTORY_SEPARATOR;
         if (strpos($file, "/") !== false) {
             $folders = explode("/", $file);
             $file = array_pop($folders);
 
-            $folders = "/" . implode("/", $folders);
+            $folders = $folder_separator . implode($folder_separator, $folders);
         }
 
-        $currentDirectory =  getcwd();
-        $backPath = $outsideApp ? $currentDirectory . $folders : "$currentDirectory/app$folders";
 
-        if (!is_dir($backPath)) {
-            mkdir($backPath, 0777, true);
+        $current_directory =  getcwd();
+        $back_path = $outside_app ? $current_directory . $folders : "{$current_directory}{$folder_separator}app{$folders}";
+
+        if (!is_dir($back_path)) {
+            mkdir($back_path, 0777, true);
         }
 
-        return "$backPath/$file";
+        return "{$back_path}{$folder_separator}{$file}";
     }
 
     protected function accentuation($word)

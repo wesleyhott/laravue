@@ -41,7 +41,7 @@ class LaravueApiCommand extends Command
         $this->createService();
         $this->createController();
         // $this->createReport();
-        // $this->createRoute();
+        $this->createRoute();
         // $this->createPermission();
     }
 
