@@ -68,7 +68,7 @@ class LaravueApiCommand extends Command
     protected function createSeeder()
     {
         $this->call('laravue:seed', [
-            'model' => $this->argument('model'),
+            'model' => $this->argument('model')[0],
             '--schema' =>  $this->option('schema'),
             '--fields' =>  $this->option('fields'),
             '--view' =>  $this->option('view'),
