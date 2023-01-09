@@ -15,7 +15,7 @@ class LaravueSeedCommand extends LaravueCommand
                                 {--f|fields=} 
                                 {--x|mxn} 
                                 {--i|view : build a model based on view, not table}
-                                {--s|schema}';
+                                {--s|schema=}';
 
     /**
      * The console command description.
