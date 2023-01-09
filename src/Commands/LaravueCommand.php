@@ -107,6 +107,7 @@ class LaravueCommand extends Command
      */
     protected function getPath($model = '', $ext = 'php', $schema = '')
     {
+        $string_model = is_array($model) ? $model[0] :  $model;
         $path = '';
         $schemaPath = '';
         if ($schema != '') {
@@ -115,13 +116,13 @@ class LaravueCommand extends Command
         $currentDirectory =  getcwd();
         switch ($this->type) {
             case 'model':
-                $path = $this->makePath("Models/{$schemaPath}$model.$ext");
+                $path = $this->makePath("Models/{$schemaPath}$string_model.$ext");
                 break;
             case 'controller':
-                $path = $this->makePath("Http/Controllers/{$schemaPath}{$model}Controller.$ext");
+                $path = $this->makePath("Http/Controllers/{$schemaPath}{$string_model}Controller.$ext");
                 break;
             case 'report':
-                $path = $this->makePath("Http/Controllers/Reports/{$schemaPath}{$model}ReportController.$ext");
+                $path = $this->makePath("Http/Controllers/Reports/{$schemaPath}{$string_model}ReportController.$ext");
                 break;
             case 'route':
                 $path = $this->makePath("routes/api.php", true);
@@ -147,15 +148,13 @@ class LaravueCommand extends Command
                     $model2 = $model[1];
                     $path = $this->makePath("database/seeders/{$schemaPath}{$model1}{$model2}Seeder.php", true);
                 } else {
-                    $parsedModel = is_array($model) ? $model[0] : $model;
-                    $path = $this->makePath("database/seeders/{$schemaPath}{$parsedModel}Seeder.php", true);
+                    $path = $this->makePath("database/seeders/{$schemaPath}{$string_model}Seeder.php", true);
                 }
                 break;
             case 'seeder':
                 $path = $this->makePath("database/seeders/DatabaseSeeder.php", true);
                 break;
             case 'request':
-                $parsedModel = is_array($model) ? $model[0] : $model;
                 $type = '';
                 if ($this->option('store')) {
                     $type = 'Store';
@@ -163,15 +162,13 @@ class LaravueCommand extends Command
                 if ($this->option('update')) {
                     $type = 'Update';
                 }
-                $path = $this->makePath("Http/Requests/{$schemaPath}{$type}{$parsedModel}Request.{$ext}");
+                $path = $this->makePath("Http/Requests/{$schemaPath}{$type}{$string_model}Request.{$ext}");
                 break;
             case 'resource':
-                $parsedModel = is_array($model) ? $model[0] : $model;
-                $path = $this->makePath("Http/Resources/{$schemaPath}{$parsedModel}Resource.{$ext}");
+                $path = $this->makePath("Http/Resources/{$schemaPath}{$string_model}Resource.{$ext}");
                 break;
             case 'service':
-                $parsedModel = is_array($model) ? $model[0] : $model;
-                $path = $this->makePath("Services/{$schemaPath}{$parsedModel}Service.{$ext}");
+                $path = $this->makePath("Services/{$schemaPath}{$string_model}Service.{$ext}");
                 break;
             case 'front-modal':
                 $paths = explode("/", str_replace('\\', '/', $currentDirectory));
@@ -199,7 +196,7 @@ class LaravueCommand extends Command
                 }
                 break;
             default:
-                $path = $this->makePath($this->fileBuildPath('Models', "$model.$ext"));
+                $path = $this->makePath($this->fileBuildPath('Models', "{$string_model}.{$ext}"));
         }
 
         return $path;

@@ -51,7 +51,8 @@ class LaravueMigrationCommand extends LaravueCommand
         $path = $this->getPath(model: $model, schema: $schema);
         $this->files->put($path, $this->buildMigration($model, $schema));
 
-        $this->infoLog($model, $schema);
+        $parsed_model = is_array($model) ? $model :  array($model);
+        $this->infoLog($parsed_model, $schema);
     }
 
     /**
