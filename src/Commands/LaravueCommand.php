@@ -359,8 +359,8 @@ class LaravueCommand extends Command
 
 
         $lang = config('laravue.language');
+        $ending_letters = substr($singular, -2);
         if ($lang === 'pt-BR') {
-            $ending_letters = substr($singular, -2);
             switch ($ending_letters) {
                 case 'ao':
                     return substr($singular, 0, -2) . 'oes';
@@ -374,18 +374,50 @@ class LaravueCommand extends Command
                     return substr($singular, 0, -2) . 'ois';
             }
         }
+        if ($lang === 'en') {
+            switch ($ending_letters) {
+                case 'ss':
+                case 'sh':
+                case 'ch':
+                    return $singular . 'es';
+                case 'fe':
+                    return substr($singular, 0, -1) . 'ves';
+                case 'io':
+                case 'oo':
+                    return $singular . 's';
+                case 'us':
+                    return substr($singular, 0, -2) . 'i';
+            }
+        }
 
         $last_letter = strtolower($singular[strlen($singular) - 1]);
-        switch ($last_letter) {
-            case 'm':
-                return substr($singular, 0, -1) . 'ns';
-            case 'y':
-                return substr($singular, 0, -1) . 'ies';
-            case 's':
-            case 'r':
-                return $singular . 'es';
-            default:
-                return $singular . 's';
+        if ($lang === 'pt-BR') {
+            switch ($last_letter) {
+                case 'm':
+                    return substr($singular, 0, -1) . 'ns';
+                case 'y':
+                    return substr($singular, 0, -1) . 'ies';
+                case 's':
+                case 'r':
+                    return $singular . 'es';
+                case 'f':
+                    return substr($singular, 0, -1) . 'ves';
+                default:
+                    return $singular . 's';
+            }
+        }
+        if ($lang === 'en') {
+            switch ($last_letter) {
+                case 's':
+                case 'x':
+                case 'z':
+                case 'o':
+                    return $singular . 'es';
+                case 'y':
+                    return substr($singular, 0, -1) . 'ies';
+                default:
+                    return $singular . 's';
+            }
         }
     }
 
