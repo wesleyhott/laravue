@@ -52,31 +52,31 @@ class LaravueRouteCommand extends LaravueCommand
         return $this->replaceReport($report, $model);
     }
 
-    protected function replaceRoute($routeFile, $model)
+    protected function replaceRoute($route_file, $model)
     {
-        $formatedModel = ucfirst($model);
-        $ModelName = ucfirst($this->pluralize($model));
-        $route = strtolower($ModelName);
+        $formated_model = ucfirst($model);
+        $model_name = ucfirst($this->pluralize($model));
+        $route = str_replace('_', '-', Str::snake($model_name));
         $schema = Str::ucfirst($this->option('schema'));
-        $parsedSchema = empty($schema) ? '' : "\\{$schema}";
+        $parsed_schema = empty($schema) ? '' : "\\{$schema}";
+        $route_schema = empty($schema) ? '' : Str::lcfirst("{$schema}-");
 
-        $newRoute = "";
-        $newRoute .= "'$route' => \App\Http\Controllers{$parsedSchema}\\{$formatedModel}Controller::class," . PHP_EOL;
-        $newRoute .= "\t// {{ laravue-insert:route }}";
+        $new_route = "";
+        $new_route .= "'{$route_schema}{$route}' => \App\Http\Controllers{$parsed_schema}\\{$formated_model}Controller::class," . PHP_EOL;
+        $new_route .= "\t// {{ laravue-insert:route }}";
 
-        return str_replace('// {{ laravue-insert:route }}', $newRoute, $routeFile);
+        return str_replace('// {{ laravue-insert:route }}', $new_route, $route_file);
     }
 
-    protected function replaceReport($routeFile, $model)
+    protected function replaceReport($route_file, $model)
     {
-        $formatedModel = ucfirst($model);
-        $ModelName = ucfirst($this->pluralize($model));
-        $route = strtolower($ModelName);
+        $model_name = ucfirst($this->pluralize($model));
+        $route = strtolower($model_name);
 
-        $newRoute = "";
-        $newRoute .= "Route::get('$route/{reportType}', '$model" . "ReportController@index');" . PHP_EOL;
-        $newRoute .= "\t// {{ laravue-insert:report }}";
+        $new_route = "";
+        $new_route .= "Route::get('$route/{reportType}', '$model" . "ReportController@index');" . PHP_EOL;
+        $new_route .= "\t// {{ laravue-insert:report }}";
 
-        return str_replace('// {{ laravue-insert:report }}', $newRoute, $routeFile);
+        return str_replace('// {{ laravue-insert:report }}', $new_route, $route_file);
     }
 }
