@@ -24,38 +24,38 @@ class LaravueSeeder extends Seeder
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        $create_users = Permission::create(['name' => 'c-users', 'label' => 'Create User']);
-        $read_users = Permission::create(['name' => 'r-users', 'label' => 'Read User']);
-        $edit_users = Permission::create(['name' => 'u-users', 'label' => 'Update User']);
-        $delete_users = Permission::create(['name' => 'd-users', 'label' => 'Delete User']);
-        $print_users = Permission::create(['name' => 'p-users', 'label' => 'Print User']);
+        $create_user = Permission::create(['name' => 'c-users', 'label' => 'Create User']);
+        $read_user = Permission::create(['name' => 'r-users', 'label' => 'Read User']);
+        $edit_user = Permission::create(['name' => 'u-users', 'label' => 'Update User']);
+        $delete_user = Permission::create(['name' => 'd-users', 'label' => 'Delete User']);
+        $print_user = Permission::create(['name' => 'p-users', 'label' => 'Print User']);
 
-        $create_roles = Permission::create(['name' => 'c-roles', 'label' => 'Create Role']);
-        $read_roles = Permission::create(['name' => 'r-roles', 'label' => 'Read Role']);
-        $update_roles = Permission::create(['name' => 'u-roles', 'label' => 'Update Role']);
-        $delete_roles = Permission::create(['name' => 'd-roles', 'label' => 'Delete Role']);
-        $print_roles = Permission::create(['name' => 'p-roles', 'label' => 'Print Role']);
+        $create_role = Permission::create(['name' => 'c-roles', 'label' => 'Create Role']);
+        $read_role = Permission::create(['name' => 'r-roles', 'label' => 'Read Role']);
+        $update_role = Permission::create(['name' => 'u-roles', 'label' => 'Update Role']);
+        $delete_role = Permission::create(['name' => 'd-roles', 'label' => 'Delete Role']);
+        $print_role = Permission::create(['name' => 'p-roles', 'label' => 'Print Role']);
 
-        $create_permissions = Permission::create(['name' => 'c-permissions', 'label' => 'Create Permissions']);
-        $read_permissions = Permission::create(['name' => 'r-permissions', 'label' => 'Read Permissions']);
-        $edit_permissions = Permission::create(['name' => 'u-permissions', 'label' => 'Update Permissions']);
-        $delete_permissions = Permission::create(['name' => 'd-permissions', 'label' => 'Delete Permissions']);
-        $print_permissions = Permission::create(['name' => 'p-permissions', 'label' => 'Print Permissions']);
+        $create_permission = Permission::create(['name' => 'c-permissions', 'label' => 'Create Permissions']);
+        $read_permission = Permission::create(['name' => 'r-permissions', 'label' => 'Read Permissions']);
+        $edit_permission = Permission::create(['name' => 'u-permissions', 'label' => 'Update Permissions']);
+        $delete_permission = Permission::create(['name' => 'd-permissions', 'label' => 'Delete Permissions']);
+        $print_permission = Permission::create(['name' => 'p-permissions', 'label' => 'Print Permissions']);
 
         // {{ laravue-insert:permissions }}
 
         // Menu Permissions
-        $access_dashboad_menu = Permission::create(['name' => "r-m-dashboard", 'label' => 'Access Dashboard Menu']);
-        $access_tool_menu = Permission::create(['name' => "r-m-tool", 'label' => 'Access Tool Menu']);
-        $access_report_menu = Permission::create(['name' => "r-m-report", 'label' => 'Access Report Menu']);
+        $access_dashboad_menu = Permission::create(['name' => "m-dashboard", 'label' => 'Access Dashboard Menu']);
+        $access_tool_menu = Permission::create(['name' => "m-tool", 'label' => 'Access Tool Menu']);
+        $access_report_menu = Permission::create(['name' => "m-report", 'label' => 'Access Report Menu']);
         // {{ laravue-insert:menu }}
 
         // create aditional permissions
-        $update_roles_users_permissions = Permission::create(['name' => 'u-roles-users', 'label' => 'Access User Roles']);
-        $update_users_permissions = Permission::create(['name' => 'u-permissions-users', 'label' => 'Access User Permissions']);
-        $update_roles_permissions = Permission::create(['name' => 'u-permissions-roles', 'label' => 'Access Roles Permissions']);
-        $update_fileavatars_permissions = Permission::create(['name' => 'u-fileavatars', 'label' => 'Update User Avatar Image']);
-        $update_avatars_permissions = Permission::create(['name' => 'u-avatar', 'label' => 'Update User Avatar']);
+        $update_roles_users_permission = Permission::create(['name' => 'u-roles-users', 'label' => 'Access User Roles']);
+        $update_users_permission = Permission::create(['name' => 'u-permissions-users', 'label' => 'Access User Permissions']);
+        $update_roles_permission = Permission::create(['name' => 'u-permissions-roles', 'label' => 'Access Roles Permissions']);
+        $update_fileavatars_permission = Permission::create(['name' => 'u-fileavatars', 'label' => 'Update User Avatar Image']);
+        $update_avatars_permission = Permission::create(['name' => 'u-avatar', 'label' => 'Update User Avatar']);
 
         // create roles and assign existing permissions
         $roleAdmin = Role::create(['name' => 'Administrador', 'guard_name' => 'api']);

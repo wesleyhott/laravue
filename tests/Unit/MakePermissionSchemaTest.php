@@ -6,17 +6,17 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use wesleyhott\Laravue\Tests\TestCase;
 
-class MakePermissionTest extends TestCase
+class MakePermissionSchemaTest extends TestCase
 {
     /** @test */
-    function it_makes_a_permission_test()
+    function it_makes_a_permission_schema_test()
     {
-        $model = array('ComplexModel');
         $resource = str_replace("tests/Unit", "", __DIR__) . "database/seeders/LaravueSeeder.php";
 
         // Run the make command
         Artisan::call('laravue:permission', [
-            'model' => $model,
+            'model' => array('ComplexModel'),
+            '--schema' => 'Schema'
         ]);
 
         // Assert a new file is created

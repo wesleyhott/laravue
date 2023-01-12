@@ -2,6 +2,8 @@
 
 namespace wesleyhott\Laravue\Commands;
 
+use Illuminate\Support\Str;
+
 class LaravuePermissionCommand extends LaravueCommand
 {
     /**
@@ -9,7 +11,10 @@ class LaravuePermissionCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:permission {model*} {--x|mxn} {--i|view : build a model based on view, not table}';
+    protected $signature = 'laravue:permission {model*} 
+                                            {--x|mxn} 
+                                            {--i|view : build a model based on view, not table}
+                                            {--s|schema= : determine a schema for model (postgres)}';
 
     /**
      * The console command description.
@@ -56,36 +61,44 @@ class LaravuePermissionCommand extends LaravueCommand
         return $this->replaceMenu($menu, $model);
     }
 
-    protected function replacePermission($permissionFile, $model)
+    protected function replacePermission($permission_file, $model)
     {
-        $formatedModel = ucfirst($model);
-        $ModelName = ucfirst($this->pluralize($formatedModel));
-        $route = strtolower($ModelName);
+        $formated_model = ucfirst($model);
+        $model_name = $this->getTitle($formated_model);
+        $route = Str::snake($model);
+        $permission_name = str_replace('_', '-', Str::snake($this->pluralize($model_name)));
+        $schema = $this->option('schema');
+        $parsed_schema = empty($schema) ? '' : Str::snake($schema) . '-';
+        $var_schema = empty($schema) ? '' : Str::snake($schema) . '_';
 
-        $newPermission = "";
-        $newPermission .= "\$create_{$route} = Permission::create(['name' => 'c-{$route}', 'label' => 'Create {$formatedModel}']);" . PHP_EOL;
-        $newPermission .= "\t\t\$read_{$route} = Permission::create(['name' => 'r-{$route}', 'label' => 'Read {$formatedModel}']);" . PHP_EOL;
+        $new_permission = "";
+        $new_permission .= "\$create_{$var_schema}{$route} = Permission::create(['name' => 'c-{$parsed_schema}{$permission_name}', 'label' => 'Create {$schema} {$model_name}']);" . PHP_EOL;
+        $new_permission .= "\t\t\$read_{$var_schema}{$route} = Permission::create(['name' => 'r-{$parsed_schema}{$permission_name}', 'label' => 'Read {$schema} {$model_name}']);" . PHP_EOL;
         if (!$this->option('view')) {
-            $newPermission .= "\t\t$" . "update_$route = Permission::create(['name' => 'u-$route', 'label' => 'Update {$formatedModel}']);" . PHP_EOL;
-            $newPermission .= "\t\t$" . "delete_$route = Permission::create(['name' => 'd-$route', 'label' => 'Delete {$formatedModel}']);" . PHP_EOL;
+            $new_permission .= "\t\t$" . "update_{$var_schema}{$route} = Permission::create(['name' => 'u-{$parsed_schema}{$permission_name}', 'label' => 'Update {$schema} {$model_name}']);" . PHP_EOL;
+            $new_permission .= "\t\t$" . "delete_{$var_schema}{$route} = Permission::create(['name' => 'd-{$parsed_schema}{$permission_name}', 'label' => 'Delete {$schema} {$model_name}']);" . PHP_EOL;
         }
-        $newPermission .= "\t\t$" . "print_$route = Permission::create(['name' => 'p-$route', 'label' => 'Print {$formatedModel}']);" . PHP_EOL;
-        $newPermission .= PHP_EOL;
-        $newPermission .= "\t\t// {{ laravue-insert:permissions }}";
+        $new_permission .= "\t\t$" . "print_{$var_schema}{$route} = Permission::create(['name' => 'p-{$parsed_schema}{$permission_name}', 'label' => 'Print {$schema} {$model_name}']);" . PHP_EOL;
+        $new_permission .= PHP_EOL;
+        $new_permission .= "\t\t// {{ laravue-insert:permissions }}";
 
-        return str_replace('// {{ laravue-insert:permissions }}', $newPermission, $permissionFile);
+        return str_replace('// {{ laravue-insert:permissions }}', $new_permission, $permission_file);
     }
 
-    protected function replaceMenu($permissionFile, $model)
+    protected function replaceMenu($permission_file, $model)
     {
-        $formatedModel = ucfirst($model);
-        $ModelName = ucfirst($this->pluralize($model));
-        $route = strtolower($ModelName);
+        $formated_model = ucfirst($model);
+        $model_name = $this->getTitle($formated_model);
+        $route = Str::snake($model);
+        $permission_name = str_replace('_', '-', Str::snake($this->pluralize($model_name)));
+        $schema = $this->option('schema');
+        $parsed_schema = empty($schema) ? '' : Str::snake($schema) . '-';
+        $var_schema = empty($schema) ? '' : Str::snake($schema) . '_';
 
-        $newPermission = "";
-        $newPermission .= "$" . "access_{$route}_menu = Permission::create(['name' => 'a-m-{$route}', 'label' => 'Access {$formatedModel} menu']);" . PHP_EOL;
-        $newPermission .= "\t\t// {{ laravue-insert:menu }}";
+        $new_permission = "";
+        $new_permission .= "$" . "access_{$var_schema}{$route}_menu = Permission::create(['name' => 'm-{$parsed_schema}{$permission_name}', 'label' => 'Access {$model_name} menu']);" . PHP_EOL;
+        $new_permission .= "\t\t// {{ laravue-insert:menu }}";
 
-        return str_replace('// {{ laravue-insert:menu }}', $newPermission, $permissionFile);
+        return str_replace('// {{ laravue-insert:menu }}', $new_permission, $permission_file);
     }
 }
