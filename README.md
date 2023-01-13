@@ -5,7 +5,7 @@ Code generation for projects that use Laravel and VueJs tecnologies.
 ## Instalation
 
 ```
-composer require wesleyhott/laravue
+composer require wesleyhott/laravue --dev
 ```
 
 ```

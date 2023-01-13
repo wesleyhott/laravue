@@ -118,6 +118,7 @@ class LaravueRequestCommand extends LaravueCommand
         $firstUniqueArray = true;
         foreach ($fields as $key => $value) {
             $type = $this->getType($value);
+            $snaked_key = Str::snake($key);
             // Nullable
             $required = $this->hasNullable($value) ? '|nullable' : '|required';
             // String Size
@@ -180,13 +181,14 @@ class LaravueRequestCommand extends LaravueCommand
             $snaked_model = Str::snake($model);
             $table = $this->pluralize($snaked_model);
             $id_value = $this->option('store') ? 'NULL' : "{\$this->{$snaked_model}}";
-            $unique = $isUnique ? "|unique:{$conn}{$schema}{$table},{$key},{$id_value},id{$soft_delete}" : '';
+            $unique = $isUnique ? "|unique:{$conn}{$schema}{$table},{$snaked_key},{$id_value},id{$soft_delete}" : '';
             // Unique array 
             $uniqueArray = '';
             $isUniqueArray = $this->isUniqueArray($value);
             if ($firstUniqueArray && $isUniqueArray) {
                 $fieldsUnique = array_filter($fields, fn ($unique_key) => str_contains($unique_key, 'uc'));
                 foreach ($fieldsUnique as $k => $v) {
+                    $snaked_k = Str::snake($k);
                     //point to end of the array
                     end($fieldsUnique);
                     $lastElementKey = key($fieldsUnique);
@@ -194,12 +196,12 @@ class LaravueRequestCommand extends LaravueCommand
                     $isUniqueInternalArray = $this->isUniqueArray($v);
                     if ($firstUniqueArray && $isUniqueInternalArray) {
                         $firstUniqueArray = false;
-                        $uniqueArray .= "|unique:{$conn}{$schema}{$table},{$k},\"" . PHP_EOL;
+                        $uniqueArray .= "|unique:{$conn}{$schema}{$table},{$snaked_k},\"" . PHP_EOL;
                         $uniqueArray .= $this->tabs(4) . ". \"{$id_value},id\"";
                         continue;
                     }
                     if ($isUniqueInternalArray) {
-                        $uniqueArray .= PHP_EOL . $this->tabs(4) . ". \",$k,{\$this->$k}{$double_quote}";
+                        $uniqueArray .= PHP_EOL . $this->tabs(4) . ". \",$snaked_k,{\$this->$snaked_k}{$double_quote}";
                     }
                 }
                 if ($use_soft_deletes) {
@@ -207,7 +209,7 @@ class LaravueRequestCommand extends LaravueCommand
                 }
             }
 
-            $rules .= PHP_EOL . $this->tabs(3) . "'{$key}' => \"{$type}{$required}{$unsigned}{$max_size}{$unique}{$uniqueArray}\",";
+            $rules .= PHP_EOL . $this->tabs(3) . "'{$snaked_key}' => \"{$type}{$required}{$unsigned}{$max_size}{$unique}{$uniqueArray}\",";
         }
         $rules .= PHP_EOL . $this->tabs(2);
         return str_replace('{{ rules }}', $rules, $stub);
