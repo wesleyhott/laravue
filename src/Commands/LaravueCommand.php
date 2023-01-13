@@ -146,9 +146,9 @@ class LaravueCommand extends Command
                 if (is_array($model) && count($model) > 1) {
                     $model1 = $model[0];
                     $model2 = $model[1];
-                    $path = $this->makePath("database/seeders/{$schemaPath}{$model1}{$model2}Seeder.php", true);
+                    $path = $this->makePath("database/seeders/{$schema}{$model1}{$model2}Seeder.php", true);
                 } else {
-                    $path = $this->makePath("database/seeders/{$schemaPath}{$string_model}Seeder.php", true);
+                    $path = $this->makePath("database/seeders/{$schema}{$string_model}Seeder.php", true);
                 }
                 break;
             case 'seeder':

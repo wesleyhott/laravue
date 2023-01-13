@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Permission\Commands;
+namespace wesleyhott\Laravue\Commands;
 
 use Illuminate\Console\Command;
 use Spatie\Permission\Contracts\Permission as PermissionContract;

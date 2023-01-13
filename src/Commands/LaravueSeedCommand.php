@@ -47,18 +47,19 @@ class LaravueSeedCommand extends LaravueCommand
         }
 
         $model = $this->option('mxn') ? $this->argument('model')[0] . $this->argument('model')[1] : $this->argument('model');
-        $parsedModel = is_array($model) ? $model : trim($model);
+        $parsed_model = is_array($model) ? $model : trim($model);
+        $parsed_schema = empty($this->option('schema')) ? '' : Str::ucfirst($this->option('schema'));
 
         $date = now();
 
-        $path = $this->getPath(model: $parsedModel, schema: $this->option('schema'));
-        $this->files->put($path, $this->buildSeed($parsedModel, $this->option('schema')));
+        $path = $this->getPath(model: $parsed_model, schema: $parsed_schema);
+        $this->files->put($path, $this->buildSeed($parsed_model, $parsed_schema));
 
         if ($this->option('mxn')) {
-            $this->info("$date - [ {$model} ] >> {$model}" . "Seeder.php");
+            $this->info("{$date} - [ {$model} ] >> {$parsed_schema}{$model}" . "Seeder.php");
         } else {
-            $stringModel = is_array($parsedModel) ? trim($parsedModel[0]) : trim($parsedModel);
-            $this->info("$date - [ $stringModel ] >> {$stringModel}Seeder.php");
+            $string_model = is_array($parsed_model) ? trim($parsed_model[0]) : trim($parsed_model);
+            $this->info("{$date} - [ {$string_model} ] >> {$parsed_schema}{$string_model}Seeder.php");
         }
     }
 
@@ -75,19 +76,18 @@ class LaravueSeedCommand extends LaravueCommand
         $stub = $this->files->get($this->getStub());
 
         if ($this->option('mxn')) {
-            $parsedModel =  is_array($model) ? $model[0] . $model[1] : $model;
-            $class = $this->replaceClass($stub, $parsedModel);
-            $table = $this->replaceTable($class, $parsedModel, $plural = false);
+            $parsed_model =  is_array($model) ? $model[0] . $model[1] : $model;
+            $class = $this->replaceClass($stub, $parsed_model);
+            $table = $this->replaceTable($class, $parsed_model, $plural = false);
             return $this->replaceField($table, $model);
         }
 
-        $parsedModel =  is_array($model) ? $model[0] : $model;
-        $classStub = $this->replaceClass($stub, $parsedModel);
-        $tableStub = $this->replaceTable($classStub, $parsedModel);
-        $schemaStub = $this->replaceSchemaNamespace($tableStub, $schema);
-        $tableSchemaStub = $this->replaceSchemaTable($schemaStub, $schema);
+        $parsed_model =  is_array($model) ? $model[0] : $model;
+        $class_stub = $this->replaceClass($stub, $parsed_model);
+        $table_stub = $this->replaceTable($class_stub, $parsed_model);
+        $table_schema_stub = $this->replaceSchemaTable($table_stub, $schema);
 
-        return $this->replaceField($tableSchemaStub, $parsedModel);
+        return $this->replaceField($table_schema_stub, $parsed_model);
     }
 
     protected function replaceField($stub, $model = null, $shema = null)

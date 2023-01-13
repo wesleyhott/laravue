@@ -14,7 +14,7 @@ class MakeSeedSchemaTest extends TestCase
         $model = array('ComplexModel');
         $schema = 'Schema';
         // destination path of the Foo class
-        $testClass = str_replace("tests/Unit", "", __DIR__) . "database/seeders/{$schema}/{$model[0]}Seeder.php";
+        $testClass = str_replace("tests/Unit", "", __DIR__) . "database/seeders/{$schema}{$model[0]}Seeder.php";
 
         // Run the make command
         Artisan::call('laravue:seed', [

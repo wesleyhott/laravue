@@ -104,8 +104,6 @@ class LaravueBuildCommand extends LaravueCommand
     protected function backward()
     {
         $date = now();
-        $this->info("$date - [ composer ] >> dump-autoload");
-        $this->composer->dumpAutoloads();
         $this->info("$date - [ artisan ] >> migrate:fresh --seed");
         $this->call('migrate:fresh', [
             '--seed' =>  true,
@@ -120,58 +118,53 @@ class LaravueBuildCommand extends LaravueCommand
      */
     protected function forward(array $model): void
     {
-        $date = now();
         $parsed_model = count($model) > 1 ? "{$model[0]}{$model[1]}" : $model[0];
 
+        $date = now();
         $this->info("$date - [ artisan ] >> migrate");
         $this->call('migrate');
 
+        $date = now();
         $this->info("$date - [ artisan ] >> seed");
         $schema = $this->option('schema');
-        if (empty($schema)) {
-            $this->call('db:seed', [
-                '--class' => "{$parsed_model}Seeder",
-            ]);
-        } else {
-            $this->call('db:seed', [
-                '--class' => "\Database\Seeder\{$schema}\{$parsed_model}Seeder",
-            ]);
-        }
 
-        $this->info("$date - [ composer ] >> dump-autoload");
-        $this->composer->dumpAutoloads();
+        $date = now();
+        $this->info("$date - [ artisan ] >> seed");
+        $schema = empty($schema) ? '' : Str::ucfirst($this->option('schema'));
+        $this->call('db:seed', [
+            '--class' => "{$schema}{$parsed_model}Seeder",
+        ]);
 
         $argumentModel = $this->argument('model');
         $model = is_array($argumentModel) ? trim($argumentModel[0]) : trim($argumentModel);
         $permissionName = $this->pluralize(strtolower($model));
-        $this->info("$date - [ spatie ] >> permission:create-permission");
 
-        $this->call('permission:create-permission', [
+        $this->call('laravue:spatie-permission', [
             'name' =>  "c-{$permissionName}",
             'label' => "Create {$permissionName}",
         ]);
 
-        $this->call('permission:create-permission', [
+        $this->call('laravue:spatie-permission', [
             'name' =>  "r-{$permissionName}",
             'label' => "Read {$permissionName}",
         ]);
 
-        $this->call('permission:create-permission', [
+        $this->call('laravue:spatie-permission', [
             'name' =>  "u-{$permissionName}",
             'label' => "Update {$permissionName}",
         ]);
 
-        $this->call('permission:create-permission', [
+        $this->call('laravue:spatie-permission', [
             'name' =>  "d-{$permissionName}",
             'label' => "Delete {$permissionName}",
         ]);
 
-        $this->call('permission:create-permission', [
+        $this->call('laravue:spatie-permission', [
             'name' =>  "p-{$permissionName}",
             'label' => "Print {$permissionName}",
         ]);
 
-        $this->call('permission:create-permission', [
+        $this->call('laravue:spatie-permission', [
             'name' =>  "m-{$permissionName}",
             'label' => "Access {$permissionName} Menu",
         ]);
