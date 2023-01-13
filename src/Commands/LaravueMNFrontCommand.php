@@ -38,32 +38,33 @@ class LaravueMNFrontCommand extends LaravueCommand
     public function handle()
     {
         $fields = "";
-        if( $this->option('keys') !== null ) {
+        if ($this->option('keys') !== null) {
             $fields = $this->option('keys');
         }
-        
+
         $virgula = $fields == "" ? "" : ",";
 
-        if( $this->option('pivots') !== null ) {
+        if ($this->option('pivots') !== null) {
             $fields .= $virgula . $this->option('pivots');
         }
 
-        $this->fields = $this->getFieldsArray( $fields );
+        $this->fields = $this->getFieldsArray($fields);
 
         $this->createModel();
         $this->createModal();
     }
 
-    protected function makeFrontMnPath( $model, $projectName ) {
+    protected function makeFrontMnPath($model, $projectName)
+    {
         $currentDirectory =  getcwd();
-        $paths = explode( "/", str_replace( '\\', '/', $currentDirectory) );
-        $buildPath = $this->fileBuildPath( 'src', 'components', $projectName, 'Views', 'Pages', $model, 'forms' );
-        if ( end( $paths ) == "laravue") { // Laravue Tests
-            $frontPath = $this->fileBuildPath( $currentDirectory, 'admin', $buildPath);
-        } else if ( $this->option('outdocker') ) {
-            $frontPath = Str::replaceFirst( end( $paths ), $this->fileBuildPath( 'admin', $buildPath ), $currentDirectory);
+        $paths = explode("/", str_replace('\\', '/', $currentDirectory));
+        $buildPath = $this->fileBuildPath('src', 'components', $projectName, 'Views', 'Pages', $model, 'forms');
+        if (end($paths) == "laravue") { // Laravue Tests
+            $frontPath = $this->fileBuildPath($currentDirectory, 'admin', $buildPath);
+        } else if ($this->option('outdocker')) {
+            $frontPath = Str::replaceFirst(end($paths), $this->fileBuildPath('admin', $buildPath), $currentDirectory);
         } else {
-            $frontPath = Str::replaceFirst( end( $paths ), $buildPath, $currentDirectory);
+            $frontPath = Str::replaceFirst(end($paths), $buildPath, $currentDirectory);
         }
         return $frontPath;
     }
@@ -80,54 +81,56 @@ class LaravueMNFrontCommand extends LaravueCommand
         $model_m = trim($this->argument('model')[0]);
         $model_n = trim($this->argument('model')[1]);
 
-        if( $model_m == "Monitor" || $model_m == "Permission" || $model_m == "Role" || $model_m == "Task" || $model_m == "User" ) {
+        if ($model_m == "Monitor" || $model_m == "Permission" || $model_m == "Role" || $model_m == "Task" || $model_m == "User") {
             $projectName_m = "ProjetoBase";
         }
 
-        if( $model_n == "Monitor" || $model_n == "Permission" || $model_n == "Role" || $model_n == "Task" || $model_n == "User" ) {
+        if ($model_n == "Monitor" || $model_n == "Permission" || $model_n == "Role" || $model_n == "Task" || $model_n == "User") {
             $projectName_n = "ProjetoBase";
         }
 
-        $path_m = $this->makeFrontMnPath( $model_m, $projectName_m ) . '/Model.vue';
-        $path_n = $this->makeFrontMnPath( $model_n, $projectName_n ) . '/Model.vue';
+        $path_m = $this->makeFrontMnPath($model_m, $projectName_m) . '/Model.vue';
+        $path_n = $this->makeFrontMnPath($model_n, $projectName_n) . '/Model.vue';
 
-        $stub_m = $this->files->get( $path_m ); 
-        $this->files->put( $path_m, $this->buildMnModel( $model_n, $stub_m ) );
+        $stub_m = $this->files->get($path_m);
+        $this->files->put($path_m, $this->buildMnModel($model_n, $stub_m));
         $this->info("$date - [ $model_m ] >> forms/Model.vue");
-        
-        $stub_n = $this->files->get( $path_n );
-        $this->files->put( $path_n, $this->buildMnModel( $model_m, $stub_n ) );
+
+        $stub_n = $this->files->get($path_n);
+        $this->files->put($path_n, $this->buildMnModel($model_m, $stub_n));
         $this->info("$date - [ $model_n ] >> forms/Model.vue");
     }
 
-    protected function buildMnModel( $model, $path ) {
-        $parsedField = $this->getField( $model, $path );
-        $parsedDataSelect = $this->getDataSelect( $model, $parsedField );
-        $parsedDataModel = $this->getDataModel( $model, $parsedDataSelect );
-        $parsedSubmit = $this->getSubmit( $model, $parsedDataModel );
-        $parsedLoadModelMethod = $this->getLoadModelMethod( $model, $parsedSubmit );
-        $parsedLoadModelResponse = $this->getLoadModelResponse( $model, $parsedLoadModelMethod );
-        $parsedMethods = $this->getMethods( $model, $parsedLoadModelResponse );
+    protected function buildMnModel($model, $path)
+    {
+        $parsedField = $this->getField($model, $path);
+        $parsedDataSelect = $this->getDataSelect($model, $parsedField);
+        $parsedDataModel = $this->getDataModel($model, $parsedDataSelect);
+        $parsedSubmit = $this->getSubmit($model, $parsedDataModel);
+        $parsedLoadModelMethod = $this->getLoadModelMethod($model, $parsedSubmit);
+        $parsedLoadModelResponse = $this->getLoadModelResponse($model, $parsedLoadModelMethod);
+        $parsedMethods = $this->getMethods($model, $parsedLoadModelResponse);
 
         return $parsedMethods;
     }
 
-    protected function getField( $model, $path ) {
-        $snakeModel = Str::snake( $model );
+    protected function getField($model, $path)
+    {
+        $snakeModel = Str::snake($model);
         $modellabel = 'id';
         foreach ($this->fields as $key => $value) {
-            if( strcmp( substr( $key, 0, -3), $snakeModel ) == 0 ) {
-                $keyFields = $this->getModelFieldsFromKey( $key );
-                $modellabel = $this->getSelectLabel( $keyFields );
+            if (strcmp(substr($key, 0, -3), $snakeModel) == 0) {
+                $keyFields = $this->getModelFieldsFromKey($key);
+                $modellabel = $this->getSelectLabel($keyFields);
             }
         }
-        $title = $this->getTitle($model, true ); // true: plural.
-        $plural = $this->pluralize( $model );
-        $lowcasePlural = lcfirst( $plural );
-        $lowcase = lcfirst( $model );
+        $title = $this->getTitle($model, true); // true: plural.
+        $plural = $this->pluralize($model);
+        $lowcasePlural = lcfirst($plural);
+        $lowcase = lcfirst($model);
 
         $field = "<div class=\"row formSpace\">" . PHP_EOL;
-        $field .= $this->tabs(8) ."<div class=\"col-sm-12 \">" . PHP_EOL;
+        $field .= $this->tabs(8) . "<div class=\"col-sm-12 \">" . PHP_EOL;
         $field .= $this->tabs(9) . "<ValidationProvider name=\"$model\" rules=\"\" v-slot=\"{ errors }\">" . PHP_EOL;
         $field .= $this->tabs(10) . "<div style=\"margin-bottom: 5px; color: #9A9A9A; font-size: .8571em;\">$title</div>" . PHP_EOL;
         $field .= $this->tabs(10) . "<el-select" . PHP_EOL;
@@ -137,7 +140,7 @@ class LaravueMNFrontCommand extends LaravueCommand
         $field .= $this->tabs(11) . "size=\"large\"" . PHP_EOL;
         $field .= $this->tabs(11) . "style=\"width: 100%;\"" . PHP_EOL;
         $field .= $this->tabs(11) . ":placeholder=\"relatorio ? 'Não filtrar' : '$title'\"" . PHP_EOL;
-        $field .= $this->tabs(11) . "v-model=\"model.${lowcase}_ids\" >" . PHP_EOL;
+        $field .= $this->tabs(11) . "v-model=\"model.{$lowcase}_ids\" >" . PHP_EOL;
         $field .= $this->tabs(12) . "<el-option v-if=\"relatorio\" label=\"Não filtrar\" value=\"\"></el-option>" . PHP_EOL;
         $field .= $this->tabs(12) . "<el-option" . PHP_EOL;
         $field .= $this->tabs(13) . "v-for=\"item in selects.$lowcasePlural\"" . PHP_EOL;
@@ -153,68 +156,74 @@ class LaravueMNFrontCommand extends LaravueCommand
         $field .= $this->tabs(7) . "</div>" . PHP_EOL;
         $field .= $this->tabs(7) . "<!-- {{ laravue-insert:field }} -->";
 
-        return str_replace( '<!-- {{ laravue-insert:field }} -->', $field, $path  );
+        return str_replace('<!-- {{ laravue-insert:field }} -->', $field, $path);
     }
 
-    protected function getDataSelect( $model, $path ) {
-        $item = $this->pluralize( lcfirst( $model ) );
+    protected function getDataSelect($model, $path)
+    {
+        $item = $this->pluralize(lcfirst($model));
 
-        $dataSelect = "${item}: []," . PHP_EOL;
+        $dataSelect = "{$item}: []," . PHP_EOL;
         $dataSelect .= $this->tabs(4) . "// {{ laravue-insert:dataSelects }}";
 
-        return str_replace( '// {{ laravue-insert:dataSelects }}', $dataSelect, $path  );
+        return str_replace('// {{ laravue-insert:dataSelects }}', $dataSelect, $path);
     }
 
-    protected function getDataModel( $model, $path ) {
-        $item = lcfirst( $model );
+    protected function getDataModel($model, $path)
+    {
+        $item = lcfirst($model);
 
-        $dataModel = "${item}_ids: []," . PHP_EOL;
+        $dataModel = "{$item}_ids: []," . PHP_EOL;
         $dataModel .= $this->tabs(4) . "// {{ laravue-insert:dataModel }}";
 
-        return str_replace( '// {{ laravue-insert:dataModel }}', $dataModel, $path  );
+        return str_replace('// {{ laravue-insert:dataModel }}', $dataModel, $path);
     }
 
-    protected function getSubmit( $model, $path ) {
-        $item = lcfirst( $model );
+    protected function getSubmit($model, $path)
+    {
+        $item = lcfirst($model);
 
-        $submit = "${item}_ids: this.model.${item}_ids, " . PHP_EOL;
+        $submit = "{$item}_ids: this.model.{$item}_ids, " . PHP_EOL;
         $submit .= $this->tabs(6) . "// {{ laravue-insert:submit }}";
 
-        return str_replace( '// {{ laravue-insert:submit }}', $submit, $path  );
+        return str_replace('// {{ laravue-insert:submit }}', $submit, $path);
     }
 
-    protected function getLoadModelMethod( $model, $path ) {
-        $item = $this->pluralize( $model );
+    protected function getLoadModelMethod($model, $path)
+    {
+        $item = $this->pluralize($model);
 
-        $method = "this.load${item}()" . PHP_EOL;
+        $method = "this.load{$item}()" . PHP_EOL;
         $method .= $this->tabs(3) . "// {{ laravue-insert:loadModelMethod }}";
 
-        return str_replace( '// {{ laravue-insert:loadModelMethod }}', $method, $path  );
+        return str_replace('// {{ laravue-insert:loadModelMethod }}', $method, $path);
     }
 
-    protected function getLoadModelResponse( $model, $path ) {
-        $item = lcfirst( $model );
-        $items = $this->pluralize( $item );
+    protected function getLoadModelResponse($model, $path)
+    {
+        $item = lcfirst($model);
+        $items = $this->pluralize($item);
 
-        $response = "this.model.${item}_ids = []" . PHP_EOL;
-        $response .= $this->tabs(6) . "this.model.${items}.forEach(element => {" . PHP_EOL;
-        $response .= $this->tabs(7) . "this.model.${item}_ids.push( element.id )" . PHP_EOL;
+        $response = "this.model.{$item}_ids = []" . PHP_EOL;
+        $response .= $this->tabs(6) . "this.model.{$items}.forEach(element => {" . PHP_EOL;
+        $response .= $this->tabs(7) . "this.model.{$item}_ids.push( element.id )" . PHP_EOL;
         $response .= $this->tabs(6) . "})" . PHP_EOL;
         $response .= $this->tabs(6) . "// {{ laravue-insert:loadModelResponse }}";
 
-        return str_replace( '// {{ laravue-insert:loadModelResponse }}', $response, $path  );
+        return str_replace('// {{ laravue-insert:loadModelResponse }}', $response, $path);
     }
 
-    protected function getMethods( $model, $path ) {
-        $item = $this->pluralize( $model );
-        $itemLcFrist = lcfirst( $item );
-        $itemLc = strtolower( $item );
+    protected function getMethods($model, $path)
+    {
+        $item = $this->pluralize($model);
+        $itemLcFrist = lcfirst($item);
+        $itemLc = strtolower($item);
 
-        $method = "load${item}() {" . PHP_EOL;
+        $method = "load{$item}() {" . PHP_EOL;
         $method .= $this->tabs(3) . "return this.\$http" . PHP_EOL;
-        $method .= $this->tabs(4) . ".get('${itemLc}?per_page=-1')" . PHP_EOL;
+        $method .= $this->tabs(4) . ".get('{$itemLc}?per_page=-1')" . PHP_EOL;
         $method .= $this->tabs(4) . ".then(response => {" . PHP_EOL;
-        $method .= $this->tabs(5) . "this.selects.${itemLcFrist} = response.data.data.data" . PHP_EOL;
+        $method .= $this->tabs(5) . "this.selects.{$itemLcFrist} = response.data.data.data" . PHP_EOL;
         $method .= $this->tabs(3) . "})" . PHP_EOL;
         $method .= $this->tabs(3) . ".catch(e => {" . PHP_EOL;
         $method .= $this->tabs(4) . "laravueNotify.failure(this, e)" . PHP_EOL;
@@ -222,7 +231,7 @@ class LaravueMNFrontCommand extends LaravueCommand
         $method .= $this->tabs(2) . "}," . PHP_EOL;
         $method .= $this->tabs(2) . "// {{ laravue-insert:methods }}";
 
-        return str_replace( '// {{ laravue-insert:methods }}', $method, $path  );
+        return str_replace('// {{ laravue-insert:methods }}', $method, $path);
     }
 
     /**
@@ -237,45 +246,47 @@ class LaravueMNFrontCommand extends LaravueCommand
         $model_m = trim($this->argument('model')[0]);
         $model_n = trim($this->argument('model')[1]);
 
-        if( $model_m == "Monitor" || $model_m == "Permission" || $model_m == "Role" || $model_m == "Task" || $model_m == "User" ) {
+        if ($model_m == "Monitor" || $model_m == "Permission" || $model_m == "Role" || $model_m == "Task" || $model_m == "User") {
             $projectName_m = "ProjetoBase";
         }
 
-        if( $model_n == "Monitor" || $model_n == "Permission" || $model_n == "Role" || $model_n == "Task" || $model_n == "User" ) {
+        if ($model_n == "Monitor" || $model_n == "Permission" || $model_n == "Role" || $model_n == "Task" || $model_n == "User") {
             $projectName_n = "ProjetoBase";
         }
 
-        $path_m = $this->makeFrontMnPath( $model_m, $projectName_m ) . '/Modal.vue';
-        $path_n = $this->makeFrontMnPath( $model_n, $projectName_n ) . '/Modal.vue';
+        $path_m = $this->makeFrontMnPath($model_m, $projectName_m) . '/Modal.vue';
+        $path_n = $this->makeFrontMnPath($model_n, $projectName_n) . '/Modal.vue';
 
-        $stub_m = $this->files->get( $path_m );
-        $this->files->put( $path_m, $this->buildMnModal( $model_n, $stub_m ) );
+        $stub_m = $this->files->get($path_m);
+        $this->files->put($path_m, $this->buildMnModal($model_n, $stub_m));
         $this->info("$date - [ $model_m ] >> forms/Modal.vue");
-        
-        $stub_n = $this->files->get( $path_n );
-        $this->files->put( $path_n, $this->buildMnModal( $model_m, $stub_n ) );
+
+        $stub_n = $this->files->get($path_n);
+        $this->files->put($path_n, $this->buildMnModal($model_m, $stub_n));
         $this->info("$date - [ $model_n ] >> forms/Modal.vue");
     }
 
-    protected function buildMnModal( $model, $path ) {
-        $parsedModalField = $this->getModalField( $model, $path );
+    protected function buildMnModal($model, $path)
+    {
+        $parsedModalField = $this->getModalField($model, $path);
 
         return $parsedModalField;
     }
 
-    public function getModalField( $model, $path ) {
-        $snakeModel = Str::snake( $model );
+    public function getModalField($model, $path)
+    {
+        $snakeModel = Str::snake($model);
         $modellabel = 'id';
         foreach ($this->fields as $key => $value) {
-            if( strcmp( substr( $key, 0, -3), $snakeModel ) != 0 ) {
-                $keyFields = $this->getModelFieldsFromKey( $key );
-                $modellabel = $this->getSelectLabel( $keyFields );
+            if (strcmp(substr($key, 0, -3), $snakeModel) != 0) {
+                $keyFields = $this->getModelFieldsFromKey($key);
+                $modellabel = $this->getSelectLabel($keyFields);
             }
         }
-        $title = $this->getTitle( $model, true);
-        $plural = $this->pluralize( $model );
-        $lowerSingular = lcfirst( $model );
-        $lowerPlural = lcfirst( $plural );
+        $title = $this->getTitle($model, true);
+        $plural = $this->pluralize($model);
+        $lowerSingular = lcfirst($model);
+        $lowerPlural = lcfirst($plural);
 
         $modalField = "<div v-if=\"model.$lowerPlural.length > 0\" class=\"row\">" . PHP_EOL;
         $modalField .= $this->tabs(2) . "<div class=\"col-sm-12\">" . PHP_EOL;
@@ -290,6 +301,6 @@ class LaravueMNFrontCommand extends LaravueCommand
         $modalField .= $this->tabs(1) . "</div>" . PHP_EOL;
         $modalField .= $this->tabs(1) . "<!-- {{ laravue-insert:field }} -->";
 
-        return str_replace( '<!-- {{ laravue-insert:field }} -->', $modalField, $path  );
+        return str_replace('<!-- {{ laravue-insert:field }} -->', $modalField, $path);
     }
 }

@@ -1,20 +1,22 @@
 <?php
 
-namespace App\Models;
+namespace App\Models{{ schemaNamespace }};
 
+use App\Models\LaravueModel;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+/**
+ * Class {{ class }}
+ * @package App\Models{{ schemaNamespace }}
+ *
+ * @property int $id
+ {{ fields }}
+ * {{ laravue-insert:property }}
+ */
 class {{ class }} extends LaravueModel
 {
-    protected $table = '{{ table }}';
-    // {{ laravue-insert:with }}
-
-    /**
-     * Casting
-     * 
-     * Informa o tipo de dados que é serializado nos objetos JSON.
-     */
-	protected $casts = [
-		{{ fields }}
-	];
+    protected $table = '{{ table }}'; 
 
     // {{ laravue-insert:relationship }}
 }

@@ -2,6 +2,8 @@
 
 namespace wesleyhott\Laravue\Commands;
 
+use Illuminate\Support\Str;
+
 class LaravueDbSeederCommand extends LaravueCommand
 {
     /**
@@ -9,7 +11,7 @@ class LaravueDbSeederCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:dbseeder {model*} {--x|mxn}';
+    protected $signature = 'laravue:dbseeder {model*} {--x|mxn} {--s|schema= : determine a schema for model (postgres)}';
 
     /**
      * The console command description.
@@ -33,20 +35,21 @@ class LaravueDbSeederCommand extends LaravueCommand
     public function handle()
     {
         $model = "";
-        if( $this->option('mxn') ) { 
+        if ($this->option('mxn')) {
             $model = $this->argument('model');
         } else {
             $argumentModel = $this->argument('model');
-            $model = is_array( $argumentModel ) ? trim( $argumentModel[0] ) : trim( $argumentModel ); 
+            $model = is_array($argumentModel) ? trim($argumentModel[0]) : trim($argumentModel);
         }
 
         $date = now();
 
         $path = $this->getPath($model);
-        $this->files->put( $path, $this->buildDataSeeder($model) );
+        $schema = Str::ucfirst($this->option('schema'));
+        $this->files->put($path, $this->buildDataSeeder($model, $schema));
 
         $formatedModel = $model;
-        if( $this->option('mxn') ) { 
+        if ($this->option('mxn')) {
             $formatedModel = $model[0] . $model[1];
         }
         $this->info("$date - [ $formatedModel ] >> DatabaseSeeder.php");
@@ -60,26 +63,35 @@ class LaravueDbSeederCommand extends LaravueCommand
      *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    protected function buildDataSeeder($model)
+    protected function buildDataSeeder($model, $schema)
     {
         $formatedModel = "";
-        if( $this->option('mxn') ) { 
+        if ($this->option('mxn')) {
             $formatedModel = $model[0] . $model[1];
         } else {
             $formatedModel = $model;
         }
 
-        $stub = $this->files->get( $this->getPath($formatedModel) );
-
-        return $this->replaceSeeder($stub, $formatedModel);
+        $stub = $this->files->get($this->getPath($formatedModel));
+        $seeder = $this->replaceSeeder($stub, $formatedModel);
+        return $this->replaceUse($seeder, $model, $schema);
     }
 
     protected function replaceSeeder($databaseSeederFile, $model)
     {
         $newSeeder = "";
-        $newSeeder .= "$"."this->call($model"."Seeder::class);" . PHP_EOL;
+        $newSeeder .= "$" . "this->call($model" . "Seeder::class);" . PHP_EOL;
         $newSeeder .= "\t\t// {{ laravue-insert:seed }}";
-        
-        return str_replace( '// {{ laravue-insert:seed }}', $newSeeder, $databaseSeederFile );
+
+        return str_replace('// {{ laravue-insert:seed }}', $newSeeder, $databaseSeederFile);
+    }
+
+    protected function replaceUse($databaseSeederFile, $model, $schema)
+    {
+        $schemaPath = empty($schema) ? '' : "\\{$schema}";
+        $newUse = "use Database\Seeders{$schemaPath}\\{$model}Seeder;" . PHP_EOL;
+        $newUse .= "// {{ laravue-insert:use }}";
+
+        return str_replace('// {{ laravue-insert:use }}', $newUse, $databaseSeederFile);
     }
 }

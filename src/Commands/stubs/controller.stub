@@ -1,59 +1,46 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers{{ schemaNamespace }};
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Http\Requests\LaravueFormRequest;
+use App\Services{{ schemaNamespace }}\{{ model }}Service;
+use App\Http\Controllers\LaravueController;
+use App\Http\Requests{{ schemaNamespace }}\Store{{ model }}Request;
+use App\Http\Requests{{ schemaNamespace }}\Update{{ model }}Request;
 
-class {{ model }}Controller extends LaravueController
+class {{ class }}Controller extends LaravueController
 {
-    // {{ laravue-insert:property }}
-    
     /**
-     * Implementação do modelo da classe abstrata em LaravueController
-     *
-     * @return \App\Models\{{ model }}::class
+     * Controller constructor.
+     * @param {{ model }}Service $service
      */
-    protected function getModel()
+    public function __construct({{ model }}Service $service)
     {
-        return  \App\Models\{{ model }}::class;
+        $this->service = $service;
     }
 
     /**
-     * Preenche o modelo com os valores correspondentes ao request
+     * Store a newly created resource in storage.
      *
-     * @return \App\Models\{{ model }}
+     * @param  \App\Http\Requests\LaravueFormRequest  $request
+     * @return \Illuminate\Http\Response
      */
-    public function setModel(Request $request)
+    public function store(LaravueFormRequest $request)
     {
-        // verifica se é edição - PUT - ou inlcusão - POST.
-        $model = $request->isMethod('put') ? \App\Models\{{ model }}::findOrFail($request->id) : new \App\Models\{{ model }};
-
-        // Preencher os atributos do modelo
-        {{ fields }}
-        // {{ laravue-insert:setModel }}
-
-        return  $model;
+        $input = app()->make(Store{{ model }}Request::class, compact('request'));
+        return parent::store($input);
     }
 
     /**
-     * Método que passa as validações para o método que implementa Validator no LaravueController
+     * Update the specified resource in storage.
      *
-     * @return array de validação dos campos do modelo
+     * @param  \App\Http\Requests\LaravueFormRequest  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function getModelValidation($data)
-    {       
-        return [
-			'rules' =>  [
-                {{ rules }}
-            ], {{ unique:messages }}
-        ];
+    public function update(LaravueFormRequest $request, $id)
+    {
+        $input = app()->make(Update{{ model }}Request::class, $request->all());
+        return parent::update(new LaravueFormRequest($input), $id);
     }
-
-    /**
-     * Métodos de inserção de lógica específica.
-     */
-    {{ beforeIndex }}
-
-    // {{ laravue-insert:method }}
 }

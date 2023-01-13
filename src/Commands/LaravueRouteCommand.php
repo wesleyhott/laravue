@@ -2,6 +2,8 @@
 
 namespace wesleyhott\Laravue\Commands;
 
+use Illuminate\Support\Str;
+
 class LaravueRouteCommand extends LaravueCommand
 {
     /**
@@ -9,17 +11,17 @@ class LaravueRouteCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:route {model*}';
+    protected $signature = 'laravue:route {model*} {--s|schema= : determine a schema for model (postgres)}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Criação da rota para o modelo';
+    protected $description = 'It creates a model api route.';
 
     /**
-     * Tipo de modelo que está sendo criado.
+     * Command type for path generation.
      *
      * @var string
      */
@@ -33,7 +35,7 @@ class LaravueRouteCommand extends LaravueCommand
     public function handle()
     {
         $argumentModel = $this->argument('model');
-        $model = is_array( $argumentModel ) ? trim( $argumentModel[0] ) : trim( $argumentModel ); 
+        $model = is_array($argumentModel) ? trim($argumentModel[0]) : trim($argumentModel);
         $date = now();
 
         $path = $this->getPath($model);
@@ -44,35 +46,37 @@ class LaravueRouteCommand extends LaravueCommand
 
     protected function buildRoute($model)
     {
-        $routes = $this->files->get( $this->getPath($model) );
+        $routes = $this->files->get($this->getPath($model));
         $report = $this->replaceRoute($routes, $model);
 
         return $this->replaceReport($report, $model);
     }
 
-    protected function replaceRoute($routeFile, $model)
-    {   
-        $formatedModel = ucfirst( $model );
-        $ModelName = ucfirst( $this->pluralize( $model ) );
-        $route = strtolower( $ModelName );
+    protected function replaceRoute($route_file, $model)
+    {
+        $formated_model = ucfirst($model);
+        $model_name = ucfirst($this->pluralize($model));
+        $route = str_replace('_', '-', Str::snake($model_name));
+        $schema = Str::ucfirst($this->option('schema'));
+        $parsed_schema = empty($schema) ? '' : "\\{$schema}";
+        $route_schema = empty($schema) ? '' : Str::lcfirst("{$schema}-");
 
-        $newRoute = "";
-        $newRoute .= "'$route' => \App\Http\Controllers\\$formatedModel"."Controller::class," . PHP_EOL;
-        $newRoute .= "\t// {{ laravue-insert:route }}";
+        $new_route = "";
+        $new_route .= "'{$route_schema}{$route}' => \App\Http\Controllers{$parsed_schema}\\{$formated_model}Controller::class," . PHP_EOL;
+        $new_route .= "\t// {{ laravue-insert:route }}";
 
-        return str_replace( '// {{ laravue-insert:route }}', $newRoute, $routeFile );
+        return str_replace('// {{ laravue-insert:route }}', $new_route, $route_file);
     }
 
-    protected function replaceReport($routeFile, $model)
-    {   
-        $formatedModel = ucfirst( $model );
-        $ModelName = ucfirst( $this->pluralize( $model ) );
-        $route = strtolower( $ModelName );
+    protected function replaceReport($route_file, $model)
+    {
+        $model_name = ucfirst($this->pluralize($model));
+        $route = strtolower($model_name);
 
-        $newRoute = "";
-        $newRoute .= "Route::get('$route/{reportType}', '$model"."ReportController@index');" . PHP_EOL;
-        $newRoute .= "\t// {{ laravue-insert:report }}";
+        $new_route = "";
+        $new_route .= "Route::get('$route/{reportType}', '$model" . "ReportController@index');" . PHP_EOL;
+        $new_route .= "\t// {{ laravue-insert:report }}";
 
-        return str_replace( '// {{ laravue-insert:report }}', $newRoute, $routeFile );
+        return str_replace('// {{ laravue-insert:report }}', $new_route, $route_file);
     }
 }

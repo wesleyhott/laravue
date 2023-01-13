@@ -34,23 +34,24 @@ class LaravueReportCommand extends LaravueCommand
     {
         $this->setStub('/report');
         $argumentModel = $this->argument('model');
-        $model = is_array( $argumentModel ) ? trim( $argumentModel[0] ) : trim( $argumentModel ); 
+        $model = is_array($argumentModel) ? trim($argumentModel[0]) : trim($argumentModel);
         $date = now();
 
         $path = $this->getPath($model);
-        $this->files->put( $path, $this->buildModel( $model ) );
+        $this->files->put($path, $this->buildModel($model));
 
-        $this->info("$date - [ $model ] >> $model"."ReportController.php");
+        $this->info("$date - [ $model ] >> $model" . "ReportController.php");
     }
 
-    protected function replaceField($stub, $model)
+    protected function replaceField($stub, $model = null, $shema = null)
     {
         return $this->replaceBeforeIndex($stub, $model);
     }
 
-    protected function replaceBeforeIndex( $stub, $model ) {
-        if(!$this->option('fields')){
-            return str_replace( '{{ beforeIndex }}', 'return $data;' , $stub );
+    protected function replaceBeforeIndex($stub, $model)
+    {
+        if (!$this->option('fields')) {
+            return str_replace('{{ beforeIndex }}', 'return $data;', $stub);
         }
 
         $maskaredArray = array();
@@ -61,28 +62,28 @@ class LaravueReportCommand extends LaravueCommand
         $beforeIndex .= '{{ maskared }}' . PHP_EOL;
         $beforeIndex .= $this->tabs(3) . '$linha = array(' . PHP_EOL;
 
-        $fields = $this->getFieldsArray( $this->option('fields') );
+        $fields = $this->getFieldsArray($this->option('fields'));
         foreach ($fields as $key => $value) {
-            $title = $this->getTitle( $key );
-            $type = $this->getType( $value );
-            if( $type === 'boolean' ) {
+            $title = $this->getTitle($key);
+            $type = $this->getType($value);
+            if ($type === 'boolean') {
                 $beforeIndex .= $this->tabs(4) . "'$title' => \$item->$key == 1 ? 'Sim' : 'Não'," . PHP_EOL;
-            } else if( $type === 'date' ) {
+            } else if ($type === 'date') {
                 $beforeIndex .= $this->tabs(4) . "'$title' => date( 'd/m/Y', strtotime( \$item->$key ) )," . PHP_EOL;
-            } else if( $type === 'monetario' ) {
+            } else if ($type === 'monetario' || $type === 'monetary') {
                 $beforeIndex .= $this->tabs(4) . "'$title' => number_format( \$item->$key, 2, ',', '.')," . PHP_EOL;
-            } else if( $type === 'cpf' ) {
+            } else if ($type === 'cpf') {
                 $beforeIndex .= $this->tabs(4) . "'$title' => \$this->mask( \$item->$key, '###.###.###-##' )," . PHP_EOL;
-            } else if( $type === 'cnpj' ) {
+            } else if ($type === 'cnpj') {
                 $beforeIndex .= $this->tabs(4) . "'$title' => \$this->mask( \$item->$key, '##.###.###/####-##' )," . PHP_EOL;
-            } else if( $type === 'cpfcnpj' ) {
-                array_push( $maskaredArray, $key );
-                $beforeIndex .= $this->tabs(4) . "'$title' => \$${key}Maskared," . PHP_EOL;
-            } else if( $this->isFk( $key ) ) {
-                $relation = str_replace( '_id', '', $key );
-                $keyFields = $this->getModelFieldsFromKey( $key );
-                $modelField = $this->getSelectLabel( $keyFields );
-                $beforeIndex .= $this->tabs(4) . "'$title' => isset( \$item->${relation}->${modelField} ) ? \$item->${relation}->${modelField} : '---'," . PHP_EOL;
+            } else if ($type === 'cpfcnpj') {
+                array_push($maskaredArray, $key);
+                $beforeIndex .= $this->tabs(4) . "'$title' => \${$key}Maskared," . PHP_EOL;
+            } else if ($this->isFk($key)) {
+                $relation = str_replace('_id', '', $key);
+                $keyFields = $this->getModelFieldsFromKey($key);
+                $modelField = $this->getSelectLabel($keyFields);
+                $beforeIndex .= $this->tabs(4) . "'$title' => isset( \$item->{$relation}->{$modelField} ) ? \$item->{$relation}->{$modelField} : '---'," . PHP_EOL;
             } else {
                 $beforeIndex .= $this->tabs(4) . "'$title' => \$item->$key," . PHP_EOL;
             }
@@ -93,14 +94,14 @@ class LaravueReportCommand extends LaravueCommand
         $beforeIndex .= $this->tabs(2) . '}' . PHP_EOL;
         $beforeIndex .= $this->tabs(2) . 'return $reportData;';
 
-        foreach ( $maskaredArray as $field ) {
-            $maskared .= $this->tabs(3) ."\$${field}Maskared = strlen( \$item->$field ) == 11" . PHP_EOL;
+        foreach ($maskaredArray as $field) {
+            $maskared .= $this->tabs(3) . "\${$field}Maskared = strlen( \$item->$field ) == 11" . PHP_EOL;
             $maskared .= $this->tabs(4) . "? \$this->mask( \$item->$field, '###.###.###-##' )" . PHP_EOL;
             $maskared .= $this->tabs(4) . ": \$this->mask( \$item->$field, '##.###.###/####-##' );" . PHP_EOL;
         }
 
-        $parsed = str_replace( '{{ maskared }}', $maskared, $beforeIndex );
+        $parsed = str_replace('{{ maskared }}', $maskared, $beforeIndex);
 
-        return str_replace( '{{ beforeIndex }}', $parsed, $stub );
+        return str_replace('{{ beforeIndex }}', $parsed, $stub);
     }
 }

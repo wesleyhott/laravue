@@ -11,17 +11,21 @@ class LaravueMigrationCommand extends LaravueCommand
      *
      * @var string
      */
-    protected $signature = 'laravue:migration {model*} {--f|fields=} {--x|mxn} {--i|view : build a model based on view, not table}';
+    protected $signature = 'laravue:migration {model*} 
+                                {--f|fields=} 
+                                {--x|mxn} 
+                                {--i|view : build a model based on view, not table}
+                                {--s|schema= : determine a schema for model (postgres)}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Criação de migration nos padrões do Laravue.';
+    protected $description = 'Build migration in Laravue standart.';
 
     /**
-     * Tipo de modelo que está sendo criado.
+     * Model type that is been built.
      *
      * @var string
      */
@@ -33,85 +37,121 @@ class LaravueMigrationCommand extends LaravueCommand
      * @return mixed
      */
     public function handle()
-    { 
-        if( $this->option('mxn') ) {
+    {
+        if ($this->option('mxn')) {
             $this->setStub('/migration-mxn');
-        } else if ( $this->option('view') ) {
-            $this->setStub('/migration-view'); 
+        } else if ($this->option('view')) {
+            $this->setStub('/migration-view');
         } else {
-            $this->setStub('/migration'); 
+            $this->setStub('/migration');
         }
-        
-        $model = $this->setViewName( $this->argument('model') );
-        $path = $this->getPath( $model );
-        $this->files->put( $path, $this->buildMigration( $model ) );
 
-        $name = $this->buildName( $model );
+        $model = $this->setViewName($this->argument('model'));
+        $schema = $this->setViewName($this->option('schema'));
+        $path = $this->getPath(model: $model, schema: $schema);
+        $this->files->put($path, $this->buildMigration($model, $schema));
+
+        $parsed_model = is_array($model) ? $model :  array($model);
+        $this->infoLog($parsed_model, $schema);
     }
 
-    public function setViewName( $model ) {
-        if( is_array($model) && count( $model ) > 1 && $this->option('view') ) {
-            dd('Erro: relacionamento MxN com view não é suportado.');
+    /**
+     * Build the class with the given model.
+     *
+     * @param  string  $model
+     * @return string
+     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    protected function buildMigration($model, $schema)
+    {
+        $stub = $this->files->get($this->getStub());
+
+        if (is_array($model) && count($model) > 1) { // mxn
+            $class = $this->replaceClass($stub, $model[0] . $model[1]);
+            $table = $this->replaceTable($class, $model[0] . $model[1], $plural = false);
+            $parsedSchemaTable = $this->replaceSchemaTable($table, $schema);
+            $parsedSchemaClass = $this->replaceSchemaClass($parsedSchemaTable, $schema);
+            $parsedSoftDeletes = $this->replaceSoftDeletes($parsedSchemaClass);
+
+            return $this->replaceField($parsedSoftDeletes, $model, $schema);
         }
 
-        if( is_array($model) && count( $model ) == 1 && $this->option('view') ) {
+        $parsedModel =  is_array($model) ? $model[0] : $model;
+        $class = $this->replaceClass($stub, $parsedModel);
+        $table = $this->replaceTable($class, $parsedModel);
+        $parsedSchemaTable = $this->replaceSchemaTable($table, $schema);
+        $parsedSchemaClass = $this->replaceSchemaClass($parsedSchemaTable, $schema);
+        $parsedSoftDeletes = $this->replaceSoftDeletes($parsedSchemaClass);
+
+        return $this->replaceField($parsedSoftDeletes, $parsedModel, $schema);
+    }
+
+    public function setViewName($model)
+    {
+        if (is_array($model) && count($model) > 1 && $this->option('view')) {
+            dd('Err: MxN relationship whith view is not suported.');
+        }
+
+        if (is_array($model) && count($model) == 1 && $this->option('view')) {
             $model[0] = 'Vw' . $model[0];
         }
 
-        if( !is_array($model) && $this->option('view') ) {
+        if (!is_array($model) && $this->option('view')) {
             $model = 'Vw' . $model;
         }
 
         return $model;
     }
 
-    public function buildName( $model ) {
+    public function infoLog(array $model, ?string $schema): void
+    {
         $date = now();
         $prefix = date('Y_m_d_His');
-        if( $this->option('mxn') ) {
-            $model1 = Str::snake( $model[0] );
-            $model2 = Str::snake( $model[1] );
-            $this->info("$date - [ ${model1}_${model2} ] >> ${prefix}_create_${model1}_${model2}_table.php");
-            return Str::snake( $this->pluralize( trim($this->argument('model')[0] ) ) );
+        $parsed_schema = empty($schema) ? '' : strtolower("{$schema}_");
+
+        if ($this->option('mxn')) {
+            $model1 = Str::snake($model[0]);
+            $model2 = Str::snake($model[1]);
+            $this->info("{$date} - [ {$model1}_{$model2} ] >> {$prefix}_create_{$parsed_schema}{$model1}_{$model2}_table.php");
         }
 
-        $parsedModel = is_array( $model ) ? trim( $model[0] ) : trim( $model ); 
-        $name = Str::snake( $this->pluralize( $parsedModel ) );
-        $this->info("$date - [ $parsedModel ] >> $prefix"."_create_$name"."_table.php");
+        $parsedModel = is_array($model) ? trim($model[0]) : trim($model);
+        $name = Str::snake($this->pluralize($parsedModel));
 
-        return $name;
+        $this->info("{$date} - [ {$parsedModel} ] >> {$prefix}_create_{$parsed_schema}{$name}_table.php");
     }
 
-    protected function replaceField($stub, $model)
+    protected function replaceField($stub, $model = null, $schema = null)
     {
-        if(!$this->option('fields') && !is_array( $model ) ) {
-            return str_replace( '{{ fields }}', "// insira código aqui." , $stub );
+        if (!$this->option('fields') && !is_array($model)) {
+            return str_replace('{{ fields }}', "// insert code here.", $stub);
         }
 
-        $fields = $this->buildFields( $model );
+        $fields = $this->buildFields($model);
+        $use_soft_deletes = config('laravue.use_soft_deletes');
 
         $returnFields = "";
-        $uniqueArray = [];
-        
-        $first = true;
+        $uniqueCompositionArray = [];
+        $uniqueSoftDeleteArray = [];
+
         foreach ($fields as $key => $value) {
             $type = $this->getType($value);
             // Nullable
             $isNullable = $this->hasNullable($value);
             $nullable = $isNullable ? '->nullable()' : '';
-            $onDelete = $isNullable ? 'set null' : 'cascade';
             // String, char Size
             $size = '';
-            if( $type == 'string' || $type == 'char' ) {
+            if ($type == 'string' || $type == 'char') {
                 $isNumbers = $this->hasNumber($value);
-                if( $isNumbers !== false ) {
+                if ($isNumbers !== false) {
                     $size = ", " . $isNumbers[0];
                 }
             }
             // Decimal, double precision
-            if( $type == 'decimal' || $type == 'double' ) {
+            if ($type == 'decimal' || $type == 'double') {
                 $numbers = $this->getPrecisionNumbers($value);
-                if( $numbers !== false ) {
+                if ($numbers !== false) {
                     $size = ", " . $numbers[0] . ", " . $numbers[1];
                 } else {
                     $size = ', 10, 2';
@@ -119,11 +159,14 @@ class LaravueMigrationCommand extends LaravueCommand
             }
             // Unique 
             $isUnique = $this->isUnique($value);
-            $unique = $isUnique ? '->unique()' : '';
-            // Unique Array
-            $isUniqueArray = $this->isUniqueArray($value);
-            if ( $isUniqueArray ) {
-                array_push( $uniqueArray, $key );
+            $unique = $isUnique && !$use_soft_deletes ? '->unique()' : '';
+            if (($isUnique && $use_soft_deletes)) {
+                array_push($uniqueSoftDeleteArray, PHP_EOL . $this->tabs(3) . "\$table->unique(['$key', 'deleted_at']);");
+            }
+            // Unique Composition
+            $isUniqueComposition = $this->isUniqueComposition($value);
+            if ($isUniqueComposition) {
+                array_push($uniqueCompositionArray, $key);
             }
             // Default
             $default = $this->hasDefault($value);
@@ -131,103 +174,131 @@ class LaravueMigrationCommand extends LaravueCommand
             // Unsigned integer
             $unsigned = '';
             $isUnsigned = $this->isUnsigned($value);
-            if( $type == 'integer' && $isUnsigned) {
+            if ($type == 'integer' && $isUnsigned) {
                 $unsigned = '->unsigned()';
             }
             // CPF
-            if( $type == 'cpf' ) {
+            if ($type == 'cpf') {
                 $type = 'string';
                 $size = ", 11";
             }
             // CNPJ ou CPF/CNPJ
-            if( $type == 'cnpj' || $type == 'cpfcnpj' ) {
+            if ($type == 'cnpj' || $type == 'cpfcnpj') {
                 $type = 'string';
                 $size = ", 14";
             }
-            // Valor monetário
-            if( $type == 'monetario' ) {
+            // Monetary value
+            if ($type == 'monetario' || $type == 'monetary') {
                 $type = 'decimal';
                 $size = ", 16, 2";
             }
 
-            
-            if( $first ) {
-                $first = false;
-            } else {
-                $returnFields .= PHP_EOL;
-                $returnFields .= $this->tabs(3);
-            }
+            if ($this->isFk($key)) {
+                $referenced_table = $this->pluralize(str_replace("_id", "", $key));
 
-            if( $this->isFk( $key ) ) {
-                $referenced_table = $this->pluralize( str_replace( "_id", "", $key ) );
-
-                $returnFields .= "\$table->$type('$key')" . PHP_EOL;
-                if( $isNullable ) {
-                    $returnFields .= $this->tabs(4) . $nullable . PHP_EOL;
-                } else if ( $isUnique ) {
-                    $returnFields .= $this->tabs(4) . $unique . PHP_EOL;
+                $returnFields .= PHP_EOL . $this->tabs(3) . "\$table->foreignId('$key')";
+                if ($isNullable) {
+                    $returnFields .=  PHP_EOL . $this->tabs(4) . $nullable;
                 }
-                $returnFields .= $this->tabs(4) . "->unsigned();" . PHP_EOL;
-                $returnFields .= $this->tabs(3) . "\$table->foreign('$key')" . PHP_EOL;
-                $returnFields .= $this->tabs(4) . "->references('id')" . PHP_EOL;
-                $returnFields .= $this->tabs(4) . "->on('$referenced_table')" . PHP_EOL;
-                $returnFields .= $this->tabs(4) . "->onDelete('$onDelete');";
+                $parsedSchema = empty($schema) ? '' : strtolower("{$schema}.");
+                $returnFields .=  PHP_EOL . $this->tabs(4) . "->constrained('{$parsedSchema}{$referenced_table}');";
             } else {
-                if( $isNullable && $isUnique ) {
-                    $returnFields .= "\$table->$type('$key'$size)" . PHP_EOL;
-                    $returnFields .= $this->tabs(4) . "${nullable}" . PHP_EOL;
-                    if( $isUnsigned ) {
-                        $returnFields .= $this->tabs(4) . "${unsigned}" . PHP_EOL;
+                if ($isNullable && $isUnique) {
+                    $returnFields .= PHP_EOL . $this->tabs(3) . "\$table->$type('$key'$size)";
+                    $returnFields .= $use_soft_deletes ? "{$nullable}" : PHP_EOL . $this->tabs(4) . "{$nullable}";
+                    if ($isUnsigned) {
+                        $returnFields .= PHP_EOL . $this->tabs(4) . "{$unsigned}";
                     }
-                    $returnFields .= $this->tabs(4) . "${unique};";
-                } else if( $default !== false && $isUnique ) {
-                    $returnFields .= "\$table->$type('$key'$size)" . PHP_EOL;
-                    $returnFields .= $this->tabs(4) . "${unique}";
-                    if( $isUnsigned ) {
-                        $returnFields .=  PHP_EOL . $this->tabs(4) . "${unsigned}";
+                    $returnFields .= $use_soft_deletes ? "{$unique};" : PHP_EOL . $this->tabs(4) . "{$unique};";
+                } else if ($default !== false && $isUnique) {
+                    $returnFields .= PHP_EOL . $this->tabs(3) . "\$table->$type('$key'$size)";
+                    $returnFields .= $use_soft_deletes ? "{$unique}" : PHP_EOL . $this->tabs(4) . "{$unique}";
+                    if ($isUnsigned) {
+                        $returnFields .=  PHP_EOL . $this->tabs(4) . "{$unsigned}";
                     }
-                    $tabulation = $default == '' ? '' : PHP_EOL . $this->tabs(4);
-                    $returnFields .=  $tabulation . "${default};";
+                    // $tabulation = $default == '' ? '' : PHP_EOL . $this->tabs(4);
+                    $returnFields .= $use_soft_deletes ? "{$default};" : PHP_EOL . $this->tabs(4) . "{$default};";
                 } else {
-                    $returnFields .= "\$table->$type('$key'$size)${nullable}${unique}${default}${unsigned};";
-                } 
+                    $returnFields .= PHP_EOL . $this->tabs(3) . "\$table->$type('$key'$size){$nullable}{$unique}{$default}{$unsigned};";
+                }
             }
         }
-        if( count( $uniqueArray ) > 0 ){
-            $uniques = implode("','",$uniqueArray);
+
+        // Uniques
+        $has_unique_composition = count($uniqueCompositionArray) > 0;
+        $has_unique_soft_delete = count($uniqueSoftDeleteArray) > 0;
+        if ($has_unique_composition || $has_unique_soft_delete) {
+            $returnFields .= PHP_EOL . PHP_EOL . $this->tabs(3) . "// Uniques";
+        }
+        foreach ($uniqueSoftDeleteArray as $uniqueSoftDelete) {
+            $returnFields .= $uniqueSoftDelete;
+        }
+        if ($has_unique_composition) {
+            if ($use_soft_deletes) {
+                array_push($uniqueCompositionArray, 'deleted_at');
+            }
+            $uniques = implode("','", $uniqueCompositionArray);
             $returnFields .= PHP_EOL . $this->tabs(3) . "\$table->unique(['$uniques']);";
         }
 
-        if( is_array( $model ) ) {
-            $key1 = Str::snake( $model[0] );
-            $key2 = Str::snake( $model[1] );
+        if (is_array($model)) {
+            $key1 = Str::snake($model[0]);
+            $key2 = Str::snake($model[1]);
             $returnFields .= PHP_EOL;
-            $returnFields .= $this->tabs(3) . "\$table->primary(['${key1}_id', '${key2}_id'], '${key1}_${key2}_${key1}_id_${key2}_id_primary');";
+            $returnFields .= $this->tabs(3) . "\$table->primary(['{$key1}_id', '{$key2}_id'], '{$key1}_{$key2}_{$key1}_id_{$key2}_id_primary');";
         }
 
-        return str_replace( '{{ fields }}', $returnFields , $stub );
+        return str_replace('{{ fields }}', $returnFields, $stub);
     }
 
-    public function buildFields( $model ) {
+    public function buildFields($model)
+    {
         $model1 = $model2 = "";
         $keys = array();
-        $allFields = $fields = $this->getFieldsArray( $this->option('fields') );
+        $allFields = $fields = $this->getFieldsArray($this->option('fields'));
 
-        if( is_array( $model ) ) {
-            $key1 = Str::snake( $model[0] ) . "_id";
-            $model1 = array( $key1 => 'i' );
-            $key2 = Str::snake( $model[1] ) . "_id";
-            $model2 = array( $key2 => 'i' );
+        if (is_array($model)) {
+            $key1 = Str::snake($model[0]) . "_id";
+            $model1 = array($key1 => 'bi');
+            $key2 = Str::snake($model[1]) . "_id";
+            $model2 = array($key2 => 'bi');
 
-            if( !array_key_exists( $key1, $fields ) && !array_key_exists( $key2, $fields ) ) {
+            if (!array_key_exists($key1, $fields) && !array_key_exists($key2, $fields)) {
                 $allFields = $model1 + $model2 + $fields;
-            } else if ( !array_key_exists( $key1, $fields ) ) {
+            } else if (!array_key_exists($key1, $fields)) {
                 $allFields = $model1 + $fields;
-            } else if ( !array_key_exists( $key2, $fields ) ) {
+            } else if (!array_key_exists($key2, $fields)) {
                 $allFields = $model2 + $fields;
             }
         }
 
         return $allFields;
+    }
+
+    /**
+     * Replace the Soft Deletes in the given stub.
+     *
+     * @param  string  $stub
+     * @return string
+     */
+    protected function replaceSoftDeletes(string $stub): string
+    {
+        $use_soft_deletes = config('laravue.use_soft_deletes');
+        $softDelete = $use_soft_deletes
+            ? PHP_EOL . $this->tabs(3) . '$table->softDeletes();'
+            : '';
+        return str_replace('{{ softDeletes }}', $softDelete, $stub);
+    }
+
+    /**
+     * Replace the Schema Class in the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $model
+     * @return string
+     */
+    protected function replaceSchemaClass($stub, $schema)
+    {
+        return str_replace('{{ schemaClass }}', strtolower($schema), $stub);
     }
 }

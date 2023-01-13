@@ -29,16 +29,16 @@ class LaravueFrontIndexCommand extends LaravueCommand
     {
         $this->setStub('/front/index');
         $argumentModel = $this->argument('model');
-        $model = is_array( $argumentModel ) ? trim( $argumentModel[0] ) : trim( $argumentModel ); 
+        $model = is_array($argumentModel) ? trim($argumentModel[0]) : trim($argumentModel);
         $date = now();
 
         $path = $this->getFrontPath($model, "Index");
-        $this->files->put( $path, $this->buildModel($model) );
+        $this->files->put($path, $this->buildModel($model));
 
         $this->info("$date - [ $model ] >> Index.vue");
     }
 
-    protected function replaceField($stub, $model)
+    protected function replaceField($stub, $model = null, $schema = null)
     {
         $fieldSize = 330;
         $default = "{" . PHP_EOL;
@@ -47,46 +47,46 @@ class LaravueFrontIndexCommand extends LaravueCommand
         $default .=  $this->tabs(3) . "minWidth: $fieldSize" . PHP_EOL;
         $default .=  $this->tabs(2) . "},";
 
-        if(!$this->option('fields')){
-            return str_replace( '{{ fields }}', $default , $stub );
+        if (!$this->option('fields')) {
+            return str_replace('{{ fields }}', $default, $stub);
         }
 
-        $fields = $this->getFieldsArray( $this->option('fields') );
-        if( count($fields) > 0 ) {
-            $rest = $fieldSize % ( count($fields) );
-            $fieldSize = floor( $fieldSize / ( count($fields) ) );
+        $fields = $this->getFieldsArray($this->option('fields'));
+        if (count($fields) > 0) {
+            $rest = $fieldSize % (count($fields));
+            $fieldSize = floor($fieldSize / (count($fields)));
             $default = '';
-        } 
+        }
 
         $returnFields = '';
         $first = true;
         foreach ($fields as $key => $value) {
-            $label = $this->getTitle( $key );
+            $label = $this->getTitle($key);
             $minWidth = $fieldSize + $rest;
-            if( $first ) {
+            if ($first) {
                 $first = false;
             } else {
                 $returnFields .= PHP_EOL . $this->tabs(4);
             }
 
             $propKey = $key;
-            if( $this->isFk( $key ) ) {
-                $keyFields = $this->getModelFieldsFromKey( $key );
-                $modellabel = $this->getSelectLabel( $keyFields );
-                $propKey = substr( $key, 0, -3 ) . '.' . $modellabel;
+            if ($this->isFk($key)) {
+                $keyFields = $this->getModelFieldsFromKey($key);
+                $modellabel = $this->getSelectLabel($keyFields);
+                $propKey = substr($key, 0, -3) . '.' . $modellabel;
             }
-            
+
             $returnFields .= "{" . PHP_EOL;
             $returnFields .= $this->tabs(5) . "prop: \"$propKey\"," . PHP_EOL;
             $returnFields .= $this->tabs(5) . "label: \"$label\"," . PHP_EOL;
             $returnFields .= $this->tabs(5) . "minWidth: $minWidth," . PHP_EOL;
-            if( $this->isBoolean( $value ) ) {
+            if ($this->isBoolean($value)) {
                 $returnFields .= $this->tabs(5) . "type: \"bit\"," . PHP_EOL;
             }
             $returnFields .= $this->tabs(4) . "},";
             $rest = 0;
         }
 
-        return str_replace( '{{ fields }}', $returnFields , $stub );
+        return str_replace('{{ fields }}', $returnFields, $stub);
     }
 }

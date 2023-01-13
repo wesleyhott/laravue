@@ -12,7 +12,10 @@ class LaravueApiCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'laravue:api {model*} {--f|fields=} {--i|view : build a model based on view, not table}';
+    protected $signature = 'laravue:api {model*} 
+                                {--f|fields=} 
+                                {--i|view : build a model based on view, not table}
+                                {--s|schema= : determine a schema for model (postgres)}';
 
     /**
      * The console command description.
@@ -32,8 +35,12 @@ class LaravueApiCommand extends Command
         $this->createSeeder();
         $this->createDataSeeder();
         $this->createModel();
+        $this->createStoreRequest();
+        $this->createUpdateRequest();
+        $this->createResource();
+        $this->createService();
         $this->createController();
-        $this->createReport();
+        // $this->createReport();
         $this->createRoute();
         $this->createPermission();
     }
@@ -47,6 +54,7 @@ class LaravueApiCommand extends Command
     {
         $this->call('laravue:migration', [
             'model' => $this->argument('model'),
+            '--schema' =>  $this->option('schema'),
             '--fields' =>  $this->option('fields'),
             '--view' =>  $this->option('view'),
         ]);
@@ -61,6 +69,7 @@ class LaravueApiCommand extends Command
     {
         $this->call('laravue:seed', [
             'model' => $this->argument('model'),
+            '--schema' =>  $this->option('schema'),
             '--fields' =>  $this->option('fields'),
             '--view' =>  $this->option('view'),
         ]);
@@ -74,7 +83,79 @@ class LaravueApiCommand extends Command
     protected function createDataSeeder()
     {
         $this->call('laravue:dbseeder', [
-            'model' => $this->argument('model')[0],
+            'model' => $this->argument('model'),
+        ]);
+    }
+
+    /**
+     * Create the entry model.
+     *
+     * @return void
+     */
+    protected function createModel()
+    {
+        $this->call('laravue:model', [
+            'model' => $this->argument('model'),
+            '--schema' =>  $this->option('schema'),
+            '--fields' =>  $this->option('fields'),
+            '--view' =>  $this->option('view'),
+        ]);
+    }
+
+    /**
+     * Creates a Store Request for the entry model.
+     *
+     * @return void
+     */
+    protected function createStoreRequest()
+    {
+        $this->call('laravue:request', [
+            'model' => $this->argument('model'),
+            '--schema' =>  $this->option('schema'),
+            '--fields' =>  $this->option('fields'),
+            '--store' =>  true,
+        ]);
+    }
+
+    /**
+     * Creates a Update Request for the entry model.
+     *
+     * @return void
+     */
+    protected function createUpdateRequest()
+    {
+        $this->call('laravue:request', [
+            'model' => $this->argument('model'),
+            '--schema' =>  $this->option('schema'),
+            '--fields' =>  $this->option('fields'),
+            '--update' =>  true,
+        ]);
+    }
+
+    /**
+     * Creates a Resource for the entry model.
+     *
+     * @return void
+     */
+    protected function createResource()
+    {
+        $this->call('laravue:resource', [
+            'model' => $this->argument('model'),
+            '--schema' =>  $this->option('schema'),
+            '--fields' =>  $this->option('fields'),
+        ]);
+    }
+
+    /**
+     * Creates a Resource for the entry model.
+     *
+     * @return void
+     */
+    protected function createService()
+    {
+        $this->call('laravue:service', [
+            'model' => $this->argument('model'),
+            '--schema' =>  $this->option('schema'),
         ]);
     }
 
@@ -86,22 +167,8 @@ class LaravueApiCommand extends Command
     protected function createController()
     {
         $this->call('laravue:controller', [
-            'model' => $this->argument('model')[0],
-            '--fields' =>  $this->option('fields'),
-        ]);
-    }
-
-    /**
-     * Cria o controller para o modelo.
-     *
-     * @return void
-     */
-    protected function createModel()
-    {
-        $this->call('laravue:model', [
-            'model' => $this->argument('model')[0],
-            '--fields' =>  $this->option('fields'),
-            '--view' =>  $this->option('view'),
+            'model' => $this->argument('model'),
+            '--schema' =>  $this->option('schema'),
         ]);
     }
 
@@ -113,7 +180,7 @@ class LaravueApiCommand extends Command
     protected function createReport()
     {
         $this->call('laravue:report', [
-            'model' => $this->argument('model')[0],
+            'model' => $this->argument('model'),
             '--fields' =>  $this->option('fields'),
         ]);
     }
@@ -126,7 +193,7 @@ class LaravueApiCommand extends Command
     protected function createRoute()
     {
         $this->call('laravue:route', [
-            'model' => $this->argument('model')[0],
+            'model' => $this->argument('model'),
         ]);
     }
 
@@ -138,7 +205,7 @@ class LaravueApiCommand extends Command
     protected function createPermission()
     {
         $this->call('laravue:permission', [
-            'model' => $this->argument('model')[0],
+            'model' => $this->argument('model'),
             '--view' =>  $this->option('view'),
         ]);
     }

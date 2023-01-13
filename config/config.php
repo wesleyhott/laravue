@@ -1,34 +1,44 @@
 <?php
 
 return [
+    /**
+     * Language
+     * 
+     * Determines the language for generation rules.
+     * Supported languages: en, pt-BR
+     */
+    'language' => 'en',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Server URI index
-    |--------------------------------------------------------------------------
-    |
-    | Server URI index determina em qual posição está o nome da rota que é o 
-    | plural do modelo. Esse nome é usado para determinar as permissões do 
-    | usuário no sistema.
-    | Ex: http://localhost/laravue/api/api/users Para o modelo User, o 
-    | SERVER_URI_INDEX é 3: 0 => "laravue"; 1 => "api"; 2 => "api"; 3 => "users"
-    */
+    /**
+     * Use Soft Deletes
+     * 
+     * Determines if models will be generated with soft deltes
+     */
+    'use_soft_deletes' => false,
 
-    'uri_index' => env('SERVER_URI_INDEX', 3),
+    /**
+     * Form Request Connection
+     * 
+     * When generating unique rules for table in a specific schema (Like Postgres schemas),
+     * Laravel demands to wirte explicit connection for this schema table.
+     * Example: 'required|unique:connection_name.schema_name.table_name,column,NULL,id',
+     */
+    'form_request_connection' => '',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Accentuation
-    |--------------------------------------------------------------------------
-    | Por não existir regras sem exceções no Português para acentuação gráfica,
-    | precisamos fazer manualmente. De tal forma que é necessário ensinar ao  
-    | Laravue as acentuações para que ele gere as acentuações corretamente. 
-    | Para tanto, basta inserir a palavra sem aentuação e logo após a palavra
-    | acentuada. Precisamos fazer tanto para o singula quanto para o plural.
-    | Outra alternativa é usar o comando:
-    |     php artisan laravue:learn PalavraSemAcento PalavraAcentuada -a
-    */
-
+    /**
+     * Accentuation
+     * 
+     * As there are no rules without exceptions in Portuguese for graphic 
+     * accentuation, we need to do it manually. In such a way that it is 
+     * necessary to teach Laravue the graphic accents so that it generates the 
+     * accents correctly. To do so, just insert the word without accentuation and 
+     * right after the accented word. We need to do this for both the singular and 
+     * the plural.
+     * Another alternative is to use the command:
+     * 
+     * php artisan laravue:learn AccentlessWord AccentedWord -a
+     * 
+     */
     'accentuation' => [
         'Acordao' => 'Acórdao',
         'Acordaos' => 'Acórdaos',
@@ -61,22 +71,21 @@ return [
         'Tacitas' => 'Tácitas',
         'Usuario' => 'Usuário',
         'Usuarios' => 'Usuários',
-		// {{ laravue-insert:accentuation }}
+        // {{ laravue-insert:accentuation }}
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Plural
-    |--------------------------------------------------------------------------
-    | Por não existir regras sem exceções no Português para pluralização,
-    | precisamos fazer manualmente. De tal forma que é necessário ensinar ao  
-    | Laravue as exeções para que ele gere as palavras corretamente. 
-    | Para tanto, basta inserir a palavra no singular *** sem aentuação *** e
-    | logo após a palavra no plural, também sem acentuação.
-    | Outra alternativa é usar o comando:
-    |     php artisan laravue:learn PalavraSingularSemAcento PalavraPluralSemAcento -p
-    */
-
+    /**
+     * Plural
+     * 
+     * Because there are no rules without exceptions in Portuguese for pluralization,
+     * we need to do it manually. In such a way that it is necessary to teach the
+     * Laravue how to fix the exceptions, so it generates the words correctly.
+     * To do so, just insert the word in the singular - without accentuation - and
+     * right after the word in the plural, also without accentuation.
+     * Another alternative is to use the command:
+     * 
+     * php artisan laravue:learn SingularNotAccentedWord PluralNotAccentedWord -p
+     */
     'plural' => [
         'Acordao' => 'Acordaos',
         'Cidadao' => 'Cidadaos',
@@ -87,21 +96,35 @@ return [
         'Missil' => 'Misseis',
         'Reptil' => 'Repteis',
         'User' => 'Users',
-		// {{ laravue-insert:plural }}
+        'Roof' => 'Roofs',
+        'Belief' => 'Beliefs',
+        'Chef' => 'Chefs',
+        'Chief' => 'Chiefs',
+        'Photo' => 'Photos',
+        'Child' => 'Children',
+        'Man' => 'Men',
+        'Woman' => 'women',
+        'Goose' => 'Geese',
+        'Person' => 'People',
+        'Tooth' => 'Teeth',
+        'Tooth' => 'Teeth',
+        'Foot' => 'Feet',
+        'Mouse' => 'Mice',
+        // {{ laravue-insert:plural }}
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Select Label
-    |--------------------------------------------------------------------------
-    | Quando de um relacionamento 1xN ou MxN, é gerado um select no formulário.
-    | O Laravue procura possíveis campos que podem servir de label para melhor 
-    | representar o modelo. Ele procura na listagem abaixo e retorna a primeira
-    | ocorrência encontrada. Pode-se trocar a ordem conforme necessidade.
-    | Outra alternativa é usar o comando:
-    |     php artisan laravue:learn Label -s
-    */
-
+    /**
+     * Laravue select Label
+     * 
+     * When a 1xN or MxN relationship is created, a select component (laravue-select) 
+     * is generated in the form.
+     * Laravue looks for possible fields that can serve as a label to better 
+     * represent the model. It searches the listing below and returns the first
+     * occurrence found. You can change the order as needed.
+     * Another alternative is to use the command:
+     * 
+     * php artisan laravue:learn Label -s
+     */
     'select_label' => [
         'label',
         'name',
@@ -117,6 +140,6 @@ return [
         'uf',
         'code',
         'codigo',
-		// {{ laravue-insert:selectlabel }}
+        // {{ laravue-insert:selectlabel }}
     ],
 ];

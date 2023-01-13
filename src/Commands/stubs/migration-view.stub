@@ -13,7 +13,7 @@ class Create{{ class }}Table extends Migration
      */
     public function up()
     {
-        Schema::create('{{ table }}', function (Blueprint $table) {
+        Schema::create('{{ schemaTable }}{{ table }}', function (Blueprint $table) {
             $table->increments('id');
             {{ fields }}
         });
@@ -26,6 +26,6 @@ class Create{{ class }}Table extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('{{ table }}');
+        Schema::dropIfExists('{{ schemaTable }}{{ table }}');
     }
 }

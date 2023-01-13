@@ -105,19 +105,24 @@ class LaravueCommand extends Command
      * @param  string  $ext file extension
      * @return string
      */
-    protected function getPath($model = '', $ext = 'php')
+    protected function getPath($model = '', $ext = 'php', $schema = '')
     {
+        $string_model = is_array($model) ? $model[0] :  $model;
         $path = '';
+        $schemaPath = '';
+        if ($schema != '') {
+            $schemaPath = "$schema/";
+        }
         $currentDirectory =  getcwd();
         switch ($this->type) {
             case 'model':
-                $path = $this->makePath("Models/$model.$ext");
+                $path = $this->makePath("Models/{$schemaPath}$string_model.$ext");
                 break;
             case 'controller':
-                $path = $this->makePath("Http/Controllers/${model}Controller.$ext");
+                $path = $this->makePath("Http/Controllers/{$schemaPath}{$string_model}Controller.$ext");
                 break;
             case 'report':
-                $path = $this->makePath("Http/Controllers/Reports/${model}ReportController.$ext");
+                $path = $this->makePath("Http/Controllers/Reports/{$schemaPath}{$string_model}ReportController.$ext");
                 break;
             case 'route':
                 $path = $this->makePath("routes/api.php", true);
@@ -127,27 +132,43 @@ class LaravueCommand extends Command
                 break;
             case 'migration':
                 $prefix = date('Y_m_d_His');
+                $parsed_schema = empty($schema) ? '' : strtolower("{$schema}_");
                 if (is_array($model) && count($model) > 1) {
                     $model1 = Str::snake($model[0]);
                     $model2 = Str::snake($model[1]);
-                    $path = $this->makePath("database/migrations/${prefix}_create_${model1}_${model2}_table.$ext", true);
+                    $path = $this->makePath("database/migrations/{$prefix}_create_{$parsed_schema}{$model1}_{$model2}_table.{$ext}", true);
                 } else {
-                    $model = is_array($model) ? Str::snake($model[0]) : Str::snake($model);
-                    $path = $this->makePath("database/migrations/${prefix}_create_${model}_table.$ext", true);
+                    $model = is_array($model) ? Str::snake($this->pluralize($model[0])) : Str::snake($this->pluralize($model));
+                    $path = $this->makePath("database/migrations/{$prefix}_create_{$parsed_schema}{$model}_table.{$ext}", true);
                 }
                 break;
             case 'seed':
                 if (is_array($model) && count($model) > 1) {
                     $model1 = $model[0];
                     $model2 = $model[1];
-                    $path = $this->makePath("database/seeders/${model1}${model2}Seeder.php", true);
+                    $path = $this->makePath("database/seeders/{$schemaPath}{$model1}{$model2}Seeder.php", true);
                 } else {
-                    $parsedModel = is_array($model) ? $model[0] : $model;
-                    $path = $this->makePath("database/seeders/${parsedModel}Seeder.php", true);
+                    $path = $this->makePath("database/seeders/{$schemaPath}{$string_model}Seeder.php", true);
                 }
                 break;
             case 'seeder':
                 $path = $this->makePath("database/seeders/DatabaseSeeder.php", true);
+                break;
+            case 'request':
+                $type = '';
+                if ($this->option('store')) {
+                    $type = 'Store';
+                }
+                if ($this->option('update')) {
+                    $type = 'Update';
+                }
+                $path = $this->makePath("Http/Requests/{$schemaPath}{$type}{$string_model}Request.{$ext}");
+                break;
+            case 'resource':
+                $path = $this->makePath("Http/Resources/{$schemaPath}{$string_model}Resource.{$ext}");
+                break;
+            case 'service':
+                $path = $this->makePath("Services/{$schemaPath}{$string_model}Service.{$ext}");
                 break;
             case 'front-modal':
                 $paths = explode("/", str_replace('\\', '/', $currentDirectory));
@@ -175,7 +196,7 @@ class LaravueCommand extends Command
                 }
                 break;
             default:
-                $path = $this->makePath($this->fileBuildPath('Models', "$model.$ext"));
+                $path = $this->makePath($this->fileBuildPath('Models', "{$string_model}.{$ext}"));
         }
 
         return $path;
@@ -336,31 +357,67 @@ class LaravueCommand extends Command
                 return substr($singular, 0, -3) . 'sers';
         }
 
+
+        $lang = config('laravue.language');
         $ending_letters = substr($singular, -2);
-        switch ($ending_letters) {
-            case 'ao':
-                return substr($singular, 0, -2) . 'oes';
-            case 'al':
-                return substr($singular, 0, -2) . 'ais';
-            case 'el':
-                return substr($singular, 0, -2) . 'eis';
-            case 'il':
-                return substr($singular, 0, -2) . 'is';
-            case 'ol':
-                return substr($singular, 0, -2) . 'ois';
+        if ($lang === 'pt-BR') {
+            switch ($ending_letters) {
+                case 'ao':
+                    return substr($singular, 0, -2) . 'oes';
+                case 'al':
+                    return substr($singular, 0, -2) . 'ais';
+                case 'el':
+                    return substr($singular, 0, -2) . 'eis';
+                case 'il':
+                    return substr($singular, 0, -2) . 'is';
+                case 'ol':
+                    return substr($singular, 0, -2) . 'ois';
+            }
+        }
+        if ($lang === 'en') {
+            switch ($ending_letters) {
+                case 'ss':
+                case 'sh':
+                case 'ch':
+                    return $singular . 'es';
+                case 'fe':
+                    return substr($singular, 0, -1) . 'ves';
+                case 'io':
+                case 'oo':
+                    return $singular . 's';
+                case 'us':
+                    return substr($singular, 0, -2) . 'i';
+            }
         }
 
         $last_letter = strtolower($singular[strlen($singular) - 1]);
-        switch ($last_letter) {
-            case 'm':
-                return substr($singular, 0, -1) . 'ns';
-            case 'y':
-                return substr($singular, 0, -1) . 'ies';
-            case 's':
-            case 'r':
-                return $singular . 'es';
-            default:
-                return $singular . 's';
+        if ($lang === 'pt-BR') {
+            switch ($last_letter) {
+                case 'm':
+                    return substr($singular, 0, -1) . 'ns';
+                case 'y':
+                    return substr($singular, 0, -1) . 'ies';
+                case 's':
+                case 'r':
+                    return $singular . 'es';
+                case 'f':
+                    return substr($singular, 0, -1) . 'ves';
+                default:
+                    return $singular . 's';
+            }
+        }
+        if ($lang === 'en') {
+            switch ($last_letter) {
+                case 's':
+                case 'x':
+                case 'z':
+                case 'o':
+                    return $singular . 'es';
+                case 'y':
+                    return substr($singular, 0, -1) . 'ies';
+                default:
+                    return $singular . 's';
+            }
         }
     }
 
@@ -405,9 +462,10 @@ class LaravueCommand extends Command
      *
      * @param  string  $stub
      * @param  string  $model
+     * @param  string  $schema
      * @return string
      */
-    protected function replaceField($stub, $model)
+    protected function replaceField($stub, $model = null, $schema = null)
     {
         return str_replace('{{ fields }}', "", $stub);
     }
@@ -420,7 +478,7 @@ class LaravueCommand extends Command
      * @param  string  $fields
      * @return string $stub
      */
-    protected function replaceRelation($stub, $model, $fields)
+    protected function replaceRelation($stub, $model, $fields, $schema)
     {
         // {{ laravue-insert:relationship }} must be implemented
         return $stub;
@@ -468,6 +526,62 @@ class LaravueCommand extends Command
     }
 
     /**
+     * Replace the Schema Namespace in the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $model
+     * @return string
+     */
+    protected function replaceSchemaNamespace($stub, $schema)
+    {
+        if (empty($schema)) {
+            return str_replace('{{ schemaNamespace }}', "", $stub);
+        }
+        return str_replace('{{ schemaNamespace }}', "\\" . ucfirst($schema), $stub);
+    }
+
+    /**
+     * Replace the Schema Table in the given stub.
+     * Used in migration and seeder
+     *
+     * @param  string  $stub
+     * @param  string  $model
+     * @return string
+     */
+    protected function replaceSchemaTable($stub, $schema)
+    {
+        $replacement = empty($schema) ? '' : strtolower("$schema.");
+        return str_replace('{{ schemaTable }}', $replacement, $stub);
+    }
+
+    /**
+     * Replace the Schema Route in the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $model
+     * @return string
+     */
+    protected function replaceSchemaRoute($stub, $schema)
+    {
+        return str_replace('{{ schemaRoute }}', strtolower($schema), $stub);
+    }
+
+    /**
+     * Replace the Schema Namespace in the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $model
+     * @return string
+     */
+    protected function replaceModelVar($stub, $model)
+    {
+        if (empty($model)) {
+            return str_replace('{{ modelVar }}', "", $stub);
+        }
+        return str_replace('{{ modelVar }}', Str::snake($model), $stub);
+    }
+
+    /**
      * Replace the title for the given stub.
      *
      * @param  string  $stub
@@ -489,72 +603,23 @@ class LaravueCommand extends Command
      *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    protected function buildModel($model, $fields = null)
+    protected function buildModel($model, $fields = null, $schema = null)
     {
+        $stub = $this->files->get($this->getStub());
+
         if (is_array($model)) {
-            return $this->replaceRelation($table, $model, $fields);
+            return $this->replaceRelation($stub, $model, $fields, $schema);
         }
 
-        $stub = $this->files->get($this->getStub());
         $isPlural = true;
         $title = $this->replaceTitle($stub, $model, $isPlural);
         $route = $this->replaceRoute($title, $model);
         $field = $this->replaceField($route, $model);
         $table = $this->replaceTable($field, $model);
-        $relation = $this->replaceRelation($table, $model, $fields);
+        $relation = $this->replaceRelation($table, $model, $fields, $schema);
+        $parsedSchema = $this->replaceSchemaNamespace($relation, $schema);
 
-        return $this->replaceModel($relation, $model);
-    }
-
-    /**
-     * Build the class with the given model.
-     *
-     * @param  string  $model
-     * @return string
-     *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
-    protected function buildMigration($model)
-    {
-        $stub = $this->files->get($this->getStub());
-
-        if (is_array($model) && count($model) > 1) { // mxn
-            $class = $this->replaceClass($stub, $model[0] . $model[1]);
-            $table = $this->replaceTable($class, $model[0] . $model[1], $plural = false);
-            return $this->replaceField($table, $model);
-        }
-
-        $parsedModel =  is_array($model) ? $model[0] : $model;
-        $class = $this->replaceClass($stub, $parsedModel);
-        $table = $this->replaceTable($class, $parsedModel);
-
-        return $this->replaceField($table, $parsedModel);
-    }
-
-    /**
-     * Build the class with the given model.
-     *
-     * @param  string  $model
-     * @return string
-     *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
-    protected function buildSeed($model)
-    {
-        $stub = $this->files->get($this->getStub());
-
-        if ($this->option('mxn')) {
-            $parsedModel =  is_array($model) ? $model[0] . $model[1] : $model;
-            $class = $this->replaceClass($stub, $parsedModel);
-            $table = $this->replaceTable($class, $parsedModel, $plural = false);
-            return $this->replaceField($table, $model);
-        }
-
-        $parsedModel =  is_array($model) ? $model[0] : $model;
-        $class = $this->replaceClass($stub, $parsedModel);
-        $table = $this->replaceTable($class, $parsedModel);
-
-        return $this->replaceField($table, $parsedModel);
+        return $this->replaceModel($parsedSchema, $model);
     }
 
     /**
@@ -598,8 +663,16 @@ class LaravueCommand extends Command
         );
         $arr_fileds = [];
         foreach (explode(",", $pureOptions) as $field) {
-            list($key, $value) = explode(":", $field);
-            $arr_fileds[$key] = $value;
+            // Foreing Keys are big integer by default
+            $hasType = str_contains($field, ':');
+            if ($hasType) {
+                list($key, $value) = explode(":", $field);
+                $arr_fileds[$key] = $value;
+            } else {
+                // Fields are string by default
+                $isFK = str_contains($field, '_id');
+                $arr_fileds[$field] = $isFK ? 'bi' : 's';
+            }
         }
 
         return $arr_fileds;
@@ -621,6 +694,7 @@ class LaravueCommand extends Command
         $default = $this->hasDefault($field);
 
         if ($default !== false) {
+            /** @var string $default */
             $field = str_replace($default, '', $field);
         }
 
@@ -702,7 +776,7 @@ class LaravueCommand extends Command
         $options = $this->getOptionsArray($field);
         $unique = false;
         foreach ($options as $option) {
-            if ((strpos($option, 'u') !== false) && (strpos($option, '*') === false)) {
+            if ((strpos($option, 'u') !== false) && (strpos($option, 'uc') === false)) {
                 $unique = true;
             }
         }
@@ -715,15 +789,15 @@ class LaravueCommand extends Command
      * @param  string  $field
      * @return boolean uniqueArray
      */
-    protected function isUniqueArray($field)
+    protected function isUniqueComposition($field)
     {
-        // default may contain letter u*
+        // default may contain letter uc
         $field = $this->dropDefault($field);
 
         $options = $this->getOptionsArray($field);
         $uniqueArray = false;
         foreach ($options as $option) {
-            if (strpos($option, 'u*') !== false) {
+            if (strpos($option, 'uc') !== false) {
                 $uniqueArray = true;
             }
         }
@@ -858,7 +932,9 @@ class LaravueCommand extends Command
                 return 'timestamp';
             case 'tt':
                 return 'timestamps';
-            case 'vm':
+            case 'tx':
+                return 'text';
+            case 'mv':
                 return 'monetario';
             default:
                 return 'string';
@@ -984,24 +1060,26 @@ class LaravueCommand extends Command
      * @param  string  File with relative app path
      * @return string
      */
-    protected function makePath($file, $outsideApp = false)
+    protected function makePath($file, $outside_app = false)
     {
         $folders = "";
+        $folder_separator = DIRECTORY_SEPARATOR;
         if (strpos($file, "/") !== false) {
             $folders = explode("/", $file);
             $file = array_pop($folders);
 
-            $folders = "/" . implode("/", $folders);
+            $folders = $folder_separator . implode($folder_separator, $folders);
         }
 
-        $currentDirectory =  getcwd();
-        $backPath = $outsideApp ? $currentDirectory . $folders : "$currentDirectory/app$folders";
 
-        if (!is_dir($backPath)) {
-            mkdir($backPath, 0777, true);
+        $current_directory =  getcwd();
+        $back_path = $outside_app ? $current_directory . $folders : "{$current_directory}{$folder_separator}app{$folders}";
+
+        if (!is_dir($back_path)) {
+            mkdir($back_path, 0777, true);
         }
 
-        return "$backPath/$file";
+        return "{$back_path}{$folder_separator}{$file}";
     }
 
     protected function accentuation($word)
@@ -1055,7 +1133,7 @@ class LaravueCommand extends Command
     {
         $modelFields = [];
         $controllerName = Str::studly(substr($key, 0, -3)) . "Controller.php";
-        $path = $this->makePath("Http/Controllers/${controllerName}");
+        $path = $this->makePath("Http/Controllers/{$controllerName}");
 
         $controllerFile = @fopen($path, "r");
         if ($controllerFile) {
@@ -1078,5 +1156,63 @@ class LaravueCommand extends Command
         }
 
         return $modelFields;
+    }
+
+    /**
+     * Returns language setted on config/laravue.php.
+     * Ex: user_id, returns fields from model User.
+     *
+     * @return string language pt-BR or en
+     */
+    protected function getLanguage()
+    {
+        return config('laravue.language');
+    }
+
+    /**
+     * Returns true is setted Brazilian Portuguese language, false otherwise.
+     *
+     * @return boolean isPtBR
+     */
+    protected function isPtBRLanguage()
+    {
+        return $this->getLanguage() === 'pt-BR';
+    }
+
+    /**
+     * Returns true is setted EUA language, false otherwise.
+     *
+     * @return boolean isEUA
+     */
+    protected function isEnLanguage()
+    {
+        return $this->getLanguage() === 'en';
+    }
+
+    /**
+     * Returns a string that contais de biggest number possible for a key decimal value..
+     * Example: for decimal('amount', 6, 2) we have key: amount, value: 6-2. Then the
+     * biggest possible number is 9999.99
+     * @return string biggest_number
+     */
+    protected function decimalMaxSize(string $value): string
+    {
+        $numbers = $this->getPrecisionNumbers($value);
+
+        if ($numbers !== false) {
+            $base = '';
+            for ($b = 0; $b < ($numbers[0] - $numbers[1]); $b++) {
+                $base .= '9';
+            }
+
+            $digits = '';
+            for ($f = 0; $f < $numbers[1]; $f++) {
+                $digits .= '9';
+            }
+
+            return "{$base}.{$digits}";
+        }
+
+        return '';
     }
 }

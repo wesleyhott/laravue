@@ -1,22 +1,27 @@
 <?php
 
-namespace App\Models;
+namespace App\Models{{ schemaNamespace }};
 
-class {{ class }} extends LaravueModel
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * Class {{ class }}
+ * @package App\Models{{ schemaNamespace }}
+ *
+ * @property int $id
+ * @property string properties_txt
+ {{ fields }}
+ * @ method newMethod()
+ */
+class {{ class }} extends Model
 {
     protected $table = 'vw_{{ table }}';
     protected static $isView = true;
     public $timestamps = false;
-    // {{ laravue-insert:with }}
 
-    /**
-     * Casting
-     * 
-     * Informa o tipo de dados que é serializado nos objetos JSON.
-     */
-	protected $casts = [
-		{{ fields }}
-	];
+    // Model Methods must be declared in this documentation header
+    // newMethod() {} 
+
 
     // {{ laravue-insert:relationship }}
 }
