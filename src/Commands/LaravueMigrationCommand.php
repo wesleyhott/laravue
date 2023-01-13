@@ -129,11 +129,12 @@ class LaravueMigrationCommand extends LaravueCommand
         }
 
         $fields = $this->buildFields($model);
+        $use_soft_deletes = config('laravue.use_soft_deletes');
 
         $returnFields = "";
-        $uniqueArray = [];
+        $uniqueCompositionArray = [];
+        $uniqueSoftDeleteArray = [];
 
-        $first = true;
         foreach ($fields as $key => $value) {
             $type = $this->getType($value);
             // Nullable
@@ -158,11 +159,14 @@ class LaravueMigrationCommand extends LaravueCommand
             }
             // Unique 
             $isUnique = $this->isUnique($value);
-            $unique = $isUnique ? '->unique()' : '';
+            $unique = $isUnique && !$use_soft_deletes ? '->unique()' : '';
+            if (($isUnique && $use_soft_deletes)) {
+                array_push($uniqueSoftDeleteArray, PHP_EOL . $this->tabs(3) . "\$table->unique(['$key', 'deleted_at']);");
+            }
             // Unique Composition
             $isUniqueComposition = $this->isUniqueComposition($value);
             if ($isUniqueComposition) {
-                array_push($uniqueArray, $key);
+                array_push($uniqueCompositionArray, $key);
             }
             // Default
             $default = $this->hasDefault($value);
@@ -189,48 +193,51 @@ class LaravueMigrationCommand extends LaravueCommand
                 $size = ", 16, 2";
             }
 
-
-            if ($first) {
-                $first = false;
-            } else {
-                $returnFields .= PHP_EOL;
-                $returnFields .= $this->tabs(3);
-            }
-
             if ($this->isFk($key)) {
                 $referenced_table = $this->pluralize(str_replace("_id", "", $key));
 
-                $returnFields .= "\$table->foreignId('$key')" . PHP_EOL;
+                $returnFields .= PHP_EOL . $this->tabs(3) . "\$table->foreignId('$key')";
                 if ($isNullable) {
-                    $returnFields .= $this->tabs(4) . $nullable . PHP_EOL;
-                } else if ($isUnique) {
-                    $returnFields .= $this->tabs(4) . $unique . PHP_EOL;
+                    $returnFields .=  PHP_EOL . $this->tabs(4) . $nullable;
                 }
                 $parsedSchema = empty($schema) ? '' : strtolower("{$schema}.");
-                $returnFields .= $this->tabs(4) . "->constrained('{$parsedSchema}{$referenced_table}');";
+                $returnFields .=  PHP_EOL . $this->tabs(4) . "->constrained('{$parsedSchema}{$referenced_table}');";
             } else {
                 if ($isNullable && $isUnique) {
-                    $returnFields .= "\$table->$type('$key'$size)" . PHP_EOL;
-                    $returnFields .= $this->tabs(4) . "{$nullable}" . PHP_EOL;
+                    $returnFields .= PHP_EOL . $this->tabs(3) . "\$table->$type('$key'$size)";
+                    $returnFields .= $use_soft_deletes ? "{$nullable}" : PHP_EOL . $this->tabs(4) . "{$nullable}";
                     if ($isUnsigned) {
-                        $returnFields .= $this->tabs(4) . "{$unsigned}" . PHP_EOL;
+                        $returnFields .= PHP_EOL . $this->tabs(4) . "{$unsigned}";
                     }
-                    $returnFields .= $this->tabs(4) . "{$unique};";
+                    $returnFields .= $use_soft_deletes ? "{$unique};" : PHP_EOL . $this->tabs(4) . "{$unique};";
                 } else if ($default !== false && $isUnique) {
-                    $returnFields .= "\$table->$type('$key'$size)" . PHP_EOL;
-                    $returnFields .= $this->tabs(4) . "{$unique}";
+                    $returnFields .= PHP_EOL . $this->tabs(3) . "\$table->$type('$key'$size)";
+                    $returnFields .= $use_soft_deletes ? "{$unique}" : PHP_EOL . $this->tabs(4) . "{$unique}";
                     if ($isUnsigned) {
                         $returnFields .=  PHP_EOL . $this->tabs(4) . "{$unsigned}";
                     }
-                    $tabulation = $default == '' ? '' : PHP_EOL . $this->tabs(4);
-                    $returnFields .=  $tabulation . "{$default};";
+                    // $tabulation = $default == '' ? '' : PHP_EOL . $this->tabs(4);
+                    $returnFields .= $use_soft_deletes ? "{$default};" : PHP_EOL . $this->tabs(4) . "{$default};";
                 } else {
-                    $returnFields .= "\$table->$type('$key'$size){$nullable}{$unique}{$default}{$unsigned};";
+                    $returnFields .= PHP_EOL . $this->tabs(3) . "\$table->$type('$key'$size){$nullable}{$unique}{$default}{$unsigned};";
                 }
             }
         }
-        if (count($uniqueArray) > 0) {
-            $uniques = implode("','", $uniqueArray);
+
+        // Uniques
+        $has_unique_composition = count($uniqueCompositionArray) > 0;
+        $has_unique_soft_delete = count($uniqueSoftDeleteArray) > 0;
+        if ($has_unique_composition || $has_unique_soft_delete) {
+            $returnFields .= PHP_EOL . PHP_EOL . $this->tabs(3) . "// Uniques";
+        }
+        foreach ($uniqueSoftDeleteArray as $uniqueSoftDelete) {
+            $returnFields .= $uniqueSoftDelete;
+        }
+        if ($has_unique_composition) {
+            if ($use_soft_deletes) {
+                array_push($uniqueCompositionArray, 'deleted_at');
+            }
+            $uniques = implode("','", $uniqueCompositionArray);
             $returnFields .= PHP_EOL . $this->tabs(3) . "\$table->unique(['$uniques']);";
         }
 

@@ -17,8 +17,7 @@ class Create{{ schemaClass }}{{ class }}Table extends Migration
             // Primary Key
             $table->id('id');
 
-            // Attributes
-            {{ fields }}
+            // Attributes{{ fields }}
 
             // Control Fields
             $table->timestamps(); {{ softDeletes }}
