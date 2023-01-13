@@ -27,16 +27,16 @@ class LaravueFrontCommand extends Command
      */
     public function handle()
     {
-        $this->createIndex();
-        $this->createModel();
-        $this->createCreate();
-        $this->createEdit();
-        $this->createReport();
-        $this->createModal();
-        $this->createShow();
-        $this->createDelete();
-        $this->createFrontRoutes();
-        $this->createFrontSideBar();
+        // $this->createIndex();
+        // $this->createModel();
+        // $this->createCreate();
+        // $this->createEdit();
+        // $this->createReport();
+        // $this->createModal();
+        // $this->createShow();
+        // $this->createDelete();
+        // $this->createFrontRoutes();
+        // $this->createFrontSideBar();
     }
 
     /**

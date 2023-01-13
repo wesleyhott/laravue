@@ -48,12 +48,12 @@ class LaravueBuildCommand extends LaravueCommand
         }
 
         $this->backend($models, $this->option('schema'));
-        // $this->frontend($models, $this->option('schema'));
+        $this->frontend($models, $this->option('schema'));
 
         if ($this->option('backward') || $this->option('bw')) {
             $this->backward();
         } else if ($this->option('forward') || $this->option('fw')) {
-            $this->forward();
+            $this->forward($models);
         }
     }
 
@@ -115,14 +115,28 @@ class LaravueBuildCommand extends LaravueCommand
     /**
      * Insere novos dados no banco
      *
+     * @param array $model
      * @return void
      */
-    protected function forward()
+    protected function forward(array $model): void
     {
         $date = now();
+        $parsed_model = count($model) > 1 ? "{$model[0]}{$model[1]}" : $model[0];
 
         $this->info("$date - [ artisan ] >> migrate");
         $this->call('migrate');
+
+        $this->info("$date - [ artisan ] >> seed");
+        $schema = $this->option('schema');
+        if (empty($schema)) {
+            $this->call('db:seed', [
+                '--class' => "{$parsed_model}Seeder",
+            ]);
+        } else {
+            $this->call('db:seed', [
+                '--class' => "\Database\Seeder\{$schema}\{$parsed_model}Seeder",
+            ]);
+        }
 
         $this->info("$date - [ composer ] >> dump-autoload");
         $this->composer->dumpAutoloads();
@@ -134,22 +148,32 @@ class LaravueBuildCommand extends LaravueCommand
 
         $this->call('permission:create-permission', [
             'name' =>  "c-{$permissionName}",
+            'label' => "Create {$permissionName}",
         ]);
 
         $this->call('permission:create-permission', [
             'name' =>  "r-{$permissionName}",
+            'label' => "Read {$permissionName}",
         ]);
 
         $this->call('permission:create-permission', [
             'name' =>  "u-{$permissionName}",
+            'label' => "Update {$permissionName}",
         ]);
 
         $this->call('permission:create-permission', [
             'name' =>  "d-{$permissionName}",
+            'label' => "Delete {$permissionName}",
         ]);
 
         $this->call('permission:create-permission', [
             'name' =>  "p-{$permissionName}",
+            'label' => "Print {$permissionName}",
+        ]);
+
+        $this->call('permission:create-permission', [
+            'name' =>  "m-{$permissionName}",
+            'label' => "Access {$permissionName} Menu",
         ]);
     }
 }
