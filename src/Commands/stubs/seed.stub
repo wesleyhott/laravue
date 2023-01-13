@@ -14,8 +14,8 @@ class {{ class }}Seeder extends Seeder
      */
     public function run()
     {
-        // DB::table("{{ schemaTable }}{{ table }}")->insert([
+        DB::table("{{ schemaTable }}{{ table }}")->insert([
         {{ fields }}
-        // ]);
+        ]);
     }
 }

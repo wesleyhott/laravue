@@ -133,12 +133,16 @@ class LaravueSeedCommand extends LaravueCommand
                     $parsedValue = '\'' . date("H:i:s") . '\'';
                     break;
                 default:
-                    $parsedValue = '\'\'';
+                    $dummy_data = $this->isEnLanguage()
+                        ? "'Just some example {$key} for test.'"
+                        : "'Apenas {$key} para teste.'";
+                    $parsedValue = $dummy_data;
             }
             if ($this->isFk($key)) {
                 $parsedValue = 1;
             }
-            $returnFields .= "// " . $this->tabs(1) . "\"$key\" => {$parsedValue},";
+            $snaked_key = Str::snake($key);
+            $returnFields .= $this->tabs(1) . "\"$snaked_key\" => {$parsedValue},";
         }
 
         return str_replace('{{ fields }}', $returnFields, $stub);
