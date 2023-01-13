@@ -57,6 +57,7 @@ class LaravueApiCommand extends Command
             '--schema' =>  $this->option('schema'),
             '--fields' =>  $this->option('fields'),
             '--view' =>  $this->option('view'),
+            '--mxn' =>  false,
         ]);
     }
 
@@ -72,6 +73,7 @@ class LaravueApiCommand extends Command
             '--schema' =>  $this->option('schema'),
             '--fields' =>  $this->option('fields'),
             '--view' =>  $this->option('view'),
+            '--mxn' =>  false,
         ]);
     }
 
@@ -84,6 +86,7 @@ class LaravueApiCommand extends Command
     {
         $this->call('laravue:dbseeder', [
             'model' => $this->argument('model'),
+            '--mxn' =>  false,
         ]);
     }
 
@@ -99,6 +102,7 @@ class LaravueApiCommand extends Command
             '--schema' =>  $this->option('schema'),
             '--fields' =>  $this->option('fields'),
             '--view' =>  $this->option('view'),
+            '--mxn' =>  false,
         ]);
     }
 
@@ -114,6 +118,7 @@ class LaravueApiCommand extends Command
             '--schema' =>  $this->option('schema'),
             '--fields' =>  $this->option('fields'),
             '--store' =>  true,
+            '--mxn' =>  false,
         ]);
     }
 
@@ -129,6 +134,7 @@ class LaravueApiCommand extends Command
             '--schema' =>  $this->option('schema'),
             '--fields' =>  $this->option('fields'),
             '--update' =>  true,
+            '--mxn' =>  false,
         ]);
     }
 
@@ -143,6 +149,7 @@ class LaravueApiCommand extends Command
             'model' => $this->argument('model'),
             '--schema' =>  $this->option('schema'),
             '--fields' =>  $this->option('fields'),
+            '--mxn' =>  false,
         ]);
     }
 
@@ -156,6 +163,7 @@ class LaravueApiCommand extends Command
         $this->call('laravue:service', [
             'model' => $this->argument('model'),
             '--schema' =>  $this->option('schema'),
+            '--mxn' =>  false,
         ]);
     }
 
@@ -169,6 +177,7 @@ class LaravueApiCommand extends Command
         $this->call('laravue:controller', [
             'model' => $this->argument('model'),
             '--schema' =>  $this->option('schema'),
+            '--mxn' =>  false,
         ]);
     }
 
@@ -207,6 +216,7 @@ class LaravueApiCommand extends Command
         $this->call('laravue:permission', [
             'model' => $this->argument('model'),
             '--view' =>  $this->option('view'),
+            '--mxn' =>  false,
         ]);
     }
 }

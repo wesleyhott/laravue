@@ -21,7 +21,7 @@ class LaravueBuildCommand extends LaravueCommand
         {--k|keys= : custom foreing keys that belongs to relationship}
         {--p|pivots= : Feilds that belongs to relationship}
         {--i|view : build a model based on view, not table}
-        {--s|schema : build a model based on view, not table}';
+        {--s|schema= : build a model based on view, not table}';
 
     /**
      * The console command description.
