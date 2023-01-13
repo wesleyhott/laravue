@@ -85,7 +85,8 @@ class LaravueSeedCommand extends LaravueCommand
         $parsed_model =  is_array($model) ? $model[0] : $model;
         $class_stub = $this->replaceClass($stub, $parsed_model);
         $table_stub = $this->replaceTable($class_stub, $parsed_model);
-        $table_schema_stub = $this->replaceSchemaTable($table_stub, $schema);
+        $schema_stub = $this->replaceSchema($table_stub, $schema);
+        $table_schema_stub = $this->replaceSchemaTable($schema_stub, $schema);
 
         return $this->replaceField($table_schema_stub, $parsed_model);
     }

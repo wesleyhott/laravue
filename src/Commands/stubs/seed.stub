@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class {{ class }}Seeder extends Seeder
+class {{ schema }}{{ class }}Seeder extends Seeder
 {
     /**
      * Run the database seeds.

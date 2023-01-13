@@ -526,6 +526,21 @@ class LaravueCommand extends Command
     }
 
     /**
+     * Replace the Schema name in the given stub.
+     *
+     * @param  string  $stub
+     * @param  string  $model
+     * @return string
+     */
+    protected function replaceSchema($stub, $schema)
+    {
+        if (empty($schema)) {
+            return str_replace('{{ schema }}', "", $stub);
+        }
+        return str_replace('{{ schema }}', ucfirst($schema), $stub);
+    }
+
+    /**
      * Replace the Schema Namespace in the given stub.
      *
      * @param  string  $stub
@@ -942,7 +957,7 @@ class LaravueCommand extends Command
     }
 
     /**
-     * Cria o título a partir do nome do campo
+     * Creates a title from field
      *
      * @param string  $field 
      * @param boolean $plural

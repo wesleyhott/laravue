@@ -121,55 +121,49 @@ class LaravueBuildCommand extends LaravueCommand
         $parsed_model = count($model) > 1 ? "{$model[0]}{$model[1]}" : $model[0];
 
         $date = now();
-        $this->info("$date - [ artisan ] >> migrate");
+        $this->info("{$date} - [ artisan ] >> migrate");
         $this->call('migrate');
 
         $date = now();
-        $this->info("$date - [ artisan ] >> seed");
-        $schema = $this->option('schema');
-
-        $date = now();
-        $this->info("$date - [ artisan ] >> seed");
-        $schema = empty($schema) ? '' : Str::ucfirst($schema);
+        $this->info("{$date} - [ artisan ] >> seed");
+        $schema = empty($this->option('schema')) ? '' : Str::ucfirst($this->option('schema'));
         $this->call('db:seed', [
             '--class' => "{$schema}{$parsed_model}Seeder",
         ]);
 
-        $argument_model = $this->argument('model');
-        $model = is_array($argument_model) ? trim($argument_model[0]) : trim($argument_model);
-        $permission_route = Str::snake($this->pluralize(strtolower($model)));
-        $permission_name = $this->getTilte($model);
+        $permission_route = Str::snake($this->pluralize($parsed_model), '-');
+        $permission_name = $this->getTitle($parsed_model);
         $schema_route = empty($schema) ? '' : Str::snake($this->option('schema')) . '-';
         $schema_name = empty($schema) ? '' : $this->getTitle($this->option('schema'));
 
         $this->call('laravue:spatie-permission', [
             'name' =>  "c-{$schema_route}{$permission_route}",
-            'label' => "Create {$schema_name} {$permission_name}",
+            '--label' => "Create {$schema_name} {$permission_name}",
         ]);
 
         $this->call('laravue:spatie-permission', [
             'name' =>  "r-{$schema_route}{$permission_route}",
-            'label' => "Read {$schema_name} {$permission_name}",
+            '--label' => "Read {$schema_name} {$permission_name}",
         ]);
 
         $this->call('laravue:spatie-permission', [
             'name' =>  "u-{$schema_route}{$permission_route}",
-            'label' => "Update {$schema_name} {$permission_name}",
+            '--label' => "Update {$schema_name} {$permission_name}",
         ]);
 
         $this->call('laravue:spatie-permission', [
             'name' =>  "d-{$schema_route}{$permission_route}",
-            'label' => "Delete {$schema_name} {$permission_name}",
+            '--label' => "Delete {$schema_name} {$permission_name}",
         ]);
 
         $this->call('laravue:spatie-permission', [
             'name' =>  "p-{$schema_route}{$permission_route}",
-            'label' => "Print {$schema_name} {$permission_name}",
+            '--label' => "Print {$schema_name} {$permission_name}",
         ]);
 
         $this->call('laravue:spatie-permission', [
             'name' =>  "m-{$schema_route}{$permission_route}",
-            'label' => "Access {$schema_name} {$permission_name} Menu",
+            '--label' => "Access {$schema_name} {$permission_name} Menu",
         ]);
     }
 }
