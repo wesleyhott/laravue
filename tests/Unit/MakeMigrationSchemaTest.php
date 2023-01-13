@@ -23,7 +23,7 @@ class MakeMigrationSchemaTest extends TestCase
         Artisan::call('laravue:migration', [
             'model' => $model,
             '--schema' => $schema,
-            '--fields' => "name:s.50u#'Fulano'#,nick_name,age:i.#40#,user_id,file_id:i,descricao:s.nu,modelo_id:i.u*,fabrica_id:i.nu*,idade:i.+",
+            '--fields' => "name:s.50u#'Fulano'#,nick_name,age:i.#40#,user_id,file_id:i,descricao:s.nu,modelo_id:i.uc,fabrica_id:i.nuc,idade:i.+",
         ]);
 
         // Assert a new file is created

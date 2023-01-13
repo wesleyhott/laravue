@@ -791,13 +791,13 @@ class LaravueCommand extends Command
      */
     protected function isUniqueArray($field)
     {
-        // default may contain letter u*
+        // default may contain letter uc
         $field = $this->dropDefault($field);
 
         $options = $this->getOptionsArray($field);
         $uniqueArray = false;
         foreach ($options as $option) {
-            if (strpos($option, 'u*') !== false) {
+            if (strpos($option, 'uc') !== false) {
                 $uniqueArray = true;
             }
         }

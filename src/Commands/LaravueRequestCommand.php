@@ -185,7 +185,7 @@ class LaravueRequestCommand extends LaravueCommand
             $uniqueArray = '';
             $isUniqueArray = $this->isUniqueArray($value);
             if ($firstUniqueArray && $isUniqueArray) {
-                $fieldsUnique = array_filter($fields, fn ($unique_key) => str_contains($unique_key, 'u*'));
+                $fieldsUnique = array_filter($fields, fn ($unique_key) => str_contains($unique_key, 'uc'));
                 foreach ($fieldsUnique as $k => $v) {
                     //point to end of the array
                     end($fieldsUnique);
@@ -285,7 +285,7 @@ class LaravueRequestCommand extends LaravueCommand
             // Unique array 
             $isUniqueArray = $this->isUniqueArray($value);
             if ($firstUniqueArray && $isUniqueArray) {
-                $fieldsUnique = array_filter($fields, fn ($unique_key) => str_contains($unique_key, 'u*'));
+                $fieldsUnique = array_filter($fields, fn ($unique_key) => str_contains($unique_key, 'uc'));
                 $unique_fields = '';
                 foreach ($fieldsUnique as $k => $v) {
                     $isUniqueInternalArray = $this->isUniqueArray($v);
