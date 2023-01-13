@@ -932,6 +932,8 @@ class LaravueCommand extends Command
                 return 'timestamp';
             case 'tt':
                 return 'timestamps';
+            case 'tx':
+                return 'text';
             case 'mv':
                 return 'monetario';
             default:
