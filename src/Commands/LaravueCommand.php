@@ -776,7 +776,7 @@ class LaravueCommand extends Command
         $options = $this->getOptionsArray($field);
         $unique = false;
         foreach ($options as $option) {
-            if ((strpos($option, 'u') !== false) && (strpos($option, '*') === false)) {
+            if ((strpos($option, 'u') !== false) && (strpos($option, 'uc') === false)) {
                 $unique = true;
             }
         }
@@ -789,7 +789,7 @@ class LaravueCommand extends Command
      * @param  string  $field
      * @return boolean uniqueArray
      */
-    protected function isUniqueArray($field)
+    protected function isUniqueComposition($field)
     {
         // default may contain letter uc
         $field = $this->dropDefault($field);

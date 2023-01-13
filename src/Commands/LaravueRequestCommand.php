@@ -115,7 +115,7 @@ class LaravueRequestCommand extends LaravueCommand
     public function replaceRules(string $stub, string $model, array $fields): string
     {
         $rules = '';
-        $firstUniqueArray = true;
+        $firstUniqueComposition = true;
         foreach ($fields as $key => $value) {
             $type = $this->getType($value);
             $snaked_key = Str::snake($key);
@@ -182,25 +182,25 @@ class LaravueRequestCommand extends LaravueCommand
             $table = $this->pluralize($snaked_model);
             $id_value = $this->option('store') ? 'NULL' : "{\$this->{$snaked_model}}";
             $unique = $isUnique ? "|unique:{$conn}{$schema}{$table},{$snaked_key},{$id_value},id{$soft_delete}" : '';
-            // Unique array 
+            // Unique Composition 
             $uniqueArray = '';
-            $isUniqueArray = $this->isUniqueArray($value);
-            if ($firstUniqueArray && $isUniqueArray) {
-                $fieldsUnique = array_filter($fields, fn ($unique_key) => str_contains($unique_key, 'uc'));
+            $isUniqueComposition = $this->isUniqueComposition($value);
+            if ($firstUniqueComposition && $isUniqueComposition) {
+                $fieldsUnique = array_filter($fields, fn ($unique_key) => $this->isUniqueComposition($unique_key));
                 foreach ($fieldsUnique as $k => $v) {
                     $snaked_k = Str::snake($k);
                     //point to end of the array
                     end($fieldsUnique);
                     $lastElementKey = key($fieldsUnique);
                     $double_quote = $k == $lastElementKey ? '' : '"';
-                    $isUniqueInternalArray = $this->isUniqueArray($v);
-                    if ($firstUniqueArray && $isUniqueInternalArray) {
-                        $firstUniqueArray = false;
+                    $isUniqueInternalComposition = $this->isUniqueComposition($v);
+                    if ($firstUniqueComposition && $isUniqueInternalComposition) {
+                        $firstUniqueComposition = false;
                         $uniqueArray .= "|unique:{$conn}{$schema}{$table},{$snaked_k},\"" . PHP_EOL;
                         $uniqueArray .= $this->tabs(4) . ". \"{$id_value},id\"";
                         continue;
                     }
-                    if ($isUniqueInternalArray) {
+                    if ($isUniqueInternalComposition) {
                         $uniqueArray .= PHP_EOL . $this->tabs(4) . ". \",$snaked_k,{\$this->$snaked_k}{$double_quote}";
                     }
                 }
@@ -219,7 +219,7 @@ class LaravueRequestCommand extends LaravueCommand
     {
         $messages = '';
         $language = config('laravue.language');
-        $firstUniqueArray = true;
+        $firstUniqueComposition = true;
         $parsedModel = $this->getTitle($model);
         foreach ($fields as $key => $value) {
             $label = $this->getTitle($key);
@@ -284,16 +284,16 @@ class LaravueRequestCommand extends LaravueCommand
                     : "já existe";
                 $messages .= PHP_EOL . $this->tabs(3) . "'{$key}.unique' => '{$parsedModel} {$label} {$text}.',";
             }
-            // Unique array 
-            $isUniqueArray = $this->isUniqueArray($value);
-            if ($firstUniqueArray && $isUniqueArray) {
-                $fieldsUnique = array_filter($fields, fn ($unique_key) => str_contains($unique_key, 'uc'));
+            // Unique Composition 
+            $isUniqueComposition = $this->isUniqueComposition($value);
+            if ($firstUniqueComposition && $isUniqueComposition) {
+                $fieldsUnique = array_filter($fields, fn ($unique_key) => $this->isUniqueComposition($unique_key));
                 $unique_fields = '';
                 foreach ($fieldsUnique as $k => $v) {
-                    $isUniqueInternalArray = $this->isUniqueArray($v);
-                    if ($isUniqueInternalArray) {
-                        if ($firstUniqueArray) {
-                            $firstUniqueArray = false;
+                    $isUniqueInternalComposition = $this->isUniqueComposition($v);
+                    if ($isUniqueInternalComposition) {
+                        if ($firstUniqueComposition) {
+                            $firstUniqueComposition = false;
                             continue;
                         }
                         $and = $unique_fields == '' ? '' : ' and ';

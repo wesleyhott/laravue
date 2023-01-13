@@ -159,9 +159,9 @@ class LaravueMigrationCommand extends LaravueCommand
             // Unique 
             $isUnique = $this->isUnique($value);
             $unique = $isUnique ? '->unique()' : '';
-            // Unique Array
-            $isUniqueArray = $this->isUniqueArray($value);
-            if ($isUniqueArray) {
+            // Unique Composition
+            $isUniqueComposition = $this->isUniqueComposition($value);
+            if ($isUniqueComposition) {
                 array_push($uniqueArray, $key);
             }
             // Default
