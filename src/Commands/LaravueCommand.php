@@ -45,14 +45,14 @@ class LaravueCommand extends Command
     protected $composer;
 
     /**
-     * Caminho relativo a pasta stubs
+     * Stub path 
      *
      * @var string
      */
     protected $stubPath = 'default';
 
     /**
-     * Tipo de modelo que está sendo criado.
+     * Model type that is been created.
      *
      * @var string
      */
@@ -113,7 +113,7 @@ class LaravueCommand extends Command
         if ($schema != '') {
             $schemaPath = "$schema/";
         }
-        $currentDirectory =  getcwd();
+        $current_directory =  getcwd();
         switch ($this->type) {
             case 'model':
                 $path = $this->makePath("Models/{$schemaPath}$string_model.$ext");
@@ -171,15 +171,15 @@ class LaravueCommand extends Command
                 $path = $this->makePath("Services/{$schemaPath}{$string_model}Service.{$ext}");
                 break;
             case 'front-modal':
-                $paths = explode("/", str_replace('\\', '/', $currentDirectory));
+                $paths = explode("/", str_replace('\\', '/', $current_directory));
 
                 $buildPath = $this->fileBuildPath('src', 'components', $this->projectName, 'Views', 'Pages', $model, 'forms');
                 if (end($paths) == "laravue") { // Laravue Tests
-                    $frontPath = $this->fileBuildPath($currentDirectory, 'admin', $buildPath);
+                    $frontPath = $this->fileBuildPath($current_directory, 'admin', $buildPath);
                 } else if ($this->option('outdocker')) {
-                    $frontPath = Str::replaceFirst(end($paths), $this->fileBuildPath('admin', $buildPath), $currentDirectory);
+                    $frontPath = Str::replaceFirst(end($paths), $this->fileBuildPath('admin', $buildPath), $current_directory);
                 } else {
-                    $frontPath = Str::replaceFirst(end($paths), $buildPath, $currentDirectory);
+                    $frontPath = Str::replaceFirst(end($paths), $buildPath, $current_directory);
                 }
 
                 if (!is_dir($frontPath)) {
@@ -188,7 +188,7 @@ class LaravueCommand extends Command
                 $path = $this->fileBuildPath($frontPath, 'Modal.vue');
                 break;
             case 'config':
-                $paths = explode("/", str_replace('\\', '/', $currentDirectory));
+                $paths = explode("/", str_replace('\\', '/', $current_directory));
                 if (end($paths) == "laravue") { // Laravue Tests
                     $path = $this->makePath("config/config.php", true);
                 } else {
@@ -205,29 +205,34 @@ class LaravueCommand extends Command
     /**
      * Get the destination class path.
      *
-     * @param  string  $name
+     * @param  string  $file_name
      * @return string
      */
-    protected function getFrontPath($name, $filename = null,  $ext = 'vue')
+    protected function getFrontPath($file_name)
     {
-        $currentDirectory = getcwd();
-        $paths = explode("/", str_replace('\\', '/', $currentDirectory));
+        $current_directory = getcwd();
+        $paths = explode("/", str_replace('\\', '/', $current_directory));
 
-        if (end($paths) == "laravue") { // Laravue Tests
-            $frontDirectory = $this->fileBuildPath($currentDirectory, 'admin', 'LaravueTest', 'Views', 'Pages', $name);
-        } else if ($this->option('outdocker')) {
-            $buildPath = $this->fileBuildPath('admin', 'src', 'components', $this->projectName, 'Views', 'Pages', $name);
-            $frontDirectory = Str::replaceFirst(end($paths), $buildPath, $currentDirectory);
-        } else {
-            $buildPath = $this->fileBuildPath('src', 'components', $this->projectName, 'Views', 'Pages', $name);
-            $frontDirectory = Str::replaceFirst(end($paths), $buildPath, $currentDirectory);
+        $front_directory = 'src';
+        switch ($this->type) {
+            case 'front_module_route':
+                $front_directory = $this->fileBuildPath($front_directory, 'router');
+                break;
         }
 
-        if (!is_dir($frontDirectory)) {
-            mkdir($frontDirectory, 0777, true);
+        $laravue_test_dir = $this->fileBuildPath($current_directory, 'front');
+        if (end($paths) == "laravue" && is_dir($laravue_test_dir)) {
+            return $this->fileBuildPath($laravue_test_dir, $front_directory, $file_name);
         }
 
-        $file = $filename ? "$frontDirectory/$filename.$ext" : "$frontDirectory/$name.$ext";
+        $built_path = $this->fileBuildPath('app', $front_directory);
+        $front_directory = Str::replaceFirst(end($paths), $built_path, $current_directory);
+
+        if (!is_dir($front_directory)) {
+            mkdir($front_directory, 0777, true);
+        }
+
+        $file = "$front_directory/$file_name";
 
         return $file;
     }
@@ -250,8 +255,8 @@ class LaravueCommand extends Command
             $folders = '/' . implode("/", $folders);
         }
 
-        $currentDirectory =  getcwd();
-        $paths = explode("/", str_replace('\\', '/', $currentDirectory));
+        $current_directory =  getcwd();
+        $paths = explode("/", str_replace('\\', '/', $current_directory));
 
         $buildPath = $this->fileBuildPath('workspace', 'laravue' . $folders);
 
@@ -275,17 +280,17 @@ class LaravueCommand extends Command
      */
     protected function getFrontFormsPath($name, $filename = null,  $ext = 'vue')
     {
-        $currentDirectory =  getcwd();
-        $paths = explode("/", str_replace('\\', '/', $currentDirectory));
+        $current_directory =  getcwd();
+        $paths = explode("/", str_replace('\\', '/', $current_directory));
 
         if (end($paths) == "laravue") { // Laravue Tests
-            $frontDirectory = $this->fileBuildPath($currentDirectory, 'admin', 'LaravueTest', 'Views', 'Pages', $name, 'forms');
+            $frontDirectory = $this->fileBuildPath($current_directory, 'admin', 'LaravueTest', 'Views', 'Pages', $name, 'forms');
         } else if ($this->option('outdocker')) {
             $buildPath = $this->fileBuildPath('admin', 'src', 'components', $this->projectName, 'Views', 'Pages', $name, 'forms');
-            $frontDirectory = Str::replaceFirst(end($paths), $buildPath, $currentDirectory);
+            $frontDirectory = Str::replaceFirst(end($paths), $buildPath, $current_directory);
         } else {
             $buildPath = $this->fileBuildPath('src', 'components', $this->projectName, 'Views', 'Pages', $name, 'forms');
-            $frontDirectory = Str::replaceFirst(end($paths), $buildPath, $currentDirectory);
+            $frontDirectory = Str::replaceFirst(end($paths), $buildPath, $current_directory);
         }
 
         if (!is_dir($frontDirectory)) {
@@ -333,10 +338,8 @@ class LaravueCommand extends Command
     /**
      * Pluralizes a word if quantity is not one.
      *
-     * @param int $quantity Number of items
      * @param string $singular Singular form of word
-     * @param string $plural Plural form of word; function will attempt to deduce plural form from singular if not provided
-     * @return string Pluralized word if quantity is not one, otherwise singular
+     * @return string Pluralized word
      */
     public static function pluralize($singular)
     {
@@ -1080,7 +1083,7 @@ class LaravueCommand extends Command
         $folders = "";
         $folder_separator = DIRECTORY_SEPARATOR;
         if (strpos($file, "/") !== false) {
-            $folders = explode("/", $file);
+            $folders = explode("/", str_replace('\\', '/', $file));
             $file = array_pop($folders);
 
             $folders = $folder_separator . implode($folder_separator, $folders);
