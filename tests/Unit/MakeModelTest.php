@@ -19,7 +19,7 @@ class MakeModelTest extends TestCase
 
         // Run the make command
         Artisan::call('laravue:model', [
-            'model' => 'Userfake',
+            'model' => 'UserFake',
             '--fields' => 'name',
         ]);
 

@@ -127,11 +127,29 @@ class LaravueModelCommand extends LaravueCommand
         }
 
         $fieldStub = $this->replaceField($stub, $model);
-        $tableStub = $this->replaceTable($fieldStub, $model);
+        $parsed_schema = empty($schema) ? '' : strtolower("{$schema}.");
+        $parsed_model = Str::snake($model);
+        $tableStub = $this->replaceTable($fieldStub, "{$parsed_schema}{$parsed_model}");
         $relationStub = $this->replaceRelation($tableStub, $model, $fields, $schema);
         $schemaStub = $this->replaceSchemaNamespace($relationStub, $schema);
 
         return $this->replaceModel($schemaStub, $model);
+    }
+
+    /**
+     * Replace the plural for class in the given stub.
+     * Override because here snake cannot be applied.
+     *
+     * @param  string  $stub
+     * @param  string  $model
+     * @return string
+     */
+    protected function replaceTable($stub, $model, $plural = true)
+    {
+        if ($plural) {
+            $model = $this->pluralize($model);
+        }
+        return str_replace('{{ table }}', $model, $stub);
     }
 
     /**
