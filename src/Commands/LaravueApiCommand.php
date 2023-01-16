@@ -86,6 +86,7 @@ class LaravueApiCommand extends Command
     {
         $this->call('laravue:dbseeder', [
             'model' => $this->argument('model'),
+            '--schema' =>  $this->option('schema'),
             '--mxn' =>  false,
         ]);
     }
@@ -203,6 +204,7 @@ class LaravueApiCommand extends Command
     {
         $this->call('laravue:route', [
             'model' => $this->argument('model'),
+            '--schema' =>  $this->option('schema'),
         ]);
     }
 
