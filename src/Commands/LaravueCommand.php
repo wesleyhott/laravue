@@ -1233,4 +1233,31 @@ class LaravueCommand extends Command
 
         return '';
     }
+
+    // Frontend Generation
+    protected function replaceUpperModule(string $stub, string $module): string
+    {
+        return str_replace('{{ upper_module }}',  Str::upper(Str::snake($module)), $stub);
+    }
+
+    protected function replaceSnakeModule(string $stub, string $module): string
+    {
+        return str_replace('{{ snake_module }}', Str::snake($module), $stub);
+    }
+
+    protected function replacePluralSnakeModule(string $stub, string $module): string
+    {
+        return str_replace('{{ plural_snake_module }}', $this->pluralize(Str::snake($module)), $stub);
+    }
+
+    protected function replaceUpperCaseFirstModule(string $stub, string $module): string
+    {
+        return str_replace('{{ ucfirst_module }}', Str::ucfirst($module), $stub);
+    }
+
+    protected function replaceInsert(string $key, string $replacement, string $stub): string
+    {
+        $return = str_replace("// {{ laravue-insert:{$key} }}", $replacement, $stub);
+        return $return;
+    }
 }
