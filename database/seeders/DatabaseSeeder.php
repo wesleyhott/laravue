@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 
 use Illuminate\Database\Seeder;
-// {{ laravue-insert:use }}
 
 class DatabaseSeeder extends Seeder
 {
