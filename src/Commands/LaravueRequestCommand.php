@@ -91,7 +91,14 @@ class LaravueRequestCommand extends LaravueCommand
         // }
 
         $parsedModel =  is_array($model) ? $model[0] : $model;
-        $classStub = $this->replaceClass($stub, $parsedModel);
+        $type = '';
+        if ($this->option('store')) {
+            $type = 'Store';
+        }
+        if ($this->option('update')) {
+            $type = 'Update';
+        }
+        $classStub = $this->replaceClass($stub, "{$type}{$parsedModel}");
         $schemaStub = $this->replaceSchemaNamespace($classStub, $schema);
 
         return $this->replaceField($schemaStub, $parsedModel);

@@ -38,8 +38,8 @@ class LaravueDbSeederCommand extends LaravueCommand
         if ($this->option('mxn')) {
             $model = $this->argument('model');
         } else {
-            $argumentModel = $this->argument('model');
-            $model = is_array($argumentModel) ? trim($argumentModel[0]) : trim($argumentModel);
+            $argument_model = $this->argument('model');
+            $model = is_array($argument_model) ? trim($argument_model[0]) : trim($argument_model);
         }
 
         $date = now();
@@ -48,11 +48,11 @@ class LaravueDbSeederCommand extends LaravueCommand
         $schema = Str::ucfirst($this->option('schema'));
         $this->files->put($path, $this->buildDataSeeder($model, $schema));
 
-        $formatedModel = $model;
+        $formated_model = $model;
         if ($this->option('mxn')) {
-            $formatedModel = $model[0] . $model[1];
+            $formated_model = $model[0] . $model[1];
         }
-        $this->info("$date - [ $formatedModel ] >> DatabaseSeeder.php");
+        $this->info("$date - [ $formated_model ] >> DatabaseSeeder.php");
     }
 
     /**
@@ -65,33 +65,23 @@ class LaravueDbSeederCommand extends LaravueCommand
      */
     protected function buildDataSeeder($model, $schema)
     {
-        $formatedModel = "";
+        $formated_model = "";
         if ($this->option('mxn')) {
-            $formatedModel = $model[0] . $model[1];
+            $formated_model = $model[0] . $model[1];
         } else {
-            $formatedModel = $model;
+            $formated_model = $model;
         }
 
-        $stub = $this->files->get($this->getPath($formatedModel));
-        $seeder = $this->replaceSeeder($stub, $formatedModel);
-        return $this->replaceUse($seeder, $model, $schema);
+        $stub = $this->files->get($this->getPath($formated_model));
+        return $this->replaceSeeder($stub, $formated_model, $schema);
     }
 
-    protected function replaceSeeder($databaseSeederFile, $model)
+    protected function replaceSeeder(string $database_seeder_file, string $model, string $schema): string
     {
-        $newSeeder = "";
-        $newSeeder .= "$" . "this->call($model" . "Seeder::class);" . PHP_EOL;
-        $newSeeder .= "\t\t// {{ laravue-insert:seed }}";
+        $new_seeder = "";
+        $new_seeder .= "\$this->call({$schema}{$model}Seeder::class);" . PHP_EOL;
+        $new_seeder .= $this->tabs(2) . "// {{ laravue-insert:seed }}";
 
-        return str_replace('// {{ laravue-insert:seed }}', $newSeeder, $databaseSeederFile);
-    }
-
-    protected function replaceUse($databaseSeederFile, $model, $schema)
-    {
-        $schemaPath = empty($schema) ? '' : "\\{$schema}";
-        $newUse = "use Database\Seeders{$schemaPath}\\{$model}Seeder;" . PHP_EOL;
-        $newUse .= "// {{ laravue-insert:use }}";
-
-        return str_replace('// {{ laravue-insert:use }}', $newUse, $databaseSeederFile);
+        return str_replace('// {{ laravue-insert:seed }}', $new_seeder, $database_seeder_file);
     }
 }
