@@ -217,6 +217,7 @@ class LaravueApiCommand extends Command
     {
         $this->call('laravue:permission', [
             'model' => $this->argument('model'),
+            '--schema' =>  $this->option('schema'),
             '--view' =>  $this->option('view'),
             '--mxn' =>  false,
         ]);
