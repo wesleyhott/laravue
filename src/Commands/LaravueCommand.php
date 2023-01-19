@@ -843,18 +843,19 @@ class LaravueCommand extends Command
     }
 
     /**
-     * Retorna falso se não contém número ou retorna os números de precisão
+     * Returns false if do not contains number or
+     * Returns precision numbers array
      *
      * @param  string  $field
-     * @return boolean false or
-     * @return integer number
+     * @return false|array $precision_numbers
      */
-    protected function getPrecisionNumbers($field)
+    protected function getPrecisionNumbers(string $field)
     {
         $options = $this->getOptionsArray($field);
         $numbers = false;
         if (isset($options[1])) {
-            $numbers = explode('-', $options[1]);
+            $parsed_numbers = preg_replace("/[^0-9\-]/", "", $options[1]);
+            $numbers = explode('-', $parsed_numbers);
         }
 
         return $numbers;

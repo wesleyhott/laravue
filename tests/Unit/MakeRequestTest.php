@@ -17,7 +17,7 @@ class MakeRequestTest extends TestCase
         $storeRequest = str_replace("tests/Unit", "", __DIR__) . "app/Http/Requests/Store" . $model[0] . "Request.php";
         $updateRequest = str_replace("tests/Unit", "", __DIR__) . "app/Http/Requests/Update" . $model[0] . "Request.php";
 
-        $fields = "name:s.50u#'John Doe'#,age:i.+.#40#,user_id:i.n,birthday:d,awakeAt:t,foreingCitzen:b,wage:de.5-2,big_file_id";
+        $fields = "name:s.50u#'John Doe'#,age:i.+.#40#,user_id:i.n,birthday:d.uc,awakeAt:t,foreingCitzen:b,wage:de.5-2uc,big_file_id:bi.uc";
 
         // Run the make command
         Artisan::call('laravue:request', [

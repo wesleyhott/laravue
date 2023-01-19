@@ -187,7 +187,7 @@ class LaravueRequestCommand extends LaravueCommand
             $isUnique = $this->isUnique($value);
             $snaked_model = Str::snake($model);
             $table = $this->pluralize($snaked_model);
-            $id_value = $this->option('store') ? 'NULL' : "{\$this->{$snaked_model}}";
+            $id_value = $this->option('store') ? 'NULL' : "{\$this->id}";
             $unique = $isUnique ? "|unique:{$conn}{$schema}{$table},{$snaked_key},{$id_value},id{$soft_delete}" : '';
             // Unique Composition 
             $uniqueArray = '';
