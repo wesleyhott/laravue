@@ -63,7 +63,7 @@ class LaravueRouteCommand extends LaravueCommand
 
         $new_route = "";
         $new_route .= "'{$route_schema}{$route}' => \App\Http\Controllers{$parsed_schema}\\{$formated_model}Controller::class," . PHP_EOL;
-        $new_route .= "\t// {{ laravue-insert:route }}";
+        $new_route .= $this->tabs(2) . "// {{ laravue-insert:route }}";
 
         return str_replace('// {{ laravue-insert:route }}', $new_route, $route_file);
     }
@@ -75,7 +75,7 @@ class LaravueRouteCommand extends LaravueCommand
 
         $new_route = "";
         $new_route .= "Route::get('$route/{reportType}', '$model" . "ReportController@index');" . PHP_EOL;
-        $new_route .= "\t// {{ laravue-insert:report }}";
+        $new_route .= $this->tabs(2) . "// {{ laravue-insert:report }}";
 
         return str_replace('// {{ laravue-insert:report }}', $new_route, $route_file);
     }
