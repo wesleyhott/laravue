@@ -218,6 +218,9 @@ class LaravueCommand extends Command
             case 'front_module_route':
                 $front_directory = $this->fileBuildPath($front_directory, 'router');
                 break;
+            case 'front_module_index':
+                $front_directory = $this->fileBuildPath($front_directory, 'router', 'modules');
+                break;
         }
 
         $laravue_test_dir = $this->fileBuildPath($current_directory, 'front');
@@ -1260,5 +1263,22 @@ class LaravueCommand extends Command
     {
         $return = str_replace("// {{ laravue-insert:{$key} }}", $replacement, $stub);
         return $return;
+    }
+
+    protected function lookForInFile(string $path, string $needle): bool
+    {
+        $found = false;
+        $file = @fopen($path, "r");
+        if ($file) {
+            while (($line = fgets($file, 4096)) !== false) {
+                if (strpos($line, $needle) !== false) {
+                    $found = true;
+                    break;
+                }
+            }
+            fclose($file);
+        }
+
+        return $found;
     }
 }
