@@ -17,6 +17,10 @@ class LaravueServiceProvider extends ServiceProvider
                 Commands\LaravueControllerCommand::class,
                 Commands\LaravueDbSeederCommand::class,
                 Commands\LaravueFrontCommand::class,
+
+                Commands\LaravueFrontModuleIndexCommand::class,
+                Commands\LaravueFrontModuleRouteCommand::class,
+
                 Commands\LaravueFrontCreateCommand::class,
                 Commands\LaravueFrontDeleteCommand::class,
                 Commands\LaravueFrontEditCommand::class,
