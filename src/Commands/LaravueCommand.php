@@ -212,6 +212,7 @@ class LaravueCommand extends Command
     {
         $current_directory = getcwd();
         $paths = explode("/", str_replace('\\', '/', $current_directory));
+        $parsed_module = $this->option('module') ? Str::ucfirst($this->option('module')) : '';
 
         $front_directory = 'src';
         switch ($this->type) {
@@ -220,6 +221,9 @@ class LaravueCommand extends Command
                 break;
             case 'front_module_index':
                 $front_directory = $this->fileBuildPath($front_directory, 'router', 'modules');
+                break;
+            case 'front_module_page':
+                $front_directory = $this->fileBuildPath($front_directory, 'pages', $parsed_module);
                 break;
         }
 
@@ -1239,6 +1243,11 @@ class LaravueCommand extends Command
     }
 
     // Frontend Generation
+    protected function replaceLcfirstModel(string $stub, string $module): string
+    {
+        return str_replace('{{ lcfirst_model }}', Str::lcfirst($module), $stub);
+    }
+
     protected function replaceUpperModule(string $stub, string $module): string
     {
         return str_replace('{{ upper_module }}',  Str::upper(Str::snake($module)), $stub);

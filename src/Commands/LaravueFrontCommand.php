@@ -29,8 +29,23 @@ class LaravueFrontCommand extends Command
      */
     public function handle()
     {
+        // Module
+        $this->createModulePage();
         $this->createModuleRoute();
         $this->createModuleIndex();
+    }
+
+    /**
+     * Creates the router/modules/index.ts for the given model.
+     *
+     * @return void
+     */
+    protected function createModulePage()
+    {
+        $this->call('laravue:front-module-page', [
+            'model' => $this->argument('model'),
+            '--module' =>  $this->option('module'),
+        ]);
     }
 
     /**
