@@ -55,8 +55,23 @@ class LaravueFrontModulePageCommand extends LaravueCommand
 
   protected function build(string $path, string $model, string $module): string
   {
+    $this->createIndexFileIfNotExists($module);
     $route_file = $this->files->get($path);
     return $this->replaceRouteRoutes($route_file, $model);
+  }
+
+  protected function createIndexFileIfNotExists(string $module)
+  {
+    $path = $this->getFrontPath("{$module}Index.vue");
+
+    if (file_exists($path)) {
+      return;
+    }
+
+    $stub = $this->files->get($this->getStub('front/module-index'));
+    $stub = $this->replacePluralTitleModule($stub, $module);
+    $this->createFileWithContent($path, $stub);
+    $this->files->put($path, $stub);
   }
 
   protected function replaceRouteRoutes($route_file, $model)

@@ -99,6 +99,20 @@ class LaravueCommand extends Command
     }
 
     /**
+     * Create a file with con if it do not exists.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    protected function createFileWithContent($path, $content)
+    {
+        $this->makeDirectory($path);
+        $file = fopen($path, "w") or die("Unable to open file! File path: {$path}");
+        fwrite($file, $content);
+        fclose($file);
+    }
+
+    /**
      * Get the destination class path.
      *
      * @param  string  $model model name
@@ -325,11 +339,13 @@ class LaravueCommand extends Command
     /**
      * Get the stub file for the generator.
      *
-     * @return string
+     * @param string $name The stub name
+     * @return string The object stub_path or the given stub name
      */
-    protected function getStub()
+    protected function getStub(string $name = null): string
     {
-        return $this->resolveStubPath("/stubs/$this->stubPath.stub");
+        $stub = empty($name) ? $this->stubPath : $name;
+        return $this->resolveStubPath("/stubs/{$stub}.stub");
     }
 
     /**
@@ -1251,6 +1267,11 @@ class LaravueCommand extends Command
     protected function replaceUpperModule(string $stub, string $module): string
     {
         return str_replace('{{ upper_module }}',  Str::upper(Str::snake($module)), $stub);
+    }
+
+    protected function replacePluralTitleModule(string $stub, string $module): string
+    {
+        return str_replace('{{ plural_title_module }}',  $this->getTitle($module, true), $stub);
     }
 
     protected function replaceSnakeModule(string $stub, string $module): string

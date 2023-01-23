@@ -1,5 +1,5 @@
 <template>
-  <ModuleLayout title="New Modules" :menus="moduleMenus" />
+  <ModuleLayout title="{{ plural_title_module }}" :menus="moduleMenus" />
 </template>
 
 <script setup lang="ts">
