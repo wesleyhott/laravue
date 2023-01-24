@@ -1264,6 +1264,11 @@ class LaravueCommand extends Command
         return str_replace('{{ lcfirst_model }}', Str::lcfirst($module), $stub);
     }
 
+    protected function replacePluralLcfirstModel(string $stub, string $module): string
+    {
+        return str_replace('{{ plural_lcfirst_model }}', $this->pluralize(Str::lcfirst($module)), $stub);
+    }
+
     protected function replaceUpperModule(string $stub, string $module): string
     {
         return str_replace('{{ upper_module }}',  Str::upper(Str::snake($module)), $stub);

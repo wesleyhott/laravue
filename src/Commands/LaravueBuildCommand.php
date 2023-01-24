@@ -91,7 +91,7 @@ class LaravueBuildCommand extends LaravueCommand
             $this->call('laravue:front', [
                 'model' => $models,
                 '--fields' =>  $this->option('fields'),
-                '--outdocker' =>  $this->option('outdocker'),
+                '--module' =>  $this->option('schema'),
             ]);
         }
     }

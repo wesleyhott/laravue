@@ -42,7 +42,7 @@ class LaravueFrontModulePageCommand extends LaravueCommand
 
     $path = $this->getFrontPath("{$module}Index.vue");
     try {
-      $module_exists = $this->lookForInFile($path, Str::snake($module));
+      $module_exists = $this->lookForInFile($path, $this->getTitle($model));
       if ($module_exists) {
         return;
       }
@@ -80,13 +80,13 @@ class LaravueFrontModulePageCommand extends LaravueCommand
                       {
                           title: '{{ title }}',
                           icon: 'drag_indicator',
-                          route: { name: '{{ lcfirst_model }}' },
+                          route: { name: '{{ plural_lcfirst_model }}' },
                         },
                         // {{ laravue-insert:route }}
                       STUB;
     $new_route = $stub_route;
     $new_route = $this->replaceTitle($new_route, $model);
-    $new_route = $this->replaceLcfirstModel($new_route, $model);
+    $new_route = $this->replacePluralLcfirstModel($new_route, $model);
 
     return $this->replaceInsert('route', $new_route, $route_file);
   }
