@@ -36,19 +36,19 @@ class LaravueFrontModulePageRoutesCommand extends LaravueCommand
   public function handle()
   {
     $module = $this->option('module');
-    $lower_module = Str::lower($module);
+    $snake_module = Str::snake($module);
     $argumentModel = $this->argument('model');
     $model = is_array($argumentModel) ? Str::ucfirst(trim($argumentModel[0])) : Str::ucfirst(trim($argumentModel));
     $date = now();
 
-    $path = $this->getFrontPath("{$lower_module}.ts");
+    $path = $this->getFrontPath("{$snake_module}.ts");
     try {
       $module_exists = $this->lookForInFile($path, $model);
       if ($module_exists) {
         return;
       }
       $this->files->put($path, $this->build($path, $model, $module));
-      $this->info("$date - [ $model ] >> {$lower_module}.ts");
+      $this->info("$date - [ $model ] >> {$snake_module}.ts");
     } catch (Exception $ex) {
       $this->error('File not found: ' . $path);
     }
@@ -56,7 +56,7 @@ class LaravueFrontModulePageRoutesCommand extends LaravueCommand
 
   protected function build(string $path, string $model, string $module): string
   {
-    $this->createRouteFileIfNotExists($module);
+    $this->createRouteFileIfNotExists(Str::snake($module));
     $route_file = $this->files->get($path);
     return $this->replaceRouteRoutes($route_file, $module, $model);
   }
@@ -89,14 +89,14 @@ class LaravueFrontModulePageRoutesCommand extends LaravueCommand
 
     $stub_route = <<<STUB
                       {
-                          path: "{{ snake_path_module }}{{ plural_snake_model }}",
-                          name: "{{ lcfirst_module }}{{ plural_model }}",
-                          component: () => import("src/pages/{{ route_module }}{{ model }}/{{ model }}IndexPage.vue"),
+                          path: '{{ snake_path_module }}{{ plural_snake_model }}',
+                          name: '{{ lcfirst_module }}{{ plural_model }}',
+                          component: () => import('src/pages/{{ route_module }}{{ model }}/{{ model }}IndexPage.vue'),
                         },
                         {
-                          path: "{{ snake_path_module }}{{ snake_model }}_save/:id?",
-                          name: "{{ lcfirst_module }}{{ model }}Save",
-                          component: () => import("src/pages/{{ route_module }}{{ model }}/{{ model }}SavePage.vue"),
+                          path: '{{ snake_path_module }}{{ snake_model }}_save/:id?',
+                          name: '{{ lcfirst_module }}{{ model }}Save',
+                          component: () => import('src/pages/{{ route_module }}{{ model }}/{{ model }}SavePage.vue'),
                         },
                         // {{ laravue-insert:route }}
                       STUB;

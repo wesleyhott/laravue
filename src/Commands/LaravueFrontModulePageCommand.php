@@ -79,7 +79,7 @@ class LaravueFrontModulePageCommand extends LaravueCommand
     $stub_route = <<<STUB
                       {
                           title: '{{ title }}',
-                          icon: 'drag_indicator',
+                          icon: 'drag_indicator', // Change: https://fonts.google.com/icons?icon.set=Material+Icons
                           route: { name: '{{ plural_lcfirst_model }}' },
                         },
                         // {{ laravue-insert:route }}

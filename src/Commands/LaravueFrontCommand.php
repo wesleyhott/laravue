@@ -30,7 +30,7 @@ class LaravueFrontCommand extends Command
     public function handle()
     {
         // Module
-        // $this->createModulePageRoutes();
+        $this->createModulePageRoutes();
         $this->createModulePage();
         $this->createModuleRoute();
         $this->createModuleIndex();

@@ -67,7 +67,7 @@ class LaravueFrontModuleIndexCommand extends LaravueCommand
                       {
                           title: '{{ ucfirst_module }}',
                           caption: '',
-                          icon: 'drag_indicator',
+                          icon: 'drag_indicator', // Change: https://fonts.google.com/icons?icon.set=Material+Icons
                           route: { name: '{{ snake_module }}' },
                         },
                         // {{ laravue-insert:module }}
