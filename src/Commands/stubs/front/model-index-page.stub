@@ -1,0 +1,43 @@
+<template>
+  <laravue-page card-classes="no-padding">
+    <laravue-data-table
+      title="{{ plural_title }}"
+      route="{{ lcfirst_model }}Save"
+      api-endpoint="{{ route_model }}"
+      :columns="columns"
+      sortBy="{{ selected_label }}"
+    >
+      <template v-slot:detailsDialog="{ model }">
+        <{{ kebab_model }}-detail-form :model="model" />
+      </template>
+    </laravue-data-table>
+  </laravue-page>
+</template>
+
+<script setup lang="ts">
+import { LaravueDataTableColumn } from "src/types/LaravueDataTableColumn";
+import LaravueDataTable from "src/pages/components/LaravueDataTable.vue";
+import {{ model }}DetailForm from "src/pages/{{ module }}/{{ model }}/forms/{{ model }}DetailForm.vue";
+import LaravuePage from "pages/components/LaravuePage.vue";
+
+const columns: LaravueDataTableColumn[] = [
+  {
+    name: "id",
+    classes: "hidden",
+    headerClasses: "hidden",
+    required: true,
+    label: "Id",
+    align: "left",
+    field: "id",
+    sortable: false,
+    filterable: false,
+  },{{ fields }}
+  {
+    name: "actions",
+    field: "actions",
+    label: "Actions",
+    align: "right",
+    filterable: false,
+  },
+];
+</script>

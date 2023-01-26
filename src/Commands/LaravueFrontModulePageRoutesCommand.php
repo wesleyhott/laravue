@@ -71,7 +71,7 @@ class LaravueFrontModulePageRoutesCommand extends LaravueCommand
 
     $stub = $this->files->get($this->getStub('front/module-page-routes'));
     $stub = $this->replaceUpperModule($stub, $module);
-    $this->createFileWithContent($path, $stub);
+    $this->createFileWithContents($path, $stub);
     $this->files->put($path, $stub);
   }
 

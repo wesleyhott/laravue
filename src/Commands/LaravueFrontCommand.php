@@ -30,10 +30,25 @@ class LaravueFrontCommand extends Command
     public function handle()
     {
         // Module
+        $this->createModelIndexPage();
         $this->createModulePageRoutes();
         $this->createModulePage();
         $this->createModuleRoute();
         $this->createModuleIndex();
+    }
+
+    /**
+     * Creates the pages/<<module?>>/<<model>>/<<Model>>IndexPage.vue for the given model.
+     *
+     * @return void
+     */
+    protected function createModelIndexPage()
+    {
+        $this->call('laravue:front-model-index', [
+            'model' => $this->argument('model'),
+            '--module' =>  $this->option('module'),
+            '--fields' =>  $this->option('fields'),
+        ]);
     }
 
     /**

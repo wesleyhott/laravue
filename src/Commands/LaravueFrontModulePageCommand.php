@@ -70,7 +70,7 @@ class LaravueFrontModulePageCommand extends LaravueCommand
 
     $stub = $this->files->get($this->getStub('front/module-index'));
     $stub = $this->replacePluralTitleModule($stub, $module);
-    $this->createFileWithContent($path, $stub);
+    $this->createFileWithContents($path, $stub);
     $this->files->put($path, $stub);
   }
 

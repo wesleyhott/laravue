@@ -99,16 +99,16 @@ class LaravueCommand extends Command
     }
 
     /**
-     * Create a file with con if it do not exists.
+     * Creates or overwrite a file with contents.
      *
      * @param  string  $path
-     * @return string
+     * @return void
      */
-    protected function createFileWithContent($path, $content)
+    protected function createFileWithContents(string $path, string $contents): void
     {
         $this->makeDirectory($path);
         $file = fopen($path, "w") or die("Unable to open file! File path: {$path}");
-        fwrite($file, $content);
+        fwrite($file, $contents);
         fclose($file);
     }
 
@@ -227,6 +227,7 @@ class LaravueCommand extends Command
         $current_directory = getcwd();
         $paths = explode("/", str_replace('\\', '/', $current_directory));
         $parsed_module = $this->option('module') ? Str::ucfirst($this->option('module')) : '';
+        $parsed_model = $this->argument('model') ? Str::ucfirst($this->argument('model')) : '';
 
         $front_directory = 'src';
         switch ($this->type) {
@@ -241,6 +242,9 @@ class LaravueCommand extends Command
                 break;
             case 'front_module_page_routes':
                 $front_directory = $this->fileBuildPath($front_directory, 'router', 'modules');
+                break;
+            case 'front_model_index':
+                $front_directory = $this->fileBuildPath($front_directory, 'pages', $parsed_module, $parsed_model);
                 break;
         }
 
@@ -1204,6 +1208,43 @@ class LaravueCommand extends Command
     }
 
     /**
+     * Returns proper fields from a select model by key name.
+     *
+     * @param string $module
+     * @param string $model
+     * 
+     * @return string $properties
+     */
+    protected function getLabelFromModel(string $module, string $model): string
+    {
+        $parsed_module = empty($module) ? '' : "{$module}/";
+        $properties = [];
+        $path = $this->makePath("Models/{$parsed_module}{$model}.php");
+
+        $file = @fopen($path, "r");
+        if ($file) {
+            $found = false;
+            while (($line = fgets($file, 4096)) !== false) {
+                if (strpos($line, '@property') !== false) {
+                    $found = true;
+                    $splited = explode("$", $line);
+                    array_push($properties, trim($splited[1]));
+                }
+                if ($found && strpos($line, 'extends') !== false) {
+                    break;
+                }
+            }
+            if (!feof($file) && !$found) {
+                $this->info("Error: file not found in path: $path");
+            }
+
+            fclose($file);
+        }
+
+        return $this->getSelectLabel($properties);
+    }
+
+    /**
      * Returns language setted on config/laravue.php.
      * Ex: user_id, returns fields from model User.
      *
@@ -1267,14 +1308,34 @@ class LaravueCommand extends Command
         return str_replace('{{ lcfirst_model }}', Str::lcfirst($module), $stub);
     }
 
+    protected function replacePluralTitle(string $stub, string $model): string
+    {
+        return str_replace('{{ plural_title }}',  $this->getTitle($model, true), $stub);
+    }
+
+    protected function replaceKebabModel(string $stub, string $model): string
+    {
+        return str_replace('{{ kebab_model }}',  Str::kebab($model), $stub);
+    }
+
+    protected function replaceRouteModel(string $stub, string $model): string
+    {
+        return str_replace('{{ route_model }}',  Str::kebab($this->pluralize($model)), $stub);
+    }
+
     protected function replacePluralLcfirstModel(string $stub, string $module): string
     {
         return str_replace('{{ plural_lcfirst_model }}', $this->pluralize(Str::lcfirst($module)), $stub);
     }
 
-    protected function replaceUpperModule(string $stub, string $module): string
+    protected function replaceSelectedLabel(string $stub, string $model): string
     {
-        return str_replace('{{ upper_module }}',  Str::upper(Str::snake($module)), $stub);
+        return str_replace('{{ selected_label }}',  Str::kebab($model, true), $stub);
+    }
+
+    protected function replaceModule(string $stub, string $module): string
+    {
+        return str_replace('{{ module }}',  Str::ucfirst($module), $stub);
     }
 
     protected function replacePluralTitleModule(string $stub, string $module): string
