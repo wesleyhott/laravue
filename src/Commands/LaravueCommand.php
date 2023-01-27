@@ -227,7 +227,9 @@ class LaravueCommand extends Command
         $current_directory = getcwd();
         $paths = explode("/", str_replace('\\', '/', $current_directory));
         $parsed_module = $this->option('module') ? Str::ucfirst($this->option('module')) : '';
-        $parsed_model = $this->argument('model') ? Str::ucfirst($this->argument('model')) : '';
+        $argument_model = $this->argument('model');
+        $model = is_array($argument_model) ? trim($argument_model[0]) : trim($argument_model);
+        $parsed_model = $argument_model ? Str::ucfirst($model) : '';
 
         $front_directory = 'src';
         switch ($this->type) {

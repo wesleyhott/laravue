@@ -15,28 +15,28 @@
 </template>
 
 <script setup lang="ts">
-import { LaravueDataTableColumn } from "src/types/LaravueDataTableColumn";
-import LaravueDataTable from "src/pages/components/LaravueDataTable.vue";
-import {{ model }}DetailForm from "src/pages/{{ module }}/{{ model }}/forms/{{ model }}DetailForm.vue";
-import LaravuePage from "pages/components/LaravuePage.vue";
+import { LaravueDataTableColumn } from 'src/types/LaravueDataTableColumn';
+import LaravueDataTable from 'src/pages/components/LaravueDataTable.vue';
+import {{ model }}DetailForm from 'src/pages/{{ module }}/{{ model }}/forms/{{ model }}DetailForm.vue';
+import LaravuePage from 'pages/components/LaravuePage.vue';
 
 const columns: LaravueDataTableColumn[] = [
   {
-    name: "id",
-    classes: "hidden",
-    headerClasses: "hidden",
+    name: 'id',
+    classes: 'hidden',
+    headerClasses: 'hidden',
     required: true,
-    label: "Id",
-    align: "left",
-    field: "id",
+    label: 'Id',
+    align: 'left',
+    field: 'id',
     sortable: false,
     filterable: false,
   },{{ fields }}
   {
-    name: "actions",
-    field: "actions",
-    label: "Actions",
-    align: "right",
+    name: 'actions',
+    field: 'actions',
+    label: 'Actions',
+    align: 'right',
     filterable: false,
   },
 ];
