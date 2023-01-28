@@ -248,6 +248,9 @@ class LaravueCommand extends Command
             case 'front_model_index':
                 $front_directory = $this->fileBuildPath($front_directory, 'pages', $parsed_module, $parsed_model);
                 break;
+            case 'front_model_detail':
+                $front_directory = $this->fileBuildPath($front_directory, 'pages', $parsed_module, $parsed_model, 'forms');
+                break;
         }
 
         $laravue_test_dir = $this->fileBuildPath($current_directory, 'front');
@@ -1338,6 +1341,16 @@ class LaravueCommand extends Command
     protected function replaceModule(string $stub, string $module): string
     {
         return str_replace('{{ module }}',  Str::ucfirst($module), $stub);
+    }
+
+    protected function replacePathModule(string $stub, string $module): string
+    {
+        return str_replace('{{ path_module }}',  Str::ucfirst($module) . '/', $stub);
+    }
+
+    protected function replacePathSnakeModule(string $stub, string $module): string
+    {
+        return str_replace('{{ path_snake_module }}',  Str::snake($module) . '/', $stub);
     }
 
     protected function replacePluralTitleModule(string $stub, string $module): string

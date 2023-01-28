@@ -1,0 +1,27 @@
+<template>
+  <div v-if="props.model">
+    <q-card>
+      <q-card-section>
+        <div class="text-h6">{{ title }} Detail</div>
+      </q-card-section>
+
+      <q-card-section class="q-pt-none" style="width: 400px">
+        <div class="q-pa-md q-gutter-sm">{{ fields }}
+        </div>
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn flat label="Close" color="primary" v-close-popup />
+      </q-card-actions>
+    </q-card>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { {{ model }} } from 'src/types/models/{{ path_snake_module }}{{ model }}';
+
+interface Props {
+  model: {{ model }};
+}
+const props = defineProps<Props>();
+</script>
