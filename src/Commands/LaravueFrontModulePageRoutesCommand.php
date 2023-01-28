@@ -41,38 +41,26 @@ class LaravueFrontModulePageRoutesCommand extends LaravueCommand
     $model = is_array($argumentModel) ? Str::ucfirst(trim($argumentModel[0])) : Str::ucfirst(trim($argumentModel));
     $date = now();
 
-    $path = $this->getFrontPath("{$snake_module}.ts");
+    $file_name = "{$snake_module}.ts";
+    $path = $this->getFrontPath($file_name);
+    $file = $this->createFileIfNotExists($path, 'front/module-page-routes');
     try {
       $module_exists = $this->lookForInFile($path, $model);
       if ($module_exists) {
         return;
       }
-      $this->files->put($path, $this->build($path, $model, $module));
-      $this->info("$date - [ $model ] >> {$snake_module}.ts");
+      $contents = $this->build($file, $model, $module);
+      $this->files->put($path, $contents);
+      $this->info("$date - [ $model ] >> {$file_name}");
     } catch (Exception $ex) {
       $this->error('File not found: ' . $path);
     }
   }
 
-  protected function build(string $path, string $model, string $module): string
+  protected function build(string $file, string $model, string $module): string
   {
-    $this->createRouteFileIfNotExists(Str::snake($module));
-    $route_file = $this->files->get($path);
-    return $this->replaceRouteRoutes($route_file, $module, $model);
-  }
-
-  protected function createRouteFileIfNotExists(string $module)
-  {
-    $path = $this->getFrontPath("{$module}.ts");
-
-    if (file_exists($path)) {
-      return;
-    }
-
-    $stub = $this->files->get($this->getStub('front/module-page-routes'));
-    $stub = $this->replaceUpperModule($stub, $module);
-    $this->createFileWithContents($path, $stub);
-    $this->files->put($path, $stub);
+    $file = $this->replaceUpperModule($file, Str::snake($module));
+    return $this->replaceRouteRoutes($file, $module, $model);
   }
 
   protected function replaceRouteRoutes(string $route_file, string $module, string $model)
@@ -80,7 +68,7 @@ class LaravueFrontModulePageRoutesCommand extends LaravueCommand
     $route_module = empty($module) ? '' : $module  . "/";
 
     $plural_model = $this->pluralize($model);
-    $lcfirst_plural_model = Str::lcfirst($$this->pluralize($model));
+    $lcfirst_plural_model = Str::lcfirst($this->pluralize($model));
     $lcfirst_model = Str::lcfirst($model);
     $plural_snake_model = Str::snake($plural_model);
     $snake_model = Str::snake($model);

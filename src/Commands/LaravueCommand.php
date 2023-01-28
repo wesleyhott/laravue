@@ -1373,6 +1373,11 @@ class LaravueCommand extends Command
         return str_replace('{{ ucfirst_module }}', Str::ucfirst($module), $stub);
     }
 
+    protected function replaceUpperModule(string $stub, string $module): string
+    {
+        return str_replace('{{ upper_module }}', Str::upper($module), $stub);
+    }
+
     protected function replaceInsert(string $key, string $replacement, string $stub): string
     {
         $return = str_replace("// {{ laravue-insert:{$key} }}", $replacement, $stub);
@@ -1394,5 +1399,19 @@ class LaravueCommand extends Command
         }
 
         return $found;
+    }
+
+    protected function createFileIfNotExists(string $path, string $stub): string
+    {
+        if (file_exists($path)) {
+            return $this->files->get($path);
+        }
+
+        $file = $this->files->get($this->getStub($stub));
+
+        $this->createFileWithContents($path, $file);
+        $this->files->put($path, $file);
+
+        return $file;
     }
 }
