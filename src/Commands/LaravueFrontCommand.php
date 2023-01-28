@@ -80,7 +80,7 @@ class LaravueFrontCommand extends Command
     }
 
     /**
-     * Creates the router/modules/index.ts for the given model.
+     * Creates the router/modules/<<module>>.ts for the given model.
      *
      * @return void
      */

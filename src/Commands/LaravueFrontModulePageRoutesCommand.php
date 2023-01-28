@@ -19,7 +19,7 @@ class LaravueFrontModulePageRoutesCommand extends LaravueCommand
    *
    * @var string
    */
-  protected $description = 'Creates a frontend Module Page Routes for the model';
+  protected $description = 'Creates the router/modules/<<module>>.ts for the given model.';
 
   /**
    * File type that is been created/modified.
@@ -80,6 +80,8 @@ class LaravueFrontModulePageRoutesCommand extends LaravueCommand
     $route_module = empty($module) ? '' : $module  . "/";
 
     $plural_model = $this->pluralize($model);
+    $lcfirst_plural_model = Str::lcfirst($$this->pluralize($model));
+    $lcfirst_model = Str::lcfirst($model);
     $plural_snake_model = Str::snake($plural_model);
     $snake_model = Str::snake($model);
 
@@ -87,12 +89,12 @@ class LaravueFrontModulePageRoutesCommand extends LaravueCommand
     $stub_route = <<<STUB
                       {
                           path: '{{ plural_snake_model }}',
-                          name: '{{ plural_model }}',
+                          name: '{{ lcfirst_plural_model }}',
                           component: () => import('src/pages/{{ route_module }}{{ model }}/{{ model }}IndexPage.vue'),
                         },
                         {
                           path: '{{ snake_model }}_save/:id?',
-                          name: '{{ model }}Save',
+                          name: '{{ lcfirst_model }}Save',
                           component: () => import('src/pages/{{ route_module }}{{ model }}/{{ model }}SavePage.vue'),
                         },
                         // {{ laravue-insert:route }}
@@ -100,9 +102,10 @@ class LaravueFrontModulePageRoutesCommand extends LaravueCommand
     $new_route = $stub_route;
 
     $new_route = str_replace('{{ plural_snake_model }}',  $plural_snake_model, $new_route);
-    $new_route = str_replace('{{ plural_model }}',  $plural_model, $new_route);
+    $new_route = str_replace('{{ lcfirst_plural_model }}',  $lcfirst_plural_model, $new_route);
     $new_route = str_replace('{{ route_module }}',  $route_module, $new_route);
     $new_route = str_replace('{{ model }}',  $model, $new_route);
+    $new_route = str_replace('{{ lcfirst_model }}',  $lcfirst_model, $new_route);
     $new_route = str_replace('{{ snake_model }}',  $snake_model, $new_route);
 
     return $this->replaceInsert('route', $new_route, $route_file);
