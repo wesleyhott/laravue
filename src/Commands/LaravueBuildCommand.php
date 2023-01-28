@@ -136,6 +136,7 @@ class LaravueBuildCommand extends LaravueCommand
         $schema_route = empty($schema) ? '' : Str::snake($this->option('schema')) . '-';
         $schema_name = empty($schema) ? '' : $this->getTitle($this->option('schema'));
 
+        // TODO: create a separated command for create model permissions
         $this->call('laravue:spatie-permission', [
             'name' =>  "c-{$schema_route}{$permission_route}",
             '--label' => "Create {$schema_name} {$permission_name}",

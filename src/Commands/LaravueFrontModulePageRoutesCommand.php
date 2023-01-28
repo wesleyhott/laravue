@@ -77,9 +77,6 @@ class LaravueFrontModulePageRoutesCommand extends LaravueCommand
 
   protected function replaceRouteRoutes(string $route_file, string $module, string $model)
   {
-    $snake_module = empty($module) ? '' : Str::snake($module);
-    $lcfirst_module = empty($module) ? '' : Str::lcfirst($module);
-    $snake_path_module = empty($snake_module) ? '' : $snake_module  . "_";
     $route_module = empty($module) ? '' : $module  . "/";
 
     $plural_model = $this->pluralize($model);
@@ -89,22 +86,20 @@ class LaravueFrontModulePageRoutesCommand extends LaravueCommand
 
     $stub_route = <<<STUB
                       {
-                          path: '{{ snake_path_module }}{{ plural_snake_model }}',
-                          name: '{{ lcfirst_module }}{{ plural_model }}',
+                          path: '{{ plural_snake_model }}',
+                          name: '{{ plural_model }}',
                           component: () => import('src/pages/{{ route_module }}{{ model }}/{{ model }}IndexPage.vue'),
                         },
                         {
-                          path: '{{ snake_path_module }}{{ snake_model }}_save/:id?',
-                          name: '{{ lcfirst_module }}{{ model }}Save',
+                          path: '{{ snake_model }}_save/:id?',
+                          name: '{{ model }}Save',
                           component: () => import('src/pages/{{ route_module }}{{ model }}/{{ model }}SavePage.vue'),
                         },
                         // {{ laravue-insert:route }}
                       STUB;
     $new_route = $stub_route;
 
-    $new_route = str_replace('{{ snake_path_module }}',  $snake_path_module, $new_route);
     $new_route = str_replace('{{ plural_snake_model }}',  $plural_snake_model, $new_route);
-    $new_route = str_replace('{{ lcfirst_module }}',  $lcfirst_module, $new_route);
     $new_route = str_replace('{{ plural_model }}',  $plural_model, $new_route);
     $new_route = str_replace('{{ route_module }}',  $route_module, $new_route);
     $new_route = str_replace('{{ model }}',  $model, $new_route);

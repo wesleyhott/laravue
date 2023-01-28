@@ -134,6 +134,7 @@ class LaravueSeedCommand extends LaravueCommand
                     $parsedValue = '\'' . date("H:i:s") . '\'';
                     break;
                 default:
+                    // TODO: verify field size
                     $dummy_data = $this->isEnLanguage()
                         ? "'Just some example {$key} for test.'"
                         : "'Apenas {$key} para teste.'";
