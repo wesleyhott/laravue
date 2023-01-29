@@ -12,7 +12,7 @@ class LaravueFrontModelIndexPageCommand extends LaravueCommand
    *
    * @var string
    */
-  protected $signature = 'laravue:front-model-index {model*} {--f|fields=} {--m|module=}';
+  protected $signature = 'laravue:front-model-index-page {model*} {--f|fields=} {--m|module=}';
 
   /**
    * The console command description.

@@ -74,7 +74,7 @@ class LaravueFrontCommand extends Command
      */
     protected function createModelIndexPage()
     {
-        $this->call('laravue:front-model-index', [
+        $this->call('laravue:front-model-index-page', [
             'model' => $this->argument('model'),
             '--module' =>  $this->option('module'),
             '--fields' =>  $this->option('fields'),

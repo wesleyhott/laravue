@@ -17,7 +17,7 @@ class MakeFrontModelIndexTest extends TestCase
         $testClass = str_replace("tests/Unit", "", __DIR__) . "front/src/pages/{$module}/{$model}/{$model}IndexPage.vue";
 
         // Run the make command
-        Artisan::call('laravue:front-model-index', [
+        Artisan::call('laravue:front-model-index-page', [
             'model' => $model,
             '--module' => $module,
             '--fields' => 'name:s.n40,age:i,data_inicio:d,data_fim:d.n,ativo:b,hora:t,user_id',
