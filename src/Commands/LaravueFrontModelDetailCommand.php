@@ -26,7 +26,7 @@ class LaravueFrontModelDetailCommand extends LaravueCommand
    *
    * @var string
    */
-  protected $type = 'front_model_detail';
+  protected $type = 'front_model_form_detail';
 
   /**
    * Execute the console command.

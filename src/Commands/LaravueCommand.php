@@ -249,7 +249,7 @@ class LaravueCommand extends Command
             case 'front_model_save_page':
                 $front_directory = $this->fileBuildPath($front_directory, 'pages', $parsed_module, $parsed_model);
                 break;
-            case 'front_model_detail':
+            case 'front_model_form_detail':
                 $front_directory = $this->fileBuildPath($front_directory, 'pages', $parsed_module, $parsed_model, 'forms');
                 break;
         }
