@@ -30,6 +30,7 @@ class LaravueFrontCommand extends Command
     public function handle()
     {
         // Module
+        $this->createModelSavePage();
         $this->createModelDetailPage();
         $this->createModelIndexPage();
         $this->createModulePageRoutes();
@@ -46,6 +47,20 @@ class LaravueFrontCommand extends Command
     protected function createModelDetailPage()
     {
         $this->call('laravue:front-model-detail', [
+            'model' => $this->argument('model'),
+            '--module' =>  $this->option('module'),
+            '--fields' =>  $this->option('fields'),
+        ]);
+    }
+
+    /**
+     * Creates the pages/<<module?>>/<<model>>/<<Model>>SavePage.vue for the given model.
+     *
+     * @return void
+     */
+    protected function createModelSavePage()
+    {
+        $this->call('laravue:front-model-save-page', [
             'model' => $this->argument('model'),
             '--module' =>  $this->option('module'),
             '--fields' =>  $this->option('fields'),

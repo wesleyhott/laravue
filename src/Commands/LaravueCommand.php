@@ -246,6 +246,7 @@ class LaravueCommand extends Command
                 $front_directory = $this->fileBuildPath($front_directory, 'router', 'modules');
                 break;
             case 'front_model_index_page':
+            case 'front_model_save_page':
                 $front_directory = $this->fileBuildPath($front_directory, 'pages', $parsed_module, $parsed_model);
                 break;
             case 'front_model_detail':

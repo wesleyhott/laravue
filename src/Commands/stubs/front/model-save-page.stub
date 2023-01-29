@@ -1,0 +1,10 @@
+<template>
+  <laravue-page>
+    <{{ kebab_model }}-form />
+  </laravue-page>
+</template>
+
+<script setup lang="ts">
+import {{ model }}Form from './forms/{{ model }}Form.vue';
+import LaravuePage from 'pages/components/LaravuePage.vue';
+</script>
