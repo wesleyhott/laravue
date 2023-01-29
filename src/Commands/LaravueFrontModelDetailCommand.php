@@ -53,7 +53,7 @@ class LaravueFrontModelDetailCommand extends LaravueCommand
   protected function build(string $path, string $model, string $module): string
   {
     // Get File
-    $file_content = $this->createIndexFileIfNotExists($path, $module);
+    $file_content = $this->createIndexFileIfNotExists($path);
 
     // Replacements
     $file_content = $this->replaceTitle($file_content, $model);
@@ -64,7 +64,7 @@ class LaravueFrontModelDetailCommand extends LaravueCommand
     return $file_content;
   }
 
-  protected function createIndexFileIfNotExists(string $path, string $module): string
+  protected function createIndexFileIfNotExists(string $path): string
   {
     $content = $this->files->get($this->getStub('front/forms/model-detail-form'));
     if (!file_exists($path)) {

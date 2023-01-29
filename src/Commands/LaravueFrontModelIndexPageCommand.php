@@ -5,7 +5,7 @@ namespace wesleyhott\Laravue\Commands;
 use Exception;
 use Illuminate\Support\Str;
 
-class LaravueFrontModelIndexCommand extends LaravueCommand
+class LaravueFrontModelIndexPageCommand extends LaravueCommand
 {
   /**
    * The name and signature of the console command.
@@ -26,7 +26,7 @@ class LaravueFrontModelIndexCommand extends LaravueCommand
    *
    * @var string
    */
-  protected $type = 'front_model_index';
+  protected $type = 'front_model_index_page';
 
   /**
    * Execute the console command.
