@@ -78,7 +78,6 @@ class LaravueFrontCommand extends Command
         $this->call('laravue:front-model-save-page', [
             'model' => $this->argument('model'),
             '--module' =>  $this->option('module'),
-            '--fields' =>  $this->option('fields'),
         ]);
     }
 
