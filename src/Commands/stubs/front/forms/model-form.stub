@@ -1,0 +1,45 @@
+<template>
+  <laravue-form
+    @submit="onSubmit"
+    title="{{ title }} Registration"
+    :cancelRoute="{ name: '{{ lcfirst_plural_model }}' }"
+  >{{ fields }}
+  </laravue-form>
+</template>
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import laravueService from 'src/services/laravueService';
+import { useRouter, useRoute } from 'vue-router';
+import { {{ model }} } from 'src/types/models/{{ path_module }}{{ model }}';
+import { Result } from 'src/types/Result';
+import LaravueForm from 'components/LaravueForm.vue';
+
+const { show, store, update } = laravueService('{{ kebab_plural_module_model }}');
+const router = useRouter();
+const route = useRoute();
+
+onMounted(async () => {
+  if (route.params.id) {
+    const id = Number.parseInt(route.params.id.toString(), 10);
+    get{{ model }}(id);
+  }
+});
+
+const {{ lcfirst_model }} = ref<{{ model }}>({});
+const get{{ model }} = async (id: number) => {
+  {{ lcfirst_model }}.value = await show(id);
+};
+
+const onSubmit = async () => {
+  if (route.params.id) {
+    const id = Number.parseInt(route.params.id.toString(), 10);
+    const data = await update(id, {{ lcfirst_model }}.value);
+    if ((data as Result).errors) return; // do not change current page
+  } else {
+    const data = await store({{ lcfirst_model }}.value);
+    if ((data as Result).errors) return; // do not change current page
+  }
+
+  router.push({ name: '{{ lcfirst_plural_model }}' });
+};
+</script>

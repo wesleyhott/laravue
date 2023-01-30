@@ -43,7 +43,7 @@ class LaravueFrontModulePageRoutesCommand extends LaravueCommand
 
     $file_name = "{$snake_module}.ts";
     $path = $this->getFrontPath($file_name);
-    $file = $this->createFileIfNotExists($path, 'front/module-page-routes');
+    $file = $this->createFile($path, 'front/module-page-routes');
     try {
       $module_exists = $this->lookForInFile($path, $model);
       if ($module_exists) {

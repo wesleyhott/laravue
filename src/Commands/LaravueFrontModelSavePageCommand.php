@@ -43,7 +43,7 @@ class LaravueFrontModelSavePageCommand extends LaravueCommand
 
     $file_name = "{$model}SavePage.vue";
     $path = $this->getFrontPath($file_name);
-    $file = $this->createFileIfNotExists($path, 'front/model-save-page');
+    $file = $this->createFile($path, 'front/model-save-page');
     try {
       $file_exists = $this->lookForInFile($path, "{$model}Form");
       if ($file_exists) {

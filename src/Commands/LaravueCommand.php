@@ -250,6 +250,7 @@ class LaravueCommand extends Command
                 $front_directory = $this->fileBuildPath($front_directory, 'pages', $parsed_module, $parsed_model);
                 break;
             case 'front_model_form_detail':
+            case 'front_model_form':
                 $front_directory = $this->fileBuildPath($front_directory, 'pages', $parsed_module, $parsed_model, 'forms');
                 break;
         }
@@ -1309,9 +1310,14 @@ class LaravueCommand extends Command
     }
 
     // Frontend Generation
-    protected function replaceLcfirstModel(string $stub, string $module): string
+    protected function replaceLcfirstModel(string $stub, string $model): string
     {
-        return str_replace('{{ lcfirst_model }}', Str::lcfirst($module), $stub);
+        return str_replace('{{ lcfirst_model }}', Str::lcfirst($model), $stub);
+    }
+
+    protected function replaceLcfirstPluralModel(string $stub, string $model): string
+    {
+        return str_replace('{{ lcfirst_plural_model }}', Str::lcfirst($this->pluralize($model)), $stub);
     }
 
     protected function replacePluralTitle(string $stub, string $model): string
@@ -1322,6 +1328,16 @@ class LaravueCommand extends Command
     protected function replaceKebabModel(string $stub, string $model): string
     {
         return str_replace('{{ kebab_model }}',  Str::kebab($model), $stub);
+    }
+
+    protected function replaceKebabPluralModel(string $stub, string $model): string
+    {
+        return str_replace('{{ kebab_plural_model }}',  Str::kebab($this->pluralize($model)), $stub);
+    }
+
+    protected function replaceKebabPluralModuleModel(string $stub, string $module, string $model): string
+    {
+        return str_replace('{{ kebab_plural_module_model }}',  Str::kebab($this->pluralize("{$module}{$model}")), $stub);
     }
 
     protected function replaceRouteModel(string $stub, string $model): string
@@ -1402,9 +1418,9 @@ class LaravueCommand extends Command
         return $found;
     }
 
-    protected function createFileIfNotExists(string $path, string $stub): string
+    protected function createFile(string $path, string $stub, bool $override = false): string
     {
-        if (file_exists($path)) {
+        if (!$override && file_exists($path)) {
             return $this->files->get($path);
         }
 
