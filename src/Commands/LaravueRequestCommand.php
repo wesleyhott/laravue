@@ -160,6 +160,10 @@ class LaravueRequestCommand extends LaravueCommand
             if ($type == 'char') {
                 $type = 'string';
             }
+            // Text
+            if ($type == 'text') {
+                $type = 'string';
+            }
             // Datetime
             if ($type == 'dateTime') {
                 $type = 'date';

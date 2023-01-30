@@ -80,6 +80,7 @@ class LaravueModelCommand extends LaravueCommand
                 case 'cpf':
                 case 'cpfcnpj':
                 case 'cnpj':
+                case 'text':
                     $type = 'string';
                     break;
                 case 'monetario':
@@ -98,11 +99,16 @@ class LaravueModelCommand extends LaravueCommand
                 default:
                     $type = $this->getType($value);
             }
+            $comments = [];
+            $comments[] = $this->hasNullable($key) ? 'nullable' : 'not null';
+            if ($this->isUnique($key)) {
+                $comments[] = 'unique';
+            }
             if ($first) {
                 $first = false;
-                $returnFields .=  "* @property $type \$$key";
+                $returnFields .=  "* @property $type \$$key " . implode(', ', $comments);
             } else {
-                $returnFields .=  PHP_EOL . " * @property $type \$$key";
+                $returnFields .=  PHP_EOL . " * @property $type \$$key " . implode(', ', $comments);
             }
         }
 

@@ -99,6 +99,10 @@ class LaravueFrontModelFormCommand extends LaravueCommand
           $components .= $first_line . $this->componentFactory('input', $module, $model, $key, $is_nullable);
           $has_input = true;
           break;
+        case 'text':
+          $components .= $first_line . $this->componentFactory('textarea', $module, $model, $key, $is_nullable);
+          $has_input = true;
+          break;
         default:
           $components .= $first_line . $this->componentFactory('input', $module, $model, $key, $is_nullable);
       }
@@ -106,18 +110,18 @@ class LaravueFrontModelFormCommand extends LaravueCommand
 
     if ($has_input) {
       $import_input = <<< STUB
-                          <script setup lang="ts">
+                          import LaravueForm from 'components/LaravueForm.vue';
                           import LaravueInput from 'pages/components/LaravueInput.vue';
                           STUB;
-      $file = str_replace('<script setup lang="ts">', $import_input, $file);
+      $file = str_replace('import LaravueForm from \'components/LaravueForm.vue\';', $import_input, $file);
     }
 
     if ($has_select) {
       $import_input = <<< STUB
-                          <script setup lang="ts">
+                          import LaravueForm from 'components/LaravueForm.vue';
                           import LaravueSelect from 'pages/components/LaravueSelect.vue';
                           STUB;
-      $file = str_replace('<script setup lang="ts">', $import_input, $file);
+      $file = str_replace('import LaravueForm from \'components/LaravueForm.vue\';', $import_input, $file);
     }
 
     return str_replace('{{ fields }}', $components, $file);
@@ -128,6 +132,8 @@ class LaravueFrontModelFormCommand extends LaravueCommand
     switch ($component) {
       case 'input':
         return $this->inputComponent($model, $field, $is_nullable);
+      case 'textarea':
+        return $this->textAreaComponent($model, $field, $is_nullable);
       case 'select':
         return $this->selectComponent($module,  $model,  $field);
       case 'toggle':
@@ -147,6 +153,23 @@ class LaravueFrontModelFormCommand extends LaravueCommand
     $component = <<<STUB
                       <laravue-input
                             v-model="{$lcfirst_model}.{$field}"
+                            label="{$title_field}{$required}"
+                            :rules="[(val) => (val && val.length > 0) || '{$title_field} is required.']"
+                          />
+                      STUB;
+    return $component;
+  }
+
+  private function textAreaComponent(string $model, string $field, bool $is_nullable): string
+  {
+    $required = $is_nullable ? '' : ' *';
+    $title_field = $this->getTitle($field);
+    $lcfirst_model = Str::lcfirst($model);
+    $component = <<<STUB
+                      <laravue-input
+                            v-model="{$lcfirst_model}.{$field}"
+                            type="textarea"
+                            rows=4
                             label="{$title_field}{$required}"
                             :rules="[(val) => (val && val.length > 0) || '{$title_field} is required.']"
                           />
