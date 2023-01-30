@@ -45,7 +45,7 @@ class LaravueFrontCommand extends Command
      *
      * @return void
      */
-    protected function createModelFormlPage()
+    protected function createModelFormPage()
     {
         $this->call('laravue:front-model-form', [
             'model' => $this->argument('model'),
