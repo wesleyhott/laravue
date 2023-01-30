@@ -58,7 +58,7 @@ class LaravueFrontModelFormCommand extends LaravueCommand
     $file = $this->replaceLcfirstPluralModel($file, $model);
     $file = $this->replaceModel($file, $model);
     $file = $this->replaceLcfirstModel($file, $model);
-    $file = $this->replacePathModule($file, $module);
+    $file = $this->replacePathSnakeModule($file, $module);
     $file = $this->replaceKebabPluralModuleModel($file, $module, $model);
 
     $file = $this->replaceFields($file, $module, $model);
@@ -107,7 +107,7 @@ class LaravueFrontModelFormCommand extends LaravueCommand
     if ($has_input) {
       $import_input = <<< STUB
                           <script setup lang="ts">
-                          import LaravueInput from 'components/LaravueInput.vue';
+                          import LaravueInput from 'pages/components/LaravueInput.vue';
                           STUB;
       $file = str_replace('<script setup lang="ts">', $import_input, $file);
     }
@@ -115,7 +115,7 @@ class LaravueFrontModelFormCommand extends LaravueCommand
     if ($has_select) {
       $import_input = <<< STUB
                           <script setup lang="ts">
-                          import LaravueSelect from 'components/LaravueSelect.vue';
+                          import LaravueSelect from 'pages/components/LaravueSelect.vue';
                           STUB;
       $file = str_replace('<script setup lang="ts">', $import_input, $file);
     }
@@ -156,10 +156,11 @@ class LaravueFrontModelFormCommand extends LaravueCommand
 
   private function selectComponent(string $module, string $model, string $field): string
   { // field: user_id
-    $v_model = Str::lcfirst($model) . '.' . substr($field, 0, -3);
+    $clean_field = substr($field, 0, -3);
+    $v_model = Str::lcfirst($model) . '.' . $clean_field;
     $title = $this->getTitle($field);
-    $plural_model = $this->pluralize($model);
-    $endpoint = Str::kebab("{$module}{$plural_model}");
+    $plural_clean_field  = $this->pluralize($clean_field);
+    $endpoint = Str::kebab("{$module}-{$plural_clean_field}");
     $label = $this->getLabelFromModel($module, $model);
     $component = <<<STUB
                       <laravue-select
