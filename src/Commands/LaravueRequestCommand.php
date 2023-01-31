@@ -342,7 +342,7 @@ class LaravueRequestCommand extends LaravueCommand
         STUB;
         $merge_item_stub = PHP_EOL . <<<STUB
                     '{{ field }}' => isset(\$this->{{ property }})
-                        ? \$this->{{ relation }}['id']
+                        ? \$this->{{ property }}['id']
                         : null,
         STUB;
 
@@ -352,14 +352,12 @@ class LaravueRequestCommand extends LaravueCommand
             // Foreing Key
             if ($this->isFk($key)) {
                 $has_fk = true;
-                $property = str_replace('_id', '', $key);
-                $relation = Str::camel($property);
+                $property = str_replace('_id', '', Str::lcfirst(Str::studly($key)));
 
                 $merge_item .= $merge_item_stub;
 
                 $merge_item = str_replace('{{ field }}', $key, $merge_item);
                 $merge_item = str_replace('{{ property }}', $property, $merge_item);
-                $merge_item = str_replace('{{ relation }}', $relation, $merge_item);
             }
         }
         if ($has_fk) {

@@ -158,7 +158,7 @@ class LaravueResourceCommand extends LaravueCommand
                 $relations .= PHP_EOL . $this->tabs(3) . "'{$relation}' => new {$relatedModel}Resource({$relatedModel}::find(\$this->{$key})),";
 
                 // Make Reverse Relation (Collection)
-                $this->makeReverseRelations($relatedModel, $model, $this->option('schema'));
+                // $this->makeReverseRelations($relatedModel, $model, $this->option('schema')); // TODO: infinit loop
             }
         }
 

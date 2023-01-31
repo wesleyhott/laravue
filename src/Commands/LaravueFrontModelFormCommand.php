@@ -110,18 +110,18 @@ class LaravueFrontModelFormCommand extends LaravueCommand
 
     if ($has_input) {
       $import_input = <<< STUB
-                          import LaravueForm from 'components/LaravueForm.vue';
+                          import LaravueForm from 'pages/components/LaravueForm.vue';
                           import LaravueInput from 'pages/components/LaravueInput.vue';
                           STUB;
-      $file = str_replace('import LaravueForm from \'components/LaravueForm.vue\';', $import_input, $file);
+      $file = str_replace('import LaravueForm from \'pages/components/LaravueForm.vue\';', $import_input, $file);
     }
 
     if ($has_select) {
       $import_input = <<< STUB
-                          import LaravueForm from 'components/LaravueForm.vue';
+                          import LaravueForm from 'pages/components/LaravueForm.vue';
                           import LaravueSelect from 'pages/components/LaravueSelect.vue';
                           STUB;
-      $file = str_replace('import LaravueForm from \'components/LaravueForm.vue\';', $import_input, $file);
+      $file = str_replace('import LaravueForm from \'pages/components/LaravueForm.vue\';', $import_input, $file);
     }
 
     return str_replace('{{ fields }}', $components, $file);
@@ -179,8 +179,8 @@ class LaravueFrontModelFormCommand extends LaravueCommand
 
   private function selectComponent(string $module, string $model, string $field): string
   { // field: user_id
-    $clean_field = substr($field, 0, -3);
-    $v_model = Str::lcfirst($model) . '.' . $clean_field;
+    $clean_field = Str::studly(substr($field, 0, -3));
+    $v_model = Str::lcfirst($model) . '.' . Str::lcfirst($clean_field);
     $title = $this->getTitle($field);
     $plural_clean_field  = $this->pluralize($clean_field);
     $endpoint = Str::kebab("{$module}-{$plural_clean_field}");
