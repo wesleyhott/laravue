@@ -100,8 +100,8 @@ class LaravueModelCommand extends LaravueCommand
                     $type = $this->getType($value);
             }
             $comments = [];
-            $comments[] = $this->hasNullable($key) ? 'nullable' : 'not null';
-            if ($this->isUnique($key)) {
+            $comments[] = $this->hasNullable($value) ? 'nullable' : 'not null';
+            if ($this->isUnique($value)) {
                 $comments[] = 'unique';
             }
             if ($first) {

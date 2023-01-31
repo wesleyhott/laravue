@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import laravueService from 'src/services/laravueService';
-import LaravueForm from 'components/LaravueForm.vue';
+import LaravueForm from 'pages/components/LaravueForm.vue';
 import { useRouter, useRoute } from 'vue-router';
 import { {{ model }} } from 'src/types/models/{{ path_snake_module }}{{ model }}';
 import { Result } from 'src/types/Result';
