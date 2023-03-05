@@ -4,6 +4,15 @@ namespace wesleyhott\Laravue\Commands;
 
 use Illuminate\Support\Str;
 
+/**
+ * LaravueRequestCommand
+ * 
+ * @package wesleyhott\Laravue\Commands
+ * 
+ * @method bool option(string $value)
+ * @method string info(string $value)
+ * @method string argument(string $value)
+ */
 class LaravueRequestCommand extends LaravueCommand
 {
     /**
@@ -352,7 +361,7 @@ class LaravueRequestCommand extends LaravueCommand
             // Foreing Key
             if ($this->isFk($key)) {
                 $has_fk = true;
-                $property = str_replace('_id', '', Str::lcfirst(Str::studly($key)));
+                $property = $this->getPropertyNameByKey($key);
 
                 $merge_item .= $merge_item_stub;
 

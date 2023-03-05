@@ -1029,6 +1029,11 @@ class LaravueCommand extends Command
         return $title;
     }
 
+    public function getPropertyNameByKey(string $key): string
+    {
+        return Str::lcfirst(Str::studly(str_replace('_id', '', $key)));
+    }
+
     /**
      * Coloca til e cecedilha nas palavras dadas.
      *
