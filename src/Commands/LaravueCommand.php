@@ -253,6 +253,9 @@ class LaravueCommand extends Command
             case 'front_model_form':
                 $front_directory = $this->fileBuildPath($front_directory, 'pages', $parsed_module, $parsed_model, 'forms');
                 break;
+            case 'front_model_type':
+                $front_directory = $this->fileBuildPath($front_directory, 'types', 'models', Str::snake($parsed_module));
+                break;
         }
 
         $laravue_test_dir = $this->fileBuildPath($current_directory, 'front');
@@ -1435,5 +1438,29 @@ class LaravueCommand extends Command
         $this->files->put($path, $file);
 
         return $file;
+    }
+
+    protected function parsePhpToJavaScriptType(string $php_type): string
+    {
+        // Javascript types: number, string, bool, undefined, null
+        switch ($php_type) {
+            case 'bigIncrements':
+            case 'bigInteger':
+            case 'double':
+            case 'decimal':
+            case 'float':
+            case 'monetario':
+            case 'increments':
+            case 'mediumInteger':
+            case 'smallInteger':
+            case 'integer':
+            case 'tinyInteger':
+                return 'number';
+            case 'boolean':
+            case 'boolean':
+                return 'boolean';
+        }
+
+        return 'string';
     }
 }

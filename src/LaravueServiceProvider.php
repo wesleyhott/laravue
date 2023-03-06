@@ -22,6 +22,7 @@ class LaravueServiceProvider extends ServiceProvider
                 Commands\LaravueFrontModelDetailCommand::class,
                 Commands\LaravueFrontModelSavePageCommand::class,
                 Commands\LaravueFrontModelIndexPageCommand::class,
+                Commands\LaravueFrontModelTypeCommand::class,
                 Commands\LaravueFrontModulePageRoutesCommand::class,
                 Commands\LaravueFrontModulePageCommand::class,
                 Commands\LaravueFrontModuleIndexCommand::class,
