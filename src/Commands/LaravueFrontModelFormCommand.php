@@ -183,7 +183,7 @@ class LaravueFrontModelFormCommand extends LaravueCommand
     $v_model = Str::lcfirst($model) . '.' . Str::lcfirst($clean_field);
     $title = $this->getTitle($field);
     $plural_clean_field  = $this->pluralize($clean_field);
-    $endpoint = Str::kebab("{$module}-{$plural_clean_field}");
+    $endpoint = Str::kebab("{$module}{$plural_clean_field}");
     $label = $this->getLabelFromModel($module, $model);
     $component = <<<STUB
                       <laravue-select
