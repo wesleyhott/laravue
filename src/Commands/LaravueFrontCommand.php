@@ -34,6 +34,7 @@ class LaravueFrontCommand extends Command
         $this->createModelSavePage();
         $this->createModelDetailPage();
         $this->createModelIndexPage();
+        $this->createModelType();
         $this->createModulePageRoutes();
         $this->createModulePage();
         $this->createModuleRoute();
@@ -144,6 +145,20 @@ class LaravueFrontCommand extends Command
         $this->call('laravue:front-module-route', [
             'model' => $this->argument('model'),
             '--module' =>  $this->option('module'),
+        ]);
+    }
+
+    /**
+     * Creates the types/models/<<module?>>/<<Model>>.ts for the given model.
+     *
+     * @return void
+     */
+    protected function createModelType()
+    {
+        $this->call('laravue:front-model-type', [
+            'model' => $this->argument('model'),
+            '--module' =>  $this->option('module'),
+            '--fields' =>  $this->option('fields'),
         ]);
     }
 }

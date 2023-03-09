@@ -8,13 +8,13 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import laravueService from 'src/services/laravueService';
+import laravueApiService from 'src/services/laravueApiService';
 import LaravueForm from 'pages/components/LaravueForm.vue';
 import { useRouter, useRoute } from 'vue-router';
 import { {{ model }} } from 'src/types/models/{{ path_snake_module }}{{ model }}';
 import { Result } from 'src/types/Result';
 
-const { show, store, update } = laravueService('{{ kebab_plural_module_model }}');
+const { show, store, update } = laravueApiService('{{ kebab_plural_module_model }}');
 const router = useRouter();
 const route = useRoute();
 
