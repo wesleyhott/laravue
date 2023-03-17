@@ -34,10 +34,10 @@ const onSubmit = async () => {
   if (route.params.id) {
     const id = Number.parseInt(route.params.id.toString(), 10);
     const data = await update(id, {{ lcfirst_model }}.value);
-    if ((data as Result).errors) return; // do not change current page
+    if ((data as Result).status && (data as Result).status != 200) return; // do not change current page
   } else {
     const data = await store({{ lcfirst_model }}.value);
-    if ((data as Result).errors) return; // do not change current page
+    if ((data as Result).status && (data as Result).status != 201) return; // do not change current page
   }
 
   router.push({ name: '{{ lcfirst_plural_model }}' });
