@@ -57,11 +57,11 @@ class LaravueFrontModuleIndexCommand extends LaravueCommand
   protected function build(string $path, string $model, string $module): string
   {
     $route_file = $this->files->get($path);
-    return $this->replaceRouteRoutes($route_file, $module, $model);
+    return $this->replaceRouteRoutes($route_file, $module);
   }
 
 
-  protected function replaceRouteRoutes($route_file, $module, $model)
+  protected function replaceRouteRoutes($route_file, $module)
   {
     $stub_route = <<<STUB
                       {
@@ -69,7 +69,7 @@ class LaravueFrontModuleIndexCommand extends LaravueCommand
                           caption: '',
                           icon: 'drag_indicator', // Change: https://fonts.google.com/icons?icon.set=Material+Icons
                           route: { name: '{{ snake_module }}' },
-                          permissions: 'm-{{ kebab_module }}-{{ kebab_plural_model }}',
+                          permissions: 'm-{{ kebab_module }}',
                         },
                         // {{ laravue-insert:module }}
                       STUB;
@@ -77,7 +77,6 @@ class LaravueFrontModuleIndexCommand extends LaravueCommand
     $new_route = $this->replaceSnakeModule($new_route, $module);
     $new_route = $this->replaceUpperCaseFirstModule($new_route, $module);
     $new_route = $this->replaceKebabModule($new_route, $module);
-    $new_route = $this->replaceKebabPluralModel($new_route, $model);
 
     return $this->replaceInsert('module', $new_route, $route_file);
   }

@@ -57,7 +57,7 @@ class LaravueFrontModulePageCommand extends LaravueCommand
   {
     $this->createIndexFileIfNotExists($module);
     $route_file = $this->files->get($path);
-    return $this->replaceRouteRoutes($route_file, $model);
+    return $this->replaceRouteRoutes($route_file, $module, $model);
   }
 
   protected function createIndexFileIfNotExists(string $module)
@@ -74,19 +74,22 @@ class LaravueFrontModulePageCommand extends LaravueCommand
     $this->files->put($path, $stub);
   }
 
-  protected function replaceRouteRoutes($route_file, $model)
+  protected function replaceRouteRoutes($route_file, $module, $model)
   {
     $stub_route = <<<STUB
                       {
                           title: '{{ title }}',
                           icon: 'drag_indicator', // Change: https://fonts.google.com/icons?icon.set=Material+Icons
                           route: { name: '{{ plural_lcfirst_model }}' },
+                          permissions: 'm-{{ kebab_module }}-{{ kebab_plural_model }}',
                         },
                         // {{ laravue-insert:route }}
                       STUB;
     $new_route = $stub_route;
     $new_route = $this->replaceTitle($new_route, $model);
     $new_route = $this->replacePluralLcfirstModel($new_route, $model);
+    $new_route = $this->replaceKebabModule($new_route, $module);
+    $new_route = $this->replaceKebabPluralModel($new_route, $model);
 
     return $this->replaceInsert('route', $new_route, $route_file);
   }
