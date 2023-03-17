@@ -1388,6 +1388,11 @@ class LaravueCommand extends Command
         return str_replace('{{ snake_module }}', Str::snake($module), $stub);
     }
 
+    protected function replaceKebabModule(string $stub, string $module): string
+    {
+        return str_replace('{{ kebab_module }}',  Str::kebab($module), $stub);
+    }
+
     protected function replacePluralSnakeModule(string $stub, string $module): string
     {
         return str_replace('{{ plural_snake_module }}', $this->pluralize(Str::snake($module)), $stub);
