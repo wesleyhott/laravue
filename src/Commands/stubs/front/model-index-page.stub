@@ -34,6 +34,7 @@ const columns: LaravueDataTableColumn[] = [
   },{{ fields }}
   {
     name: 'actions',
+    style: 'width: 135px',
     field: 'actions',
     label: 'Actions',
     align: 'right',
