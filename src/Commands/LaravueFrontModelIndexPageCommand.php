@@ -61,6 +61,7 @@ class LaravueFrontModelIndexPageCommand extends LaravueCommand
     $file_content = $this->replaceSelectedLabel($file_content, $this->getLabelFromModel($module, $model));
     $file_content = $this->replaceModule($file_content, $module);
     $file_content = $this->replaceModel($file_content, $model);
+    $file_content = $this->replaceKebabModule($file_content, $module);
     $file_content = $this->replaceKebabModel($file_content, $model);
     $file_content = $this->replaceFields($file_content, $module, $model);
 
