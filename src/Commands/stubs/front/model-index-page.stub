@@ -6,10 +6,10 @@
       api-endpoint="{{ route_model }}"
       :columns="columns"
       sortBy="{{ selected_label }}"
-      permissions-crate="c-{{ kebab_module }}-{{ kebab_model }}"
-      permissions-read="r-{{ kebab_module }}-{{ kebab_model }}"
-      permissions-update="u-{{ kebab_module }}-{{ kebab_model }}"
-      permissions-delete="d-{{ kebab_module }}-{{ kebab_model }}"
+      permissions-crate="c-{{ kebab_module }}-{{ kebab_plural_model }}"
+      permissions-read="r-{{ kebab_module }}-{{ kebab_plural_model }}"
+      permissions-update="u-{{ kebab_module }}-{{ kebab_plural_model }}"
+      permissions-delete="d-{{ kebab_module }}-{{ kebab_plural_model }}"
     >
       <template v-slot:detailsDialog="{ model }">
         <{{ kebab_model }}-detail-form :model="model" />

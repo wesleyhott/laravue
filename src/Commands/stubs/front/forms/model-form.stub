@@ -3,6 +3,7 @@
     @submit="onSubmit"
     title="{{ title }} Registration"
     :cancelRoute="{ name: '{{ lcfirst_plural_model }}' }"
+    :permissions="['c-{{ kebab_module }}-{{ kebab_plural_model }}', 'u-{{ kebab_module }}-{{ kebab_plural_model }}']"
   >{{ fields }}
   </laravue-form>
 </template>

@@ -60,6 +60,8 @@ class LaravueFrontModelFormCommand extends LaravueCommand
     $file = $this->replaceLcfirstModel($file, $model);
     $file = $this->replacePathSnakeModule($file, $module);
     $file = $this->replaceKebabPluralModuleModel($file, $module, $model);
+    $file = $this->replaceKebabModule($file, $module);
+    $file = $this->replaceKebabPluralModel($file, $model);
 
     $file = $this->replaceFields($file, $module, $model);
 
