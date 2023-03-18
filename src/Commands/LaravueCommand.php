@@ -168,6 +168,9 @@ class LaravueCommand extends Command
             case 'seeder':
                 $path = $this->makePath("database/seeders/DatabaseSeeder.php", true);
                 break;
+            case 'laravue-seeder':
+                $path = $this->makePath("database/seeders/LaravueSeeder.php", true);
+                break;
             case 'request':
                 $type = '';
                 if ($this->option('store')) {
