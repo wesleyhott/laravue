@@ -74,27 +74,27 @@ class LaravuePermissionCommand extends LaravueCommand
         $new_permission = '';
         $tabs = '';
         if (!$this->lookForIntoLaravueSeeder("c-{$parsed_schema}{$permission_name}")) {
-            $new_permission .= "\$create_{$var_schema}{$route} = Permission::create(['name' => 'c-{$parsed_schema}{$permission_name}', 'label' => 'Create {$schema} {$model_name}']);" . PHP_EOL;
+            $new_permission .= "\$create_{$var_schema}{$route} = Permission::updateOrCreate(['name' => 'c-{$parsed_schema}{$permission_name}', 'label' => 'Create {$schema} {$model_name}']);" . PHP_EOL;
             $tabs = $this->tabs(2);
         }
 
         if (!$this->lookForIntoLaravueSeeder("r-{$parsed_schema}{$permission_name}")) {
-            $new_permission .= $tabs . "\$create_{$var_schema}{$route} = Permission::create(['name' => 'r-{$parsed_schema}{$permission_name}', 'label' => 'Create {$schema} {$model_name}']);" . PHP_EOL;
+            $new_permission .= $tabs . "\$create_{$var_schema}{$route} = Permission::updateOrCreate(['name' => 'r-{$parsed_schema}{$permission_name}', 'label' => 'Read {$schema} {$model_name}']);" . PHP_EOL;
             $tabs = $this->tabs(2);
         }
 
         if ((!$this->option('view')) && !$this->lookForIntoLaravueSeeder("u-{$parsed_schema}{$permission_name}")) {
-            $new_permission .= $tabs . "\$create_{$var_schema}{$route} = Permission::create(['name' => 'u-{$parsed_schema}{$permission_name}', 'label' => 'Create {$schema} {$model_name}']);" . PHP_EOL;
+            $new_permission .= $tabs . "\$create_{$var_schema}{$route} = Permission::updateOrCreate(['name' => 'u-{$parsed_schema}{$permission_name}', 'label' => 'Update {$schema} {$model_name}']);" . PHP_EOL;
             $tabs = $this->tabs(2);
         }
 
         if ((!$this->option('view')) && !$this->lookForIntoLaravueSeeder("d-{$parsed_schema}{$permission_name}")) {
-            $new_permission .= $tabs . "\$create_{$var_schema}{$route} = Permission::create(['name' => 'd-{$parsed_schema}{$permission_name}', 'label' => 'Create {$schema} {$model_name}']);" . PHP_EOL;
+            $new_permission .= $tabs . "\$create_{$var_schema}{$route} = Permission::updateOrCreate(['name' => 'd-{$parsed_schema}{$permission_name}', 'label' => 'Delete {$schema} {$model_name}']);" . PHP_EOL;
             $tabs = $this->tabs(2);
         }
 
         if (!$this->lookForIntoLaravueSeeder("p-{$parsed_schema}{$permission_name}")) {
-            $new_permission .= $tabs . "\$create_{$var_schema}{$route} = Permission::create(['name' => 'p-{$parsed_schema}{$permission_name}', 'label' => 'Create {$schema} {$model_name}']);" . PHP_EOL;
+            $new_permission .= $tabs . "\$create_{$var_schema}{$route} = Permission::updateOrCreate(['name' => 'p-{$parsed_schema}{$permission_name}', 'label' => 'Print {$schema} {$model_name}']);" . PHP_EOL;
             $tabs = $this->tabs(2);
         }
 
